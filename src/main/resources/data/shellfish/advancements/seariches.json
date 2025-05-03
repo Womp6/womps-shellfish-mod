@@ -1,0 +1,32 @@
+{
+    "display": {
+      "icon": {
+        "item": "shellfish:pearl"
+      },
+      "title": {
+        "translate": "advancements.shellfish.searich.title"
+      },
+      "description": {
+        "translate": "advancements.shellfish.searich.desc"
+      },
+      "hidden": false,
+      "frame": "task",
+      "show_toast": true,
+      "announce_to_chat": true
+    },
+    "parent": "shellfish:wompsshellfishmod",
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:pearl"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }

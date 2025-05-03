@@ -1,0 +1,10 @@
+{
+    "type": "minecraft:smelting",
+    "ingredient": {
+      "item": "shellfish:cooked_clam"
+    },
+    "result": "shellfish:burnt_clam",
+    "experience": 0.7,
+    "cookingtime": 200,
+    "group": "shellfish:burnt_clam"
+  }

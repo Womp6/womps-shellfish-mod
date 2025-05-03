@@ -1,0 +1,32 @@
+{
+    "display": {
+      "icon": {
+        "item": "shellfish:reinforced_trap"
+      },
+      "title": {
+        "translate": "advancements.shellfish.reinforced.title"
+      },
+      "description": {
+        "translate": "advancements.shellfish.reinforced.desc"
+      },
+      "hidden": false,
+      "frame": "task",
+      "show_toast": true,
+      "announce_to_chat": true
+    },
+    "parent": "shellfish:shell_seeker",
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:reinforced_trap"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }

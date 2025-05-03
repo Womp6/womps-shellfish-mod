@@ -1,0 +1,32 @@
+{
+    "display": {
+      "icon": {
+        "item": "shellfish:shellfish_trap"
+      },
+      "title": {
+        "translate": "advancements.shellfish.shell_seeker.title"
+      },
+      "description": {
+        "translate": "advancements.shellfish.shell_seeker.desc"
+      },
+      "hidden": false,
+      "frame": "task",
+      "show_toast": true,
+      "announce_to_chat": true
+    },
+    "parent": "shellfish:wompsshellfishmod",
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:shellfish_trap"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }

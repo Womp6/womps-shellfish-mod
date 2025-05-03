@@ -1,0 +1,33 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# run
+run/*
+!run/options.txt
+
+# other
+eclipse
+runs
+run-data
+
+# macOS
+*.DS_Store
+
+# generated/resources
+*.cache

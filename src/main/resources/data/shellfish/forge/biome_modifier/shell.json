@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_features",
+  "biomes": [
+    "minecraft:beach"
+  ],
+  "features": [
+    "shellfish:shell_placed"
+  ],
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:mussel"
+        }
+    ],
+    "result": {
+        "item": "shellfish:raw_mussel",
+        "count": 1
+    }
+}

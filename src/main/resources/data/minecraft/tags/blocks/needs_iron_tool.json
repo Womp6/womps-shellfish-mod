@@ -1,0 +1,7 @@
+{
+    "replace": false,
+    "values": [
+        "shellfish:shellfish_trap_block",
+        "shellfish:reinforced_trap"
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:smoking",
+    "ingredient": {
+      "item": "shellfish:raw_sea_snail"
+    },
+    "result": "shellfish:cooked_sea_snail",
+    "experience": 0.7,
+    "cookingtime": 100
+  }

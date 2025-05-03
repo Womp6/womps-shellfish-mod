@@ -1,0 +1,19 @@
+{
+    "variants": {
+      "facing=east": {
+        "model": "shellfish:block/shellfish_trap_block",
+        "y": 90
+      },
+      "facing=north": {
+        "model": "shellfish:block/shellfish_trap_block"
+      },
+      "facing=south": {
+        "model": "shellfish:block/shellfish_trap_block",
+        "y": 180
+      },
+      "facing=west": {
+        "model": "shellfish:block/shellfish_trap_block",
+        "y": 270
+      }
+    }
+  }

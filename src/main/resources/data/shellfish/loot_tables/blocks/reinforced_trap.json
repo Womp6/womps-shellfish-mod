@@ -1,0 +1,42 @@
+{
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "bonus_rolls": 0.0,
+        "conditions": [
+          {
+            "condition": "minecraft:survives_explosion"
+          }
+        ],
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "functions": [
+              {
+                "function": "minecraft:copy_name",
+                "source": "block_entity"
+              },
+              {
+                "function": "minecraft:copy_nbt",
+                "source": "block_entity",
+                "ops": [
+                  {
+                    "op": "replace",
+                    "source": "Lock",
+                    "target": "BlockEntityTag.Lock"
+                  },
+                  {
+                    "source": "durabilityCheck",
+                    "target": "BlockEntityTag.durability",
+                    "op": "replace"
+                  }
+                ]
+              }
+            ],
+            "name": "shellfish:reinforced_trap"
+          }
+        ],
+        "rolls": 1.0
+      }
+    ]
+  }

@@ -1,0 +1,46 @@
+package womp.shellfishmod.client.renderer;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import womp.shellfishmod.client.ShellfishClient;
+import womp.shellfishmod.client.model.ClamModel;
+import womp.shellfishmod.entity.ClamEntity;
+
+public class ClamRenderer extends MobRenderer<ClamEntity, ClamModel> {
+
+    public ClamRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new ClamModel(renderManager.bakeLayer(ShellfishClient.CLAM_MODEL)), 0.25f);
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(ClamEntity animatable) {
+        int variant = animatable.getVariant();
+        return new ResourceLocation("shellfish", "textures/entity/clam/clam_" + variant + ".png");
+    }
+
+    @Override
+    public void render(ClamEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
+                       MultiBufferSource bufferSource, int packedLight) {
+        int variant = entity.getVariant();
+        if(entity.isBaby() && variant != 3 && variant != 4) {
+            poseStack.scale(0.5f, 0.5f, 0.5f);
+        }
+        if(variant == 3 && !entity.isBaby()) {
+            poseStack.scale(0.65f, 0.65f, 0.65f);
+        }
+        if(variant == 4 && !entity.isBaby()) {
+            poseStack.scale(0.65f, 0.65f, 0.65f);
+        }
+        if(variant == 3 && entity.isBaby()) {
+            poseStack.scale(0.35f, 0.35f, 0.35f);
+        }
+        if(variant == 4 && entity.isBaby()) {
+            poseStack.scale(0.35f, 0.35f, 0.35f);
+        }
+
+        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "type": "shellfish:dead_mussel_block_feature",
+    "config": {
+      "probability": 1
+    }
+  }

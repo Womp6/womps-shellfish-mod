@@ -1,0 +1,72 @@
+{
+    "display": {
+      "icon": {
+        "item": "shellfish:raw_shrimp_skewer"
+      },
+      "title": {
+        "translate": "advancements.shellfish.fancypants.title"
+      },
+      "description": {
+        "translate": "advancements.shellfish.fancypants.desc"
+      },
+      "hidden": false,
+      "frame": "task",
+      "show_toast": true,
+      "announce_to_chat": true
+    },
+    "parent": "shellfish:wompsshellfishmod",
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:shellfish_stew",
+                "shellfish:light_shellfish_stew",
+                
+                "shellfish:crayfish_boil",
+                "shellfish:gumbo",
+                "shellfish:crayfish_bisque",
+
+                "shellfish:boiled_lobster",
+                "shellfish:lobster_roll",
+                "shellfish:lobster_salad",
+
+                "shellfish:crab_cake",
+                "shellfish:crab_dip",
+                "shellfish:crab_louie",
+
+                "shellfish:raw_shrimp_skewer",
+                "shellfish:cooked_shrimp_skewer",
+                "shellfish:shrimp_scampi",
+                "shellfish:shrimp_taco",
+
+                "shellfish:escargot",
+                "shellfish:snail_gratin",
+                "shellfish:snail_soup",
+
+                "shellfish:uni_sushi",
+                "shellfish:uni_chawanmushi",
+                "shellfish:uni_salad",
+
+                "shellfish:baked_clam",
+                "shellfish:clam_strip",
+                "shellfish:clam_chowder",
+
+                "shellfish:oyster_rockefeller",
+                "shellfish:fried_oyster",
+                "shellfish:oyster_chowder",
+
+                "shellfish:stuffed_mussel",
+                "shellfish:mussel_soup",
+                "shellfish:moules_marinieres",
+
+                "shellfish:caviar_bucket"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }

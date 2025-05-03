@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:campfire_cooking",
+    "ingredient": {
+      "item": "shellfish:shellfish_bait"
+    },
+    "result": "shellfish:dried_shellfish_bait",
+    "experience": 0.7,
+    "cookingtime": 200
+  }

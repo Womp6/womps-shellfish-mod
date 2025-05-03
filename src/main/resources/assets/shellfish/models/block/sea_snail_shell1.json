@@ -1,0 +1,33 @@
+{
+	"credit": "Made By Womp",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "shellfish:block/sea_snail_shell1",
+		"particle": "shellfish:block/sea_snail_shell1_particle"
+	},
+	"elements": [
+		{
+			"name": "shell",
+			"from": [6.5, 0, 5.5],
+			"to": [9.5, 5, 10.5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [2.5, 7, 4, 9.5], "texture": "#0"},
+				"east": {"uv": [0, 7, 2.5, 9.5], "texture": "#0"},
+				"south": {"uv": [6.5, 7, 8, 9.5], "texture": "#0"},
+				"west": {"uv": [4, 7, 6.5, 9.5], "texture": "#0"},
+				"up": {"uv": [4, 7, 2.5, 4.5], "texture": "#0"},
+				"down": {"uv": [5.5, 4.5, 4, 7], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "shell",
+			"origin": [8, 0, 8],
+			"color": 0,
+			"nbt": "{}",
+			"children": [0]
+		}
+	]
+}

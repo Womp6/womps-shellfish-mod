@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:raw_uni"
+        },
+        {
+            "item": "shellfish:sea_lettuce"
+        },
+        {
+            "item": "minecraft:beetroot"
+        },
+        {
+            "item": "minecraft:bowl"
+        }
+    ],
+    "result": {
+        "item": "shellfish:uni_salad",
+        "count": 1
+    }
+}

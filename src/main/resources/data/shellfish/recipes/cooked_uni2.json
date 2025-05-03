@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:smoking",
+    "ingredient": {
+      "item": "shellfish:raw_uni"
+    },
+    "result": "shellfish:cooked_uni",
+    "experience": 0.7,
+    "cookingtime": 100
+  }

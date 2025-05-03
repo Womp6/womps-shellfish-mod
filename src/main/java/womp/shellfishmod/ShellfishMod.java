@@ -20,6 +20,7 @@ public class ShellfishMod implements ModInitializer {
     
     public static final Logger LOGGER = LoggerFactory.getLogger(ShellfishMod.class);
 
+	//Register
     @Override
     public void onInitialize() {
 		ShellfishBlocks.register();

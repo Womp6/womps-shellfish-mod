@@ -1,0 +1,25 @@
+{
+    "type": "shellfish:shellfish_trap",
+    "bait": [
+        {
+            "item": "shellfish:dried_shellfish_bait"
+        }
+    ],
+    "outputs": [
+        {
+            "item": "shellfish:raw_crab"
+        },
+        {
+            "item": "shellfish:raw_crab"
+        },
+        {
+            "item": "shellfish:raw_sea_snail"
+        },
+        {
+            "item": "shellfish:raw_shrimp"
+        }
+    ],
+    "biomes": [
+       "minecraft:frozen_river" 
+    ]
+}

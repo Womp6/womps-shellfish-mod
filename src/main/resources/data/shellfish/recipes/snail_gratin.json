@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:cooked_sea_snail"
+        },
+        {
+            "item": "minecraft:bread"
+        },
+        {
+            "item": "minecraft:milk_bucket"
+        },
+        {
+            "item": "minecraft:bowl"
+        }
+    ],
+    "result": {
+        "item": "shellfish:snail_gratin",
+        "count": 1
+    }
+}

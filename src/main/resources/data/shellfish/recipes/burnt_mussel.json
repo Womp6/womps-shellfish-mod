@@ -1,0 +1,10 @@
+{
+    "type": "minecraft:smelting",
+    "ingredient": {
+      "item": "shellfish:cooked_mussel"
+    },
+    "result": "shellfish:burnt_mussel",
+    "experience": 0.7,
+    "cookingtime": 200,
+    "group": "shellfish:burnt_mussel"
+  }

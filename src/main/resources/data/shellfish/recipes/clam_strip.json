@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:cooked_clam"
+        },
+        {
+            "item": "minecraft:bread"
+        },
+        {
+            "item": "minecraft:milk_bucket"
+        },
+        {
+            "item": "minecraft:egg"
+        }
+    ],
+    "result": {
+        "item": "shellfish:clam_strip",
+        "count": 1
+    }
+}

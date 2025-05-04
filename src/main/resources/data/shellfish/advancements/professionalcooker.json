@@ -1,0 +1,40 @@
+{
+    "display": {
+      "icon": {
+        "item": "shellfish:burnt_crayfish"
+      },
+      "title": {
+        "translate": "advancements.shellfish.prof_cook.title"
+      },
+      "description": {
+        "translate": "advancements.shellfish.prof_cook.desc"
+      },
+      "hidden": false,
+      "frame": "task",
+      "show_toast": true,
+      "announce_to_chat": true
+    },
+    "parent": "shellfish:fancypants",
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:burnt_crayfish",
+                "shellfish:burnt_lobster",
+                "shellfish:burnt_crab",
+                "shellfish:burnt_shrimp",
+                "shellfish:burnt_sea_snail",
+                "shellfish:burnt_uni",
+                "shellfish:burnt_clam",
+                "shellfish:burnt_oyster",
+                "shellfish:burnt_mussel"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }

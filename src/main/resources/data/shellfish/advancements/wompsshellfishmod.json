@@ -1,0 +1,169 @@
+{
+    "display": {
+      "icon": {
+        "item": "shellfish:crayfish"
+      },
+      "title": {
+        "translate": "advancements.shellfish.wsm.title"
+      },
+      "description": {
+        "translate": "advancements.shellfish.wsm.desc"
+      },
+      "hidden": false,
+      "frame": "task",
+      "show_toast": false,
+      "announce_to_chat": false,
+      "background": "shellfish:textures/advancement/background.png"
+    },
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:crayfish",
+                "shellfish:lobster",
+                "shellfish:crab",
+                "shellfish:shrimp",
+                "shellfish:sea_snail",
+                "shellfish:sea_urchin",
+                "shellfish:clam",
+                "shellfish:oyster",
+                "shellfish:mussel",
+
+                "shellfish:cooked_crayfish",
+                "shellfish:cooked_lobster",
+                "shellfish:cooked_crab",
+                "shellfish:cooked_shrimp",
+                "shellfish:cooked_sea_snail",
+                "shellfish:cooked_uni",
+                "shellfish:cooked_clam",
+                "shellfish:cooked_oyster",
+                "shellfish:cooked_mussel",
+
+                "shellfish:raw_crayfish",
+                "shellfish:raw_lobster",
+                "shellfish:raw_crab",
+                "shellfish:raw_shrimp",
+                "shellfish:raw_sea_snail",
+                "shellfish:raw_uni",
+                "shellfish:raw_clam",
+                "shellfish:raw_oyster",
+                "shellfish:raw_mussel",
+
+                "shellfish:crayfish_spawn_egg",
+                "shellfish:lobster_spawn_egg",
+                "shellfish:crab_spawn_egg",
+                "shellfish:shrimp_spawn_egg",
+                "shellfish:sea_snail_spawn_egg",
+                "shellfish:sea_urchin_spawn_egg",
+                "shellfish:clam_spawn_egg",
+                "shellfish:oyster_spawn_egg",
+                "shellfish:mussel_spawn_egg",
+                "shellfish:moss_ball_spawn_egg",
+
+                "shellfish:crayfish_bucket",
+                "shellfish:lobster_bucket",
+                "shellfish:crab_bucket",
+                "shellfish:shrimp_bucket",
+                "shellfish:sea_snail_bucket",
+                "shellfish:sea_urchin_bucket",
+                "shellfish:clam_bucket",
+                "shellfish:oyster_bucket",
+                "shellfish:mussel_bucket",
+                "shellfish:moss_ball_bucket",
+
+                "shellfish:rockweed",
+                "shellfish:water_lettuce",
+                "shellfish:paddleweed",
+                "shellfish:eelgrass",
+                "shellfish:sea_lettuce",
+
+                "shellfish:crayfish_eggs",
+                "shellfish:lobster_eggs",
+                "shellfish:crab_eggs",
+                "shellfish:shrimp_eggs",
+                "shellfish:sea_snail_eggs",
+
+                "shellfish:sea_snail_shell",
+                "shellfish:clam_shell",
+                "shellfish:oyster_shell",
+                "shellfish:mussel_shell",
+
+                "shellfish:dead_clam_block",
+                "shellfish:dead_oyster_block",
+                "shellfish:dead_mussel_block",
+
+                "shellfish:clam_sand",
+                "shellfish:oyster_sand",
+                "shellfish:mussel_sand",
+                "shellfish:clam_clay",
+                "shellfish:oyster_clay",
+                "shellfish:mussel_clay",
+
+                "shellfish:pearl",
+
+                "shellfish:burnt_crayfish",
+                "shellfish:burnt_lobster",
+                "shellfish:burnt_crab",
+                "shellfish:burnt_shrimp",
+                "shellfish:burnt_sea_snail",
+                "shellfish:burnt_uni",
+                "shellfish:burnt_clam",
+                "shellfish:burnt_oyster",
+                "shellfish:burnt_mussel",
+                
+                "shellfish:shellfish_stew",
+                "shellfish:light_shellfish_stew",
+                
+                "shellfish:crayfish_boil",
+                "shellfish:gumbo",
+                "shellfish:crayfish_bisque",
+
+                "shellfish:boiled_lobster",
+                "shellfish:lobster_roll",
+                "shellfish:lobster_salad",
+
+                "shellfish:crab_cake",
+                "shellfish:crab_dip",
+                "shellfish:crab_louie",
+
+                "shellfish:raw_shrimp_skewer",
+                "shellfish:cooked_shrimp_skewer",
+                "shellfish:shrimp_scampi",
+                "shellfish:shrimp_taco",
+
+                "shellfish:escargot",
+                "shellfish:snail_gratin",
+                "shellfish:snail_soup",
+
+                "shellfish:uni_sushi",
+                "shellfish:uni_chawanmushi",
+                "shellfish:uni_salad",
+
+                "shellfish:baked_clam",
+                "shellfish:clam_strip",
+                "shellfish:clam_chowder",
+
+                "shellfish:oyster_rockefeller",
+                "shellfish:fried_oyster",
+                "shellfish:oyster_chowder",
+
+                "shellfish:stuffed_mussel",
+                "shellfish:mussel_soup",
+                "shellfish:moules_marinieres",
+
+                "shellfish:caviar_bucket",
+
+                "shellfish:shellfish_trap",
+
+                "shellfish:shellfish_bait",
+                "shellfish:dried_shellfish_bait"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }

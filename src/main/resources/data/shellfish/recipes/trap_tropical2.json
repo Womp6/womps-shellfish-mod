@@ -1,0 +1,28 @@
+{
+    "type": "shellfish:shellfish_trap",
+    "bait": [
+        {
+            "item": "minecraft:tropical_fish"
+        }
+    ],
+    "outputs": [
+        {
+            "item": "minecraft:stick"
+        },
+        {
+            "item": "minecraft:string"
+        },
+        {
+            "item": "shellfish:raw_crab"
+        },
+        {
+            "item": "shellfish:raw_crab"
+        },
+        {
+            "item": "shellfish:raw_shrimp"
+        }
+    ],
+    "biomes": [
+       "minecraft:frozen_river" 
+    ]
+}

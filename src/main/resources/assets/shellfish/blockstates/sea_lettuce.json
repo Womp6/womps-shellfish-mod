@@ -1,0 +1,13 @@
+{
+    "variants": {
+      "is3d=true": {
+        "model": "shellfish:block/sea_lettuce"
+      },
+      "is3d=false,large=true": {
+            "model": "shellfish:block/sea_lettuce_large"
+      },
+      "is3d=false,large=false": {
+            "model": "shellfish:block/sea_lettuce_small"
+      }
+    }
+  }

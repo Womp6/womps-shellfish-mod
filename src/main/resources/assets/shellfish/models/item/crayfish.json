@@ -1,0 +1,188 @@
+{
+    "parent": "minecraft:item/generated",
+    "textures": {
+        "layer0": "shellfish:item/crayfish"
+    },
+    "overrides": [
+      {
+        "predicate": {
+          "supercrayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/supercrayfish"
+      },
+      {
+        "predicate": {
+          "clayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/clayfish"
+      },
+      {
+        "predicate": {
+          "sapphire_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/sapphire_crayfish"
+      },
+      {
+        "predicate": {
+          "louisiana_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/louisiana_crayfish"
+      },
+      {
+        "predicate": {
+          "white_tubercled_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/white_tubercled_crayfish"
+      },
+      {
+        "predicate": {
+          "zebra_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/zebra_crayfish"
+      },
+      {
+        "predicate": {
+          "virile_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/virile_crayfish"
+      },
+      {
+        "predicate": {
+          "rusty_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/rusty_crayfish"
+      },
+      {
+        "predicate": {
+          "supernova_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/supernova_crayfish"
+      },
+      {
+        "predicate": {
+          "signal_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/signal_crayfish"
+      },
+      {
+        "predicate": {
+          "swamp_dwarf_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/swamp_dwarf_crayfish"
+      },
+      {
+        "predicate": {
+          "australian_redclaw_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/australian_redclaw_crayfish"
+      },
+      {
+        "predicate": {
+          "big_sandy_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/big_sandy_crayfish"
+      },
+      {
+        "predicate": {
+          "spinycheek_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/spinycheek_crayfish"
+      },
+      {
+        "predicate": {
+          "parkhill_prairie_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/parkhill_prairie_crayfish"
+      },
+      {
+        "predicate": {
+          "common_yabby_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/common_yabby_crayfish"
+      },
+      {
+        "predicate": {
+          "nashville_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/nashville_crayfish"
+      },
+      {
+        "predicate": {
+          "murray_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/murray_crayfish"
+      },
+      {
+        "predicate": {
+          "tasmanian_giant_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/tasmanian_giant_crayfish"
+      },
+      {
+        "predicate": {
+          "japanese_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/japanese_crayfish"
+      },
+      {
+        "predicate": {
+          "marbled_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/marbled_crayfish"
+      },
+      {
+        "predicate": {
+          "orange_dwarf_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/orange_dwarf_crayfish"
+      },
+      {
+        "predicate": {
+          "slough_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/slough_crayfish"
+      },
+      {
+        "predicate": {
+          "cave_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/cave_crayfish"
+      },
+      {
+        "predicate": {
+          "noble_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/noble_crayfish"
+      },
+      {
+        "predicate": {
+          "hairy_marron_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/hairy_marron_crayfish"
+      },
+      {
+        "predicate": {
+          "thunderbolt_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/thunderbolt_crayfish"
+      },
+      {
+        "predicate": {
+          "blue_kong_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/blue_kong_crayfish"
+      },
+      {
+        "predicate": {
+          "diamond_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/diamond_crayfish"
+      },
+      {
+        "predicate": {
+          "golden_crayfish": 1.0
+        },
+        "model": "shellfish:item/crayfish/golden_crayfish"
+      }
+    ]
+}

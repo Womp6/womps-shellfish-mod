@@ -1,0 +1,12 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/clam_sand1"
+        },
+        {
+          "model": "shellfish:block/clam_sand2"
+        }
+      ]
+    } 
+  }

@@ -1,0 +1,14 @@
+{
+  "type": "forge:add_features",
+  "biomes": [
+    "minecraft:warm_ocean",
+    "minecraft:ocean",
+    "minecraft:lukewarm_ocean",
+    "minecraft:cold_ocean",
+    "minecraft:frozen_ocean"
+  ],
+  "features": [
+    "shellfish:clam_ore_ocean"
+  ],
+  "step": "underground_ores"
+}

@@ -1,0 +1,35 @@
+{
+    "display": {
+      "icon": {
+        "item": "shellfish:moss_ball_bucket"
+      },
+      "title": {
+        "translate": "advancements.shellfish.moss.title"
+      },
+      "description": {
+        "translate": "advancements.shellfish.moss.desc"
+      },
+      "hidden": false,
+      "frame": "task",
+      "show_toast": true,
+      "announce_to_chat": true
+    },
+    "parent": "shellfish:tactical_shellfishing",
+    "criteria": {
+      "moss_ball": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:moss_ball_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      }
+    },
+    "requirements": [
+    [
+      "moss_ball"
+    ]
+  ]
+}

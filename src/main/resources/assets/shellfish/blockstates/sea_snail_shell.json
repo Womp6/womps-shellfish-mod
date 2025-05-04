@@ -1,0 +1,81 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/sea_snail_shell1"
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell"
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell2"
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell3"
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell5"
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell1",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell2",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell3",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell5",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell1",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell2",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell3",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell5",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell1",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell2",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell3",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/sea_snail_shell5",
+          "y": 270
+        }
+      ]
+    }
+  }

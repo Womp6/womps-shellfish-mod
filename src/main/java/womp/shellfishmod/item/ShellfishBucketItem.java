@@ -1,0 +1,43 @@
+package womp.shellfishmod.item;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.animal.Bucketable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.Fluid;
+
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
+
+public class ShellfishBucketItem extends MobBucketItem {
+
+    public ShellfishBucketItem(Supplier<? extends EntityType<?>> shellfish, Fluid water, Item.Properties builder) {
+        super(shellfish, () -> water, () -> SoundEvents.BUCKET_EMPTY_FISH, builder.stacksTo(1));
+    }
+
+    @Override
+    public void checkExtraContent(@Nullable Player player, Level level, ItemStack stack, BlockPos pos) {
+        if (level instanceof ServerLevel) {
+            this.spawnShellfish((ServerLevel)level, stack, pos);
+            level.gameEvent(player, GameEvent.ENTITY_PLACE, pos);
+        }
+    }
+
+    private void spawnShellfish(ServerLevel serverLevel, ItemStack stack, BlockPos pos) {
+        Entity mob = getFishType().spawn(serverLevel, stack, (Player)null, pos, MobSpawnType.BUCKET, true, false);
+        if (mob instanceof Bucketable) {
+            Bucketable bucketable = (Bucketable)mob;
+            bucketable.loadFromBucketTag(stack.getOrCreateTag());
+            bucketable.setFromBucket(true);
+        }
+    }
+}

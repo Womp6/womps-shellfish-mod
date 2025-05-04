@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "is3d=true": {
+      "model": "shellfish:block/water_lettuce"
+    },
+    "is3d=false,swamp=false": {
+      "model": "shellfish:block/water_lettuce_2d"
+    },
+    "is3d=false,swamp=true": {
+      "model": "shellfish:block/water_lettuce_2d_swamp"
+    }
+  }
+}

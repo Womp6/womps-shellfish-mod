@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:campfire_cooking",
+    "ingredient": {
+      "item": "shellfish:cooked_sea_snail"
+    },
+    "result": "shellfish:burnt_sea_snail",
+    "experience": 0.7,
+    "cookingtime": 200
+  }

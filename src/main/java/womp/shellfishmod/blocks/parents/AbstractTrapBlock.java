@@ -1,0 +1,173 @@
+package womp.shellfishmod.blocks.parents;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import womp.shellfishmod.registry.ShellfishSounds;
+
+import java.util.HashMap;
+import java.util.List;
+
+// Block entity code made using help from Kaupenjoe
+public abstract class AbstractTrapBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+
+    //REQUIRED
+    protected abstract HashMap<Item, Integer> getRepairItems();
+    protected abstract BlockEntityType<? extends AbstractTrapBlockEntity> getBE();
+    protected abstract int getMaxDurability();
+
+
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty BROKEN = BooleanProperty.create("broken");
+
+    public AbstractTrapBlock(Properties settings) {
+        super(settings);
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(BROKEN, false));
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        FluidState fluidstate = pContext.getLevel().getFluidState(pContext.getClickedPos());
+        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER).setValue(BROKEN, false);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+        pBuilder.add(WATERLOGGED, FACING, BROKEN);
+    }
+
+    @Override
+    public @NotNull FluidState getFluidState(BlockState pState) {
+        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    }
+
+    @Override
+    public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        BlockState blockState = super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+        if (!blockState.isAir()) {
+            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+        }
+        return blockState;
+    }
+
+    @Override
+    public boolean skipRendering(BlockState pState, BlockState pAdjacentBlockState, Direction pSide) {
+        return pAdjacentBlockState.is(this) ? true : super.skipRendering(pState, pAdjacentBlockState, pSide);
+    }
+
+    @Override
+    public @NotNull VoxelShape getVisualShape(BlockState pState, BlockGetter pReader, BlockPos pPos, CollisionContext pContext) {
+        return Shapes.empty();
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof AbstractTrapBlockEntity) {
+                Containers.dropContents(world, pos, (AbstractTrapBlockEntity)blockEntity);
+                world.updateNeighbourForOutputSignal(pos,this);
+            }
+            super.onRemove(state, world, pos, newState, moved);
+        }
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!world.isClientSide) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            Item handItem = player.getItemInHand(hand).getItem();
+            if (blockEntity instanceof AbstractTrapBlockEntity trap) {
+                if (hand == InteractionHand.MAIN_HAND && getRepairItems().containsKey(handItem) && trap.getDurability() < trap.getMaxDurability()) {
+                    if (!player.isCreative()) {
+                        player.getMainHandItem().shrink(1);
+                    }
+                    trap.repair(getRepairItems().get(handItem));
+                    world.playSound(null, pos, ShellfishSounds.TRAP_REPAIR.get(), SoundSource.BLOCKS, 0.6f, 1.5f);
+                } else {
+                    MenuProvider screen = ((AbstractTrapBlockEntity) world.getBlockEntity(pos));
+                    ((ServerPlayer)player).openMenu(screen, pos);
+                }
+            }
+        }
+        return InteractionResult.sidedSuccess(world.isClientSide());
+    }
+
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        if(world.isClientSide()) {
+            return null;
+        }
+
+        return createTickerHelper(type, getBE(), (world1, pos, state1, blockEntity) -> blockEntity.tick(world1, pos, state1));
+    }
+
+    @Override
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+        if (itemStack.hasCustomHoverName()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof AbstractTrapBlockEntity) {
+                ((AbstractTrapBlockEntity) blockEntity).setCustomName(itemStack.getHoverName());
+            }
+            if (itemStack.hasTag() && itemStack.getTag().getCompound("BlockEntityTag").contains("durability") && blockEntity instanceof AbstractTrapBlockEntity) {
+                ((AbstractTrapBlockEntity) blockEntity).setDurability(itemStack.getTag().getCompound("BlockEntityTag").getInt("durability"));
+            }
+        }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options) {
+        super.appendHoverText(stack, world, tooltip, options);
+        if (stack.hasTag() && stack.getTag().getCompound("BlockEntityTag").contains("durability") && stack.getTag().getCompound("BlockEntityTag").getInt("durability") < getMaxDurability()) {
+            int durability = stack.getTag().getCompound("BlockEntityTag").getInt("durability");
+            tooltip.add(Component.literal(Component.translatable("shellfish_trap.durability").getString() + durability + " / " + getMaxDurability()).withStyle(ChatFormatting.ITALIC, durability > getMaxDurability() / 2 ? ChatFormatting.DARK_GREEN : durability > getMaxDurability() / 5 ? ChatFormatting.YELLOW : ChatFormatting.DARK_RED));
+        }
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
+        return true;
+    }
+}

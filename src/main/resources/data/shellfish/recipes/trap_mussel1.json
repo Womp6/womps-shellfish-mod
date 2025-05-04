@@ -1,0 +1,34 @@
+{
+    "type": "shellfish:shellfish_trap",
+    "bait": [
+        {
+            "item": "shellfish:raw_mussel"
+        }
+    ],
+    "outputs": [
+        {
+            "item": "shellfish:raw_crayfish"
+        },
+        {
+            "item": "shellfish:raw_crayfish"
+        },
+        {
+            "item": "shellfish:raw_crab"
+        },
+        {
+            "item": "shellfish:raw_crab"
+        },
+        {
+            "item": "shellfish:raw_shrimp"
+        }
+    ],
+    "biomes": [
+        "minecraft:river",
+        "minecraft:swamp",
+        "minecraft:mangrove_swamp",
+        "biomesoplenty:bayou",
+        "biomesoplenty:floodplain",
+        "biomesoplenty:marsh",
+        "biomesoplenty:wetland"
+    ]
+}

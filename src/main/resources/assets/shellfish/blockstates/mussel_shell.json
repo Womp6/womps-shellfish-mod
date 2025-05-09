@@ -1,0 +1,81 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/mussel_shell_0"
+        },
+        {
+          "model": "shellfish:block/mussel_shell_1"
+        },
+        {
+          "model": "shellfish:block/mussel_shell_2"
+        },
+        {
+          "model": "shellfish:block/mussel_shell_3"
+        },
+        {
+          "model": "shellfish:block/mussel_shell_4"
+        },
+        {
+          "model": "shellfish:block/mussel_shell_0",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/mussel_shell_1",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/mussel_shell_2",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/mussel_shell_3",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/mussel_shell_4",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/mussel_shell_0",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/mussel_shell_1",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/mussel_shell_2",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/mussel_shell_3",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/mussel_shell_4",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/mussel_shell_0",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/mussel_shell_1",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/mussel_shell_2",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/mussel_shell_3",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/mussel_shell_4",
+          "y": 270
+        }
+      ]
+    }
+  }

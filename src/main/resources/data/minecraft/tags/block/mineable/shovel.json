@@ -1,0 +1,11 @@
+{
+    "replace": false,
+    "values": [
+        "shellfish:clam_clay",
+        "shellfish:clam_sand",
+        "shellfish:oyster_clay",
+        "shellfish:oyster_sand",
+        "shellfish:mussel_clay",
+        "shellfish:mussel_sand"
+    ]
+}

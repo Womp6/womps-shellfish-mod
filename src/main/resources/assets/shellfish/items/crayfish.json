@@ -1,0 +1,276 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:has_component",
+    "component": "shellfish:supercrayfish",
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "shellfish:item/crayfish/supercrayfish"
+    },
+    "on_false": {
+      "type": "minecraft:condition",
+      "property": "minecraft:has_component",
+      "component": "shellfish:clayfish",
+      "on_true": {
+        "type": "minecraft:model",
+        "model": "shellfish:item/crayfish/clayfish"
+      },
+      "on_false": {
+        "type": "minecraft:condition",
+        "property": "minecraft:has_component",
+        "component": "shellfish:sapphire_crayfish",
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "shellfish:item/crayfish/sapphire_crayfish"
+        },
+        "on_false": {
+          "type": "minecraft:condition",
+          "property": "minecraft:has_component",
+          "component": "shellfish:louisiana_crayfish",
+          "on_true": {
+            "type": "minecraft:model",
+            "model": "shellfish:item/crayfish/louisiana_crayfish"
+          },
+          "on_false": {
+            "type": "minecraft:condition",
+            "property": "minecraft:has_component",
+            "component": "shellfish:white_tubercled_crayfish",
+            "on_true": {
+              "type": "minecraft:model",
+              "model": "shellfish:item/crayfish/white_tubercled_crayfish"
+            },
+            "on_false": {
+              "type": "minecraft:condition",
+              "property": "minecraft:has_component",
+              "component": "shellfish:zebra_crayfish",
+              "on_true": {
+                "type": "minecraft:model",
+                "model": "shellfish:item/crayfish/zebra_crayfish"
+              },
+              "on_false": {
+                "type": "minecraft:condition",
+                "property": "minecraft:has_component",
+                "component": "shellfish:virile_crayfish",
+                "on_true": {
+                  "type": "minecraft:model",
+                  "model": "shellfish:item/crayfish/virile_crayfish"
+                },
+                "on_false": {
+                  "type": "minecraft:condition",
+                  "property": "minecraft:has_component",
+                  "component": "shellfish:rusty_crayfish",
+                  "on_true": {
+                    "type": "minecraft:model",
+                    "model": "shellfish:item/crayfish/rusty_crayfish"
+                  },
+                  "on_false": {
+                    "type": "minecraft:condition",
+                    "property": "minecraft:has_component",
+                    "component": "shellfish:supernova_crayfish",
+                    "on_true": {
+                      "type": "minecraft:model",
+                      "model": "shellfish:item/crayfish/supernova_crayfish"
+                    },
+                    "on_false": {
+                      "type": "minecraft:condition",
+                      "property": "minecraft:has_component",
+                      "component": "shellfish:signal_crayfish",
+                      "on_true": {
+                        "type": "minecraft:model",
+                        "model": "shellfish:item/crayfish/signal_crayfish"
+                      },
+                      "on_false": {
+                        "type": "minecraft:condition",
+                        "property": "minecraft:has_component",
+                        "component": "shellfish:swamp_dwarf_crayfish",
+                        "on_true": {
+                          "type": "minecraft:model",
+                          "model": "shellfish:item/crayfish/swamp_dwarf_crayfish"
+                        },
+                        "on_false": {
+                          "type": "minecraft:condition",
+                          "property": "minecraft:has_component",
+                          "component": "shellfish:australian_redclaw_crayfish",
+                          "on_true": {
+                            "type": "minecraft:model",
+                            "model": "shellfish:item/crayfish/australian_redclaw_crayfish"
+                          },
+                          "on_false": {
+                            "type": "minecraft:condition",
+                            "property": "minecraft:has_component",
+                            "component": "shellfish:big_sandy_crayfish",
+                            "on_true": {
+                              "type": "minecraft:model",
+                              "model": "shellfish:item/crayfish/big_sandy_crayfish"
+                            },
+                            "on_false": {
+                              "type": "minecraft:condition",
+                              "property": "minecraft:has_component",
+                              "component": "shellfish:spinycheek_crayfish",
+                              "on_true": {
+                                "type": "minecraft:model",
+                                "model": "shellfish:item/crayfish/spinycheek_crayfish"
+                              },
+                              "on_false": {
+                                "type": "minecraft:condition",
+                                "property": "minecraft:has_component",
+                                "component": "shellfish:parkhill_prairie_crayfish",
+                                "on_true": {
+                                  "type": "minecraft:model",
+                                  "model": "shellfish:item/crayfish/parkhill_prairie_crayfish"
+                                },
+                                "on_false": {
+                                  "type": "minecraft:condition",
+                                  "property": "minecraft:has_component",
+                                  "component": "shellfish:common_yabby_crayfish",
+                                  "on_true": {
+                                    "type": "minecraft:model",
+                                    "model": "shellfish:item/crayfish/common_yabby_crayfish"
+                                  },
+                                  "on_false": {
+                                    "type": "minecraft:condition",
+                                    "property": "minecraft:has_component",
+                                    "component": "shellfish:nashville_crayfish",
+                                    "on_true": {
+                                      "type": "minecraft:model",
+                                      "model": "shellfish:item/crayfish/nashville_crayfish"
+                                    },
+                                    "on_false": {
+                                      "type": "minecraft:condition",
+                                      "property": "minecraft:has_component",
+                                      "component": "shellfish:murray_crayfish",
+                                      "on_true": {
+                                        "type": "minecraft:model",
+                                        "model": "shellfish:item/crayfish/murray_crayfish"
+                                      },
+                                      "on_false": {
+                                        "type": "minecraft:condition",
+                                        "property": "minecraft:has_component",
+                                        "component": "shellfish:tasmanian_giant_crayfish",
+                                        "on_true": {
+                                          "type": "minecraft:model",
+                                          "model": "shellfish:item/crayfish/tasmanian_giant_crayfish"
+                                        },
+                                        "on_false": {
+                                          "type": "minecraft:condition",
+                                          "property": "minecraft:has_component",
+                                          "component": "shellfish:japanese_crayfish",
+                                          "on_true": {
+                                            "type": "minecraft:model",
+                                            "model": "shellfish:item/crayfish/japanese_crayfish"
+                                          },
+                                          "on_false": {
+                                            "type": "minecraft:condition",
+                                            "property": "minecraft:has_component",
+                                            "component": "shellfish:marbled_crayfish",
+                                            "on_true": {
+                                              "type": "minecraft:model",
+                                              "model": "shellfish:item/crayfish/marbled_crayfish"
+                                            },
+                                            "on_false": {
+                                              "type": "minecraft:condition",
+                                              "property": "minecraft:has_component",
+                                              "component": "shellfish:orange_dwarf_crayfish",
+                                              "on_true": {
+                                                "type": "minecraft:model",
+                                                "model": "shellfish:item/crayfish/orange_dwarf_crayfish"
+                                              },
+                                              "on_false": {
+                                                "type": "minecraft:condition",
+                                                "property": "minecraft:has_component",
+                                                "component": "shellfish:slough_crayfish",
+                                                "on_true": {
+                                                  "type": "minecraft:model",
+                                                  "model": "shellfish:item/crayfish/slough_crayfish"
+                                                },
+                                                "on_false": {
+                                                  "type": "minecraft:condition",
+                                                  "property": "minecraft:has_component",
+                                                  "component": "shellfish:cave_crayfish",
+                                                  "on_true": {
+                                                    "type": "minecraft:model",
+                                                    "model": "shellfish:item/crayfish/cave_crayfish"
+                                                  },
+                                                  "on_false": {
+                                                    "type": "minecraft:condition",
+                                                    "property": "minecraft:has_component",
+                                                    "component": "shellfish:noble_crayfish",
+                                                    "on_true": {
+                                                      "type": "minecraft:model",
+                                                      "model": "shellfish:item/crayfish/noble_crayfish"
+                                                    },
+                                                    "on_false": {
+                                                      "type": "minecraft:condition",
+                                                      "property": "minecraft:has_component",
+                                                      "component": "shellfish:hairy_marron_crayfish",
+                                                      "on_true": {
+                                                        "type": "minecraft:model",
+                                                        "model": "shellfish:item/crayfish/hairy_marron_crayfish"
+                                                      },
+                                                      "on_false": {
+                                                        "type": "minecraft:condition",
+                                                        "property": "minecraft:has_component",
+                                                        "component": "shellfish:thunderbolt_crayfish",
+                                                        "on_true": {
+                                                          "type": "minecraft:model",
+                                                          "model": "shellfish:item/crayfish/thunderbolt_crayfish"
+                                                        },
+                                                        "on_false": {
+                                                          "type": "minecraft:condition",
+                                                          "property": "minecraft:has_component",
+                                                          "component": "shellfish:blue_kong_crayfish",
+                                                          "on_true": {
+                                                            "type": "minecraft:model",
+                                                            "model": "shellfish:item/crayfish/blue_kong_crayfish"
+                                                          },
+                                                          "on_false": {
+                                                            "type": "minecraft:condition",
+                                                            "property": "minecraft:has_component",
+                                                            "component": "shellfish:diamond_crayfish",
+                                                            "on_true": {
+                                                              "type": "minecraft:model",
+                                                              "model": "shellfish:item/crayfish/diamond_crayfish"
+                                                            },
+                                                            "on_false": {
+                                                              "type": "minecraft:condition",
+                                                              "property": "minecraft:has_component",
+                                                              "component": "shellfish:golden_crayfish",
+                                                              "on_true": {
+                                                                "type": "minecraft:model",
+                                                                "model": "shellfish:item/crayfish/golden_crayfish"
+                                                              },
+                                                              "on_false": {
+                                                                "type": "minecraft:model",
+                                                                "model": "shellfish:item/crayfish"
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

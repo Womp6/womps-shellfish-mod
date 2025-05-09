@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "minecraft:bread",
+        "shellfish:cooked_crab",
+        "minecraft:egg"
+    ],
+    "result": {
+        "id": "shellfish:crab_cake",
+        "count": 1
+    }
+}

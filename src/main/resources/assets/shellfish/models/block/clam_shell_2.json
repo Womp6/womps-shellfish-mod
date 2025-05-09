@@ -1,0 +1,88 @@
+{
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "shellfish:block/clam_shell_2",
+		"particle": "shellfish:item/clam_shell"
+	},
+	"elements": [
+		{
+			"name": "main body 1",
+			"from": [5.5, 0, 5.75],
+			"to": [10.5, 1, 9.75],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 7.75]},
+			"faces": {
+				"north": {"uv": [2, 4.5, 4.5, 5], "texture": "#0"},
+				"east": {"uv": [0, 4.5, 2, 5], "texture": "#0"},
+				"south": {"uv": [6.5, 4.5, 9, 5], "texture": "#0"},
+				"west": {"uv": [4.5, 4.5, 6.5, 5], "texture": "#0"},
+				"up": {"uv": [4.5, 4.5, 2, 2.5], "texture": "#0"},
+				"down": {"uv": [7, 2.5, 4.5, 4.5], "texture": "#0"}
+			}
+		},
+		{
+			"name": "main body 2",
+			"from": [5.5, 1, 5.75],
+			"to": [10.5, 2, 9.75],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 7.75]},
+			"faces": {
+				"north": {"uv": [2, 2, 4.5, 2.5], "texture": "#0"},
+				"east": {"uv": [0, 2, 2, 2.5], "texture": "#0"},
+				"south": {"uv": [6.5, 2, 9, 2.5], "texture": "#0"},
+				"west": {"uv": [4.5, 2, 6.5, 2.5], "texture": "#0"},
+				"up": {"uv": [4.5, 2, 2, 0], "texture": "#0"},
+				"down": {"uv": [7, 0, 4.5, 2], "texture": "#0"}
+			}
+		},
+		{
+			"name": "body end",
+			"from": [6, 0.5, 9.75],
+			"to": [10, 1.5, 10.75],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 7.75]},
+			"faces": {
+				"north": {"uv": [6, 5.5, 8, 6], "texture": "#0"},
+				"east": {"uv": [5.5, 5.5, 6, 6], "texture": "#0"},
+				"south": {"uv": [8.5, 5.5, 10.5, 6], "texture": "#0"},
+				"west": {"uv": [8, 5.5, 8.5, 6], "texture": "#0"},
+				"up": {"uv": [8, 5.5, 6, 5], "texture": "#0"},
+				"down": {"uv": [10, 5, 8, 5.5], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [23, 0, 90],
+			"translation": [-7, -1, -1]
+		}
+	},
+	"groups": [
+		{
+			"name": "mainbody",
+			"origin": [8, 0, 8],
+			"color": 0,
+			"nbt": "{}",
+			"children": [
+				{
+					"name": "mainbody1",
+					"origin": [8, 0, 8],
+					"color": 0,
+					"nbt": "{}",
+					"children": [0]
+				},
+				{
+					"name": "mainbody2",
+					"origin": [8, 0, 8],
+					"color": 0,
+					"nbt": "{}",
+					"children": [1]
+				}
+			]
+		},
+		{
+			"name": "bodyend",
+			"origin": [8, 0, 8],
+			"color": 0,
+			"nbt": "{}",
+			"children": [2]
+		}
+	]
+}

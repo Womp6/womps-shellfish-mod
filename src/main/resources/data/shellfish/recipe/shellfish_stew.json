@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "#shellfish:cooked_shellfish",
+        "minecraft:carrot",
+        "minecraft:baked_potato",
+        "minecraft:red_mushroom",
+        "minecraft:bowl"
+    ],
+    "result": {
+        "id": "shellfish:shellfish_stew",
+        "count": 1
+    },
+    "group": "shellfish:shellfish_stew"
+}

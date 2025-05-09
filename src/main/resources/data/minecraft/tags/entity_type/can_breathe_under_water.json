@@ -1,0 +1,15 @@
+{
+    "replace": false,
+    "values": [
+        "shellfish:crayfish",
+        "shellfish:lobster",
+        "shellfish:crab",
+        "shellfish:shrimp",
+        "shellfish:sea_snail",
+        "shellfish:sea_urchin",
+        "shellfish:clam",
+        "shellfish:oyster",
+        "shellfish:mussel",
+        "shellfish:moss_ball"
+    ]
+}

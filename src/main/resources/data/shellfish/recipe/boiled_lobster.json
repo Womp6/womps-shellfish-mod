@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:smelting",
+    "ingredient": "shellfish:lobster_bucket",
+    "result": {
+      "id": "shellfish:boiled_lobster"
+    },
+    "experience": 0.7,
+    "cookingtime": 200
+  }

@@ -1,0 +1,7 @@
+{
+	"parent": "block/block",
+	"textures": {
+	  "0": "shellfish:block/blank16",
+	  "particle": "shellfish:block/water_lettuce"
+	}
+  }

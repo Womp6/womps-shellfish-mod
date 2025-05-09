@@ -1,0 +1,6 @@
+{
+    "type": "shellfish:rockweed",
+    "config": {
+      "probability": 0.5
+    }
+  }

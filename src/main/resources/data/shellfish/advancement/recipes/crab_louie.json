@@ -1,0 +1,35 @@
+{
+    "parent": "minecraft:recipes/root",
+    "criteria": {
+      "has_cooked_crab": {
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:cooked_crab"
+              ]
+            }
+          ]
+        },
+        "trigger": "minecraft:inventory_changed"
+      },
+      "has_the_recipe": {
+        "conditions": {
+          "recipe": "shellfish:crab_louie"
+        },
+        "trigger": "minecraft:recipe_unlocked"
+      }
+    },
+    "requirements": [
+      [
+        "has_cooked_crab",
+        "has_the_recipe"
+      ]
+    ],
+    "rewards": {
+      "recipes": [
+        "shellfish:crab_louie"
+      ]
+    },
+    "sends_telemetry_event": false
+  }

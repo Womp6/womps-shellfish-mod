@@ -1,0 +1,36 @@
+{
+    "type": "shellfish:shellfish_trap",
+    "bait": [
+        {
+            "item": "shellfish:water_lettuce"
+        }
+    ],
+    "outputs": [
+        {
+            "item": "shellfish:raw_lobster"
+        },
+        {
+            "item": "shellfish:raw_crab"
+        },
+        {
+            "item": "shellfish:raw_sea_snail"
+        },
+        {
+            "item": "shellfish:sea_urchin"
+        },
+        {
+            "item": "shellfish:raw_shrimp"
+        }
+    ],
+    "biomes": [
+        "minecraft:ocean",
+        "minecraft:deep_ocean",
+        "minecraft:warm_ocean",
+        "minecraft:lukewarm_ocean",
+        "minecraft:deep_lukewarm_ocean",
+        "minecraft:cold_ocean",
+        "minecraft:deep_cold_ocean",
+        "minecraft:frozen_ocean",
+        "minecraft:deep_frozen_ocean"
+    ]
+}

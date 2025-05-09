@@ -1,0 +1,11 @@
+{
+    "type": "minecraft:smoking",
+    "ingredient": {
+      "item": "shellfish:raw_mussel"
+    },
+    "result": {
+      "id": "shellfish:cooked_mussel"
+    },
+    "experience": 0.7,
+    "cookingtime": 100
+  }

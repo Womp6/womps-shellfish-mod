@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:cooked_clam"
+        },
+        {
+            "item": "minecraft:milk_bucket"
+        },
+        {
+            "item": "minecraft:baked_potato"
+        },
+        {
+            "item": "minecraft:bowl"
+        }
+    ],
+    "result": {
+        "id": "shellfish:clam_chowder",
+        "count": 1
+    }
+}

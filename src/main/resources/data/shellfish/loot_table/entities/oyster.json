@@ -1,0 +1,57 @@
+{
+    "type": "minecraft:entity",
+    "pools": [
+      {
+        "rolls": 1.0,
+        "bonus_rolls": 0.0,
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "shellfish:oyster_shell",
+            "conditions": [
+              {
+                "condition": "minecraft:random_chance",
+                "chance": 0.25
+              }
+            ]
+          },
+          {
+            "type": "minecraft:item",
+            "functions": [
+              {
+                "function": "minecraft:furnace_smelt",
+                "conditions": [
+                  {
+                    "condition": "minecraft:entity_properties",
+                    "predicate": {
+                      "flags": {
+                        "is_on_fire": true
+                      }
+                    },
+                    "entity": "this"
+                  }
+                ]
+              }
+            ],
+            "name": "shellfish:raw_oyster"
+          }
+        ]
+      },
+      {
+        "rolls": 1.0,
+        "bonus_rolls": 0.0,
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "shellfish:pearl",
+            "conditions": [
+              {
+                "condition": "minecraft:random_chance",
+                "chance": 0.01
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }

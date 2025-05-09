@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:raw_shrimp"
+        },
+        {
+            "item": "minecraft:stick"
+        },
+        {
+            "item": "shellfish:raw_shrimp"
+        },
+        {
+            "item": "shellfish:raw_shrimp"
+        }
+    ],
+    "result": {
+        "id": "shellfish:raw_shrimp_skewer",
+        "count": 1
+    }
+}

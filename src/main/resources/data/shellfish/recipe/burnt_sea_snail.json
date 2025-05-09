@@ -1,0 +1,10 @@
+{
+    "type": "minecraft:smelting",
+    "ingredient": "shellfish:cooked_sea_snail",
+    "result": {
+      "id": "shellfish:burnt_sea_snail"
+    },
+    "experience": 0.7,
+    "cookingtime": 200,
+    "group": "shellfish:burnt_sea_snail"
+  }

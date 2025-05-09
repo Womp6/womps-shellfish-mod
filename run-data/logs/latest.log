@@ -1,0 +1,43 @@
+[16Apr2025 01:05:40.354] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forge_userdev_data, --assetIndex, 18, --assetsDir, /Users/anthonyturcinovic/.gradle/caches/forge_gradle/assets, --gameDir, ., --mod, shellfish, --all, --output, /Users/anthonyturcinovic/Desktop/shellfish mod/shellfish forge 1.21.3/src/generated/resources, --existing, /Users/anthonyturcinovic/Desktop/shellfish mod/shellfish forge 1.21.3/src/main/resources, --mixin.config, shellfish.mixins.json]
+[16Apr2025 01:05:40.355] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Oracle Corporation Java HotSpot(TM) 64-Bit Server VM 21.0.5+9-LTS-jvmci-23.1-b48
+[16Apr2025 01:05:40.355] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.2.2 starting: java version 21.0.5 by Oracle Corporation; OS Mac OS X arch aarch64 version 15.0.1
+[16Apr2025 01:05:40.400] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forge_userdev_data
+[16Apr2025 01:05:40.451] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=jar:file:///Users/anthonyturcinovic/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.7/8ab114ac385e6dbdad5efafe28aba4df8120915f/mixin-0.8.7.jar!/ Service=ModLauncher Env=UNKNOWN
+[16Apr2025 01:05:40.930] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[16Apr2025 01:05:41.353] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[16Apr2025 01:05:41.355] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forge_userdev_data' with arguments [--gameDir, ., --assetsDir, /Users/anthonyturcinovic/.gradle/caches/forge_gradle/assets, --assetIndex, 18, --mod, shellfish, --all, --output, /Users/anthonyturcinovic/Desktop/shellfish mod/shellfish forge 1.21.3/src/generated/resources, --existing, /Users/anthonyturcinovic/Desktop/shellfish mod/shellfish forge 1.21.3/src/main/resources]
+[16Apr2025 01:05:41.365] [main/WARN] [mixin/]: Reference map 'shellfish.mixins.refmap.json' for shellfish.mixins.json could not be read. If this is a development environment you can ignore this message
+[16Apr2025 01:05:41.370] [main/WARN] [mixin/]: Mixin environment was unable to detect the current side, sided mixins will not be applied
+[16Apr2025 01:05:43.718] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 53.0.11, for MC 1.21.3 with MCP 20241025.112443
+[16Apr2025 01:05:43.718] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v53.0.11 Initialized
+[16Apr2025 01:05:43.733] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Opening jdk.naming.dns/com.sun.jndi.dns to java.naming
+[16Apr2025 01:05:45.832] [main/WARN] [net.minecraft.network.syncher.SynchedEntityData/]: defineId called for: class womp.shellfishmod.entity.parents.ShellfishEntity from interface womp.shellfishmod.entity.parents.Hungry
+[16Apr2025 01:05:45.832] [main/WARN] [net.minecraft.network.syncher.SynchedEntityData/]: defineId called for: class womp.shellfishmod.entity.parents.ShellfishEntity from interface womp.shellfishmod.entity.parents.EggLaying
+[16Apr2025 01:05:45.855] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [shellfish]
+[16Apr2025 01:05:45.883] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/Users/anthonyturcinovic/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.21.3-53.0.11_mapped_parchment_1.21-2024.07.28-1.21.3/forge-1.21.3-53.0.11_mapped_parchment_1.21-2024.07.28-1.21.3-recomp.jar%230!/assets/.mcassetsroot' uses unexpected schema
+[16Apr2025 01:05:45.883] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/Users/anthonyturcinovic/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.21.3-53.0.11_mapped_parchment_1.21-2024.07.28-1.21.3/forge-1.21.3-53.0.11_mapped_parchment_1.21-2024.07.28-1.21.3-recomp.jar%230!/data/.mcassetsroot' uses unexpected schema
+[16Apr2025 01:05:45.984] [main/WARN] [net.minecraft.server.packs.PathPackResources/]: Non [a-z0-9_.-] character in namespace .DS_Store in pack /Users/anthonyturcinovic/Desktop/shellfish mod/shellfish forge 1.21.3/src/main/resources, ignoring
+[16Apr2025 01:05:45.992] [main/WARN] [net.minecraft.server.packs.PathPackResources/]: Non [a-z0-9_.-] character in namespace .DS_Store in pack /Users/anthonyturcinovic/Desktop/shellfish mod/shellfish forge 1.21.3/src/main/resources, ignoring
+[16Apr2025 01:05:45.992] [main/WARN] [net.minecraft.server.packs.PathPackResources/]: Non [a-z0-9_.-] character in namespace .DS_Store in pack /Users/anthonyturcinovic/Desktop/shellfish mod/shellfish forge 1.21.3/src/main/resources, ignoring
+[16Apr2025 01:05:45.993] [main/WARN] [net.minecraft.server.packs.PathPackResources/]: Non [a-z0-9_.-] character in namespace .DS_Store in pack /Users/anthonyturcinovic/Desktop/shellfish mod/shellfish forge 1.21.3/src/main/resources, ignoring
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.994] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.995] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.995] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.995] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.995] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.995] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.995] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.995] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:45.995] [main/INFO] [womp.shellfishmod.ShellfishMod/]: sdads
+[16Apr2025 01:05:46.045] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 0 ms
+[16Apr2025 01:05:46.047] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 0, old count: 0, new count: 1, removed stale: 0, written: 0

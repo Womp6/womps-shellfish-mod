@@ -1,0 +1,6 @@
+{
+  "model": {
+      "type": "minecraft:model",
+      "model": "shellfish:block/shellfish_trap_block"
+  }
+}

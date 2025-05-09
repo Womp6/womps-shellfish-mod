@@ -1,0 +1,6 @@
+{
+    "model": {
+        "type": "minecraft:model",
+        "model": "shellfish:item/dead_oyster_block"
+    }
+}

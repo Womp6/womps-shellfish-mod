@@ -1,0 +1,11 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "shellfish:cooked_sea_snail",
+        "minecraft:bread"
+    ],
+    "result": {
+        "id": "shellfish:escargot",
+        "count": 1
+    }
+}

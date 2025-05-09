@@ -1,0 +1,27 @@
+{
+    "type": "shellfish:shellfish_trap",
+    "bait": "shellfish:eelgrass",
+    "outputs": [
+        {
+            "id": "shellfish:raw_crayfish"
+        },
+        {
+            "id": "shellfish:raw_crab"
+        },
+        {
+            "id": "shellfish:raw_shrimp"
+        },
+        {
+            "id": "shellfish:raw_sea_snail"
+        }
+    ],
+    "biomes": [
+        "minecraft:river",
+        "minecraft:swamp",
+        "minecraft:mangrove_swamp",
+        "biomesoplenty:bayou",
+        "biomesoplenty:floodplain",
+        "biomesoplenty:marsh",
+        "biomesoplenty:wetland"
+    ]
+}

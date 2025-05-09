@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "womp.shellfishmod.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [],
+	"client": [
+		"ShellfishGraphicsMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

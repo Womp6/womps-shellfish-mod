@@ -1,0 +1,35 @@
+{
+    "parent": "minecraft:recipes/root",
+    "criteria": {
+      "has_raw_shrimp_skewer": {
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:raw_shrimp_skewer"
+              ]
+            }
+          ]
+        },
+        "trigger": "minecraft:inventory_changed"
+      },
+      "has_the_recipe": {
+        "conditions": {
+          "recipe": "shellfish:cooked_shrimp_skewer3"
+        },
+        "trigger": "minecraft:recipe_unlocked"
+      }
+    },
+    "requirements": [
+      [
+        "has_raw_shrimp_skewer",
+        "has_the_recipe"
+      ]
+    ],
+    "rewards": {
+      "recipes": [
+        "shellfish:cooked_shrimp_skewer3"
+      ]
+    },
+    "sends_telemetry_event": false
+  }

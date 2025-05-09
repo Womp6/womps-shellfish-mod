@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:smoking",
+    "ingredient": "shellfish:shellfish_bait",
+    "result": {
+      "id": "shellfish:dried_shellfish_bait"
+    },
+    "experience": 0.7,
+    "cookingtime": 100
+  }

@@ -1,0 +1,12 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/dead_oyster_block"
+        },
+        {
+          "model": "shellfish:block/dead_oyster_block2"
+        }
+      ]
+    }
+  }

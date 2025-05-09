@@ -1,0 +1,26 @@
+package womp.shellfishmod.client.model;
+
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import womp.shellfishmod.client.states.ShellfishRenderState;
+import womp.shellfishmod.entity.MossBallEntity;
+
+public class MossBallModel extends EntityModel<ShellfishRenderState<MossBallEntity.Variant>> {
+
+    public MossBallModel(ModelPart root) {
+        super(root);
+    }
+
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        modelPartData.addOrReplaceChild("ball", CubeListBuilder.create().texOffs(0, 0).addBox(-2.5F, -5.0F, -2.5F, 5.0F, 5.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+        return LayerDefinition.create(modelData, 32, 32);
+    }
+
+    @Override
+    public void setupAnim(ShellfishRenderState<MossBallEntity.Variant> entity) {
+    }
+}

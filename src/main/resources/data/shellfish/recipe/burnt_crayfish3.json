@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:campfire_cooking",
+    "ingredient": "shellfish:cooked_crayfish",
+    "result": {
+      "id": "shellfish:burnt_crayfish"
+    },
+    "experience": 0.7,
+    "cookingtime": 200
+  }

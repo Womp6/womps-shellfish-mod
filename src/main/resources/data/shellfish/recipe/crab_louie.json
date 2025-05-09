@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "minecraft:beetroot",
+        "minecraft:egg",
+        "shellfish:cooked_crab",
+        "minecraft:milk_bucket",
+        "minecraft:bowl"
+    ],
+    "result": {
+        "id": "shellfish:crab_louie",
+        "count": 1
+    }
+}

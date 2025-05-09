@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:smelting",
+    "ingredient": "shellfish:raw_crayfish",
+    "result": {
+      "id": "shellfish:cooked_crayfish"
+    },
+    "experience": 0.7,
+    "cookingtime": 200
+  }

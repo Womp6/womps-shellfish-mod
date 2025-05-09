@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "minecraft:brown_mushroom",
+        "#shellfish:cooked_shellfish",
+        "minecraft:red_mushroom",
+        "minecraft:bowl"
+    ],
+    "result": {
+        "id": "shellfish:light_shellfish_stew",
+        "count": 1
+    },
+    "group": "shellfish:light_shellfish_stew"
+}

@@ -1,0 +1,15 @@
+{
+    "replace": false,
+    "values": [
+        "minecraft:seagrass",
+        "minecraft:kelp",
+        "shellfish:rockweed",
+        "shellfish:water_lettuce",
+        "shellfish:paddleweed",
+        "shellfish:eelgrass",
+        "shellfish:sea_lettuce",
+        "shellfish:moss_ball_bucket",
+        "shellfish:shellfish_bait",
+        "shellfish:dried_shellfish_bait"
+    ]
+}

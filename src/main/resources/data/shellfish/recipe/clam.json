@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:clam"
+        }
+    ],
+    "result": {
+        "id": "shellfish:raw_clam",
+        "count": 1
+    }
+}

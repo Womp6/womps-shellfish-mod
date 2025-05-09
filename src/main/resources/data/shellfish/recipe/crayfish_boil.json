@@ -1,0 +1,31 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:cooked_crayfish"
+        },
+        {
+            "item": "shellfish:cooked_crayfish"
+        },
+        {
+            "item": "shellfish:cooked_crayfish"
+        },
+        {
+            "item": "minecraft:carrot"
+        },
+        {
+            "item": "minecraft:beetroot"
+        },
+        {
+            "item": "minecraft:baked_potato"
+        },
+        {
+            "item": "minecraft:bowl"
+        }
+    ],
+    "result": {
+        "id": "shellfish:crayfish_boil",
+        "count": 1
+    },
+    "group": "shellfish:crayfish_boil"
+}

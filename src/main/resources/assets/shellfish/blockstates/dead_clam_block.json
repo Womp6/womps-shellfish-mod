@@ -1,0 +1,81 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/dead_clam_block_0"
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_1"
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_2"
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_3"
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_4"
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_0",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_1",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_2",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_3",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_4",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_0",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_1",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_2",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_3",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_4",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_0",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_1",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_2",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_3",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/dead_clam_block_4",
+          "y": 270
+        }
+      ]
+    }
+  }

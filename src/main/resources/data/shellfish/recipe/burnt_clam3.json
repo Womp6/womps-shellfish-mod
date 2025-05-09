@@ -1,0 +1,11 @@
+{
+    "type": "minecraft:campfire_cooking",
+    "ingredient": {
+      "item": "shellfish:cooked_clam"
+    },
+    "result": {
+      "id": "shellfish:burnt_clam"
+    },
+    "experience": 0.7,
+    "cookingtime": 200
+  }

@@ -1,0 +1,35 @@
+{
+    "parent": "minecraft:recipes/root",
+    "criteria": {
+      "has_raw_uni": {
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:raw_uni"
+              ]
+            }
+          ]
+        },
+        "trigger": "minecraft:inventory_changed"
+      },
+      "has_the_recipe": {
+        "conditions": {
+          "recipe": "shellfish:cooked_uni3"
+        },
+        "trigger": "minecraft:recipe_unlocked"
+      }
+    },
+    "requirements": [
+      [
+        "has_raw_uni",
+        "has_the_recipe"
+      ]
+    ],
+    "rewards": {
+      "recipes": [
+        "shellfish:cooked_uni3"
+      ]
+    },
+    "sends_telemetry_event": false
+  }

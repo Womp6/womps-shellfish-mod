@@ -1,0 +1,30 @@
+{
+    "type": "shellfish:shellfish_trap",
+    "bait": "minecraft:pufferfish",
+    "outputs": [
+        {
+            "id": "minecraft:stick"
+        },
+        {
+            "id": "minecraft:string"
+        },
+        {
+            "id": "shellfish:raw_crayfish"
+        },
+        {
+            "id": "shellfish:raw_crayfish"
+        },
+        {
+            "id": "shellfish:raw_crab"
+        }
+    ],
+    "biomes": [
+       "minecraft:river",
+       "minecraft:swamp",
+       "minecraft:mangrove_swamp",
+       "biomesoplenty:bayou",
+       "biomesoplenty:floodplain",
+       "biomesoplenty:marsh",
+       "biomesoplenty:wetland"
+    ]
+}

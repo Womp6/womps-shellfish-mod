@@ -1,0 +1,35 @@
+{
+    "parent": "minecraft:recipes/root",
+    "criteria": {
+      "has_raw_crayfish": {
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:raw_crayfish"
+              ]
+            }
+          ]
+        },
+        "trigger": "minecraft:inventory_changed"
+      },
+      "has_the_recipe": {
+        "conditions": {
+          "recipe": "shellfish:cooked_crayfish"
+        },
+        "trigger": "minecraft:recipe_unlocked"
+      }
+    },
+    "requirements": [
+      [
+        "has_raw_crayfish",
+        "has_the_recipe"
+      ]
+    ],
+    "rewards": {
+      "recipes": [
+        "shellfish:cooked_crayfish"
+      ]
+    },
+    "sends_telemetry_event": false
+  }

@@ -1,0 +1,12 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/eelgrass_big"
+        },
+        {
+          "model": "shellfish:block/eelgrass_little"
+        }
+      ]
+    }
+  }

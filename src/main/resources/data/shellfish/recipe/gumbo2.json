@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "shellfish:cooked_crayfish",
+        "shellfish:cooked_crayfish",
+        "minecraft:red_mushroom",
+        "minecraft:cooked_chicken",
+        "minecraft:carrot",
+        "minecraft:bowl"
+    ],
+    "result": {
+        "id": "shellfish:gumbo",
+        "count": 1
+    },
+    "group": "shellfish:gumbo"
+}

@@ -1,0 +1,438 @@
+{
+    "entity.crayfish.hurt": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.crayfish.hurt",
+        "sounds": [
+            {
+                "name": "shellfish:entity/hurt_0"
+            },
+            {
+                "name": "shellfish:entity/hurt_1"
+            }
+        ]
+    },
+    "entity.crayfish.attack": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.crayfish.attack",
+        "sounds": [
+            {
+                "name": "shellfish:entity/attack"
+            }
+        ]
+    },
+    "entity.crayfish.death": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.crayfish.die",
+        "sounds": [
+            {
+                "name": "shellfish:entity/death"
+            }
+        ]
+    },
+    "entity.lobster.hurt": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.lobster.hurt",
+        "sounds": [
+            {
+                "name": "shellfish:entity/lobster_hurt"
+            }
+        ]
+    },
+    "entity.lobster.attack": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.lobster.attack",
+        "sounds": [
+            {
+                "name": "shellfish:entity/lobster_attack"
+            }
+        ]
+    },
+    "entity.lobster.death": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.lobster.die",
+        "sounds": [
+            {
+                "name": "shellfish:entity/lobster_death"
+            }
+        ]
+    },
+    "entity.crab.hurt": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.crab.hurt",
+        "sounds": [
+            {
+                "name": "shellfish:entity/crab_hurt1"
+            },
+            {
+                "name": "shellfish:entity/crab_hurt2"
+            }
+        ]
+    },
+    "entity.crab.attack": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.crab.attack",
+        "sounds": [
+            {
+                "name": "shellfish:entity/crab_attack"
+            }
+        ]
+    },
+    "entity.crab.death": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.crab.die",
+        "sounds": [
+            {
+                "name": "shellfish:entity/crab_death"
+            }
+        ]
+    },
+    "entity.crayfish.hatch": {
+        "category": "block",
+        "subtitle": "subtitles.entity.crayfish.hatch",
+        "sounds": [
+            {
+                "name": "minecraft:block/frogspawn/hatch1",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch2",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch3",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch4",
+                "pitch": 1.2,
+                "volume": 0.6
+              }
+        ]
+    },
+    "entity.lobster.hatch": {
+        "category": "block",
+        "subtitle": "subtitles.entity.lobster.hatch",
+        "sounds": [
+            {
+                "name": "minecraft:block/frogspawn/hatch1",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch2",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch3",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch4",
+                "pitch": 1.2,
+                "volume": 0.6
+              }
+        ]
+    },
+    "entity.crab.hatch": {
+        "category": "block",
+        "subtitle": "subtitles.entity.crab.hatch",
+        "sounds": [
+            {
+                "name": "minecraft:block/frogspawn/hatch1",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch2",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch3",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch4",
+                "pitch": 1.2,
+                "volume": 0.6
+              }
+        ]
+    },
+    "entity.crayfish.lay_eggs": {
+      "sounds": [
+        {
+          "name": "minecraft:mob/frog/lay_spawn1",
+          "volume": 0.25
+        },
+        {
+          "name": "minecraft:mob/frog/lay_spawn2",
+          "volume": 0.25
+        }
+      ],
+      "subtitle": "subtitles.entity.crayfish.lay_eggs"
+    },
+    "entity.lobster.lay_eggs": {
+      "sounds": [
+        {
+          "name": "minecraft:mob/frog/lay_spawn1",
+          "volume": 0.25
+        },
+        {
+          "name": "minecraft:mob/frog/lay_spawn2",
+          "volume": 0.25
+        }
+      ],
+      "subtitle": "subtitles.entity.lobster.lay_eggs"
+    },
+    "entity.crab.lay_eggs": {
+      "sounds": [
+        {
+          "name": "minecraft:mob/frog/lay_spawn1",
+          "volume": 0.25
+        },
+        {
+          "name": "minecraft:mob/frog/lay_spawn2",
+          "volume": 0.25
+        }
+      ],
+      "subtitle": "subtitles.entity.crab.lay_eggs"
+    },
+    "entity.shrimp.hurt": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.shrimp.hurt",
+        "sounds": [
+            {
+                "name": "shellfish:entity/shrimp_hurt1"
+            },
+            {
+                "name": "shellfish:entity/shrimp_hurt2"
+            }
+        ]
+    },
+    "entity.shrimp.death": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.shrimp.die",
+        "sounds": [
+            {
+                "name": "shellfish:entity/shrimp_death"
+            }
+        ]
+    },
+    "entity.shrimp.hatch": {
+        "category": "block",
+        "subtitle": "subtitles.entity.shrimp.hatch",
+        "sounds": [
+            {
+                "name": "minecraft:block/frogspawn/hatch1",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch2",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch3",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch4",
+                "pitch": 1.2,
+                "volume": 0.6
+              }
+        ]
+    },
+    "entity.shrimp.lay_eggs": {
+      "sounds": [
+        {
+          "name": "minecraft:mob/frog/lay_spawn1",
+          "volume": 0.25
+        },
+        {
+          "name": "minecraft:mob/frog/lay_spawn2",
+          "volume": 0.25
+        }
+      ],
+      "subtitle": "subtitles.entity.shrimp.lay_eggs"
+    }
+    ,
+    "entity.sea_snail.hatch": {
+        "category": "block",
+        "subtitle": "subtitles.entity.sea_snail.hatch",
+        "sounds": [
+            {
+                "name": "minecraft:block/frogspawn/hatch1",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch2",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch3",
+                "pitch": 1.2,
+                "volume": 0.6
+              },
+              {
+                "name": "minecraft:block/frogspawn/hatch4",
+                "pitch": 1.2,
+                "volume": 0.6
+              }
+        ]
+    },
+    "entity.sea_snail.lay_eggs": {
+      "sounds": [
+        {
+          "name": "minecraft:mob/frog/lay_spawn1",
+          "volume": 0.25
+        },
+        {
+          "name": "minecraft:mob/frog/lay_spawn2",
+          "volume": 0.25
+        }
+      ],
+      "subtitle": "subtitles.entity.sea_snail.lay_eggs"
+    },
+    "entity.sea_snail.hurt": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.sea_snail.hurt",
+        "sounds": [
+            {
+                "name": "shellfish:entity/sea_snail_hurt1"
+            },
+            {
+                "name": "shellfish:entity/sea_snail_hurt2"
+            }
+        ]
+    },
+    "entity.sea_snail.death": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.sea_snail.die",
+        "sounds": [
+            {
+                "name": "shellfish:entity/sea_snail_death"
+            }
+        ]
+    },
+    "entity.sea_urchin.hurt": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.sea_urchin.hurt",
+        "sounds": [
+            {
+                "name": "shellfish:entity/sea_urchin_hurt1"
+            },
+            {
+                "name": "shellfish:entity/sea_urchin_hurt2"
+            }
+        ]
+    },
+    "entity.sea_urchin.death": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.sea_urchin.die",
+        "sounds": [
+            {
+                "name": "shellfish:entity/sea_urchin_death"
+            }
+        ]
+    },
+    "entity.clam.hurt": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.clam.hurt",
+        "sounds": [
+            {
+                "name": "shellfish:entity/clam_hurt1"
+            },
+            {
+                "name": "shellfish:entity/clam_hurt2"
+            }
+        ]
+    },
+    "entity.clam.death": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.clam.die",
+        "sounds": [
+            {
+                "name": "shellfish:entity/clam_death"
+            }
+        ]
+    },
+    "entity.oyster.hurt": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.oyster.hurt",
+        "sounds": [
+            {
+                "name": "shellfish:entity/clam_hurt1"
+            },
+            {
+                "name": "shellfish:entity/clam_hurt2"
+            }
+        ]
+    },
+    "entity.oyster.death": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.oyster.die",
+        "sounds": [
+            {
+                "name": "shellfish:entity/clam_death"
+            }
+        ]
+    },
+    "entity.mussel.hurt": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.mussel.hurt",
+        "sounds": [
+            {
+                "name": "shellfish:entity/clam_hurt1"
+            },
+            {
+                "name": "shellfish:entity/clam_hurt2"
+            }
+        ]
+    },
+    "entity.mussel.death": {
+        "category": "entity",
+        "subtitle": "subtitles.entity.mussel.die",
+        "sounds": [
+            {
+                "name": "shellfish:entity/clam_death"
+            }
+        ]
+    },
+    "entity.villager.work_trapper": {
+    "sounds": [
+      {
+        "name": "minecraft:block/chain/break1",
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:block/chain/break2",
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:block/chain/break3",
+        "volume": 0.5
+      },
+      {
+        "name": "minecraft:block/chain/break4",
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitles.entity.villager.shellfish_trapper.work"
+  },
+  "block.trap.repair": {
+    "sounds": [
+      "mob/irongolem/repair"
+    ],
+    "subtitle": "subtitles.block.trap.repair"
+  }
+}

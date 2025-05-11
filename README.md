@@ -8,6 +8,7 @@
 <p align="center">
   <a href = "https://www.curseforge.com/minecraft/mc-mods/fabric-api"><img alt=“Requires Fabric API” src="https://img.shields.io/badge/FABRIC_DEPENDENCIES-FABRIC_API-white?style=for-the-badge&logoColor=white&color=%23780a15"></a> 
   <a href = "https://www.curseforge.com/minecraft/mc-mods/womps-shellfish-mod"><img alt=“No Forge Dependencies” src="https://img.shields.io/badge/FORGE_DEPENDENCIES-NONE-white?style=for-the-badge&logoColor=white&color=%23780a15"></a>
+  <a href = "https://www.curseforge.com/minecraft/mc-mods/womps-shellfish-mod"><img alt=“No NeoForge Dependencies” src="https://img.shields.io/badge/NEOFORGE_DEPENDENCIES-NONE-white?style=for-the-badge&logoColor=white&color=%23780a15"></a>
 </p>
 
 ## Welcome To Womp's Shellfish Mod!

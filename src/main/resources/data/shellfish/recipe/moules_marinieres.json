@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:cooked_mussel"
+        },
+        {
+            "item": "shellfish:cooked_mussel"
+        },
+        {
+            "item": "shellfish:cooked_mussel"
+        },
+        {
+            "item": "minecraft:milk_bucket"
+        },
+        {
+            "item": "minecraft:bowl"
+        }
+    ],
+    "result": {
+        "id": "shellfish:moules_marinieres",
+        "count": 1
+    }
+}

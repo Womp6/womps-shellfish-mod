@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#T#",
+        "TPT",
+        "#T#"
+    ],
+    "key": {
+        "#": {
+            "item": "shellfish:raw_lobster"
+        },
+        "T": {
+            "item": "shellfish:cooked_lobster"
+        },
+        "P": {
+            "tag": "shellfish:fish_buckets"
+        }
+    },
+    "result": {
+        "id": "shellfish:lobster",
+        "count": 1
+    },
+    "group": "shellfish:lobster"
+}

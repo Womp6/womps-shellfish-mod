@@ -1,0 +1,18 @@
+{
+    "replace": false,
+    "values": [
+        "shellfish:crayfish_bucket",
+        "minecraft:cod_bucket",
+        "minecraft:salmon_bucket",
+        "minecraft:pufferfish_bucket",
+        "minecraft:tropical_fish_bucket",
+        "shellfish:lobster_bucket",
+        "shellfish:crab_bucket",
+        "shellfish:shrimp_bucket",
+        "shellfish:sea_snail_bucket",
+        "shellfish:sea_urchin_bucket",
+        "shellfish:clam_bucket",
+        "shellfish:oyster_bucket",
+        "shellfish:mussel_bucket"
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "replace": false,
+    "values": [
+        "minecraft:cod_bucket",
+        "minecraft:salmon_bucket",
+        "minecraft:tropical_fish_bucket",
+        "shellfish:shrimp_bucket",
+        "shellfish:sea_snail_bucket",
+        "shellfish:sea_urchin_bucket",
+        "minecraft:cod",
+        "minecraft:salmon",
+        "minecraft:tropical_fish",
+        "shellfish:raw_crab",
+        "shellfish:raw_shrimp",
+        "shellfish:raw_sea_snail",
+        "shellfish:raw_uni",
+        "shellfish:sea_urchin",
+        "shellfish:raw_clam",
+        "shellfish:raw_oyster",
+        "shellfish:raw_mussel",
+        "minecraft:seagrass",
+        "minecraft:kelp",
+        "shellfish:rockweed",
+        "shellfish:water_lettuce",
+        "shellfish:paddleweed",
+        "shellfish:eelgrass",
+        "shellfish:sea_lettuce",
+        "shellfish:shellfish_bait",
+        "shellfish:dried_shellfish_bait"
+    ]
+}

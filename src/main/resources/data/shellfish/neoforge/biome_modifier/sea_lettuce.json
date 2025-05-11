@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "minecraft:warm_ocean",
+    "minecraft:ocean",
+    "minecraft:lukewarm_ocean"
+  ],
+  "features": [
+    "shellfish:sea_lettuce"
+  ],
+  "step": "vegetal_decoration"
+}

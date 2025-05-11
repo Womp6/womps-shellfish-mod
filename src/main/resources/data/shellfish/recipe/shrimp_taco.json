@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:cooked_shrimp"
+        },
+        {
+            "item": "minecraft:bread"
+        },
+        {
+            "item": "shellfish:sea_lettuce"
+        },
+        {
+            "item": "minecraft:beetroot"
+        }
+    ],
+    "result": {
+        "id": "shellfish:shrimp_taco",
+        "count": 1
+    }
+}

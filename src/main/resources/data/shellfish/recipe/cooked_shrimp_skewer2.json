@@ -1,0 +1,11 @@
+{
+    "type": "minecraft:smoking",
+    "ingredient": {
+      "item": "shellfish:raw_shrimp_skewer"
+    },
+    "result": {
+      "id": "shellfish:cooked_shrimp_skewer"
+    },
+    "experience": 0.7,
+    "cookingtime": 100
+  }

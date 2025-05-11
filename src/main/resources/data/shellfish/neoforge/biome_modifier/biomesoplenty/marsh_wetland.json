@@ -1,0 +1,48 @@
+{
+  "type" : "neoforge:add_spawns",
+  "biomes": "#shellfish:marsh_wetland",
+  "spawners": [
+    {
+      "type": "shellfish:crayfish",
+      "weight": 10,
+      "minCount": 1,
+      "maxCount": 4
+    },
+    {
+      "type": "shellfish:crab",
+      "weight": 7,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "type": "shellfish:shrimp",
+      "weight": 7,
+      "minCount": 2,
+      "maxCount": 5
+    },
+    {
+      "type": "shellfish:sea_snail",
+      "weight": 9,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "type": "shellfish:clam",
+      "weight": 8,
+      "minCount": 1,
+      "maxCount": 4
+    },
+    {
+      "type": "shellfish:mussel",
+      "weight": 8,
+      "minCount": 1,
+      "maxCount": 5
+    },
+    {
+      "type": "shellfish:moss_ball",
+      "weight": 9,
+      "minCount": 1,
+      "maxCount": 6
+    }
+  ]
+}

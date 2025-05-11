@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "minecraft:beetroot",
+        "shellfish:cooked_lobster",
+        "minecraft:carrot",
+        "minecraft:bowl"
+    ],
+    "result": {
+        "id": "shellfish:lobster_salad",
+        "count": 1
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "type": "shellfish:shellfish_trap",
+    "bait": "minecraft:pufferfish",
+    "outputs": [
+        {
+            "id": "minecraft:stick"
+        },
+        {
+            "id": "minecraft:string"
+        },
+        {
+            "id": "minecraft:glass_bottle"
+        },
+        {
+            "id": "shellfish:raw_crab"
+        }
+    ],
+    "biomes": [
+       "minecraft:frozen_river" 
+    ]
+}

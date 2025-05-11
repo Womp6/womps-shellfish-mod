@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "#T#",
+        "TPT",
+        "#T#"
+    ],
+    "key": {
+        "#": "shellfish:raw_shrimp",
+        "T": "shellfish:cooked_shrimp",
+        "P": "#shellfish:fish_buckets"
+    },
+    "result": {
+        "id": "shellfish:shrimp",
+        "count": 1
+    },
+    "group": "shellfish:shrimp"
+}

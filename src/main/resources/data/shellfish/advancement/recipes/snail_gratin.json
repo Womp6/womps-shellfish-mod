@@ -1,0 +1,35 @@
+{
+    "parent": "minecraft:recipes/root",
+    "criteria": {
+      "has_cooked_sea_snail": {
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:cooked_sea_snail"
+              ]
+            }
+          ]
+        },
+        "trigger": "minecraft:inventory_changed"
+      },
+      "has_the_recipe": {
+        "conditions": {
+          "recipe": "shellfish:snail_gratin"
+        },
+        "trigger": "minecraft:recipe_unlocked"
+      }
+    },
+    "requirements": [
+      [
+        "has_cooked_sea_snail",
+        "has_the_recipe"
+      ]
+    ],
+    "rewards": {
+      "recipes": [
+        "shellfish:snail_gratin"
+      ]
+    },
+    "sends_telemetry_event": false
+  }

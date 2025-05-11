@@ -1,0 +1,54 @@
+{
+  "type" : "neoforge:add_spawns",
+  "biomes": "minecraft:deep_cold_ocean",
+  "spawners": [
+    {
+      "type": "shellfish:lobster",
+      "weight": 2,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "shellfish:crab",
+      "weight": 12,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "type": "shellfish:shrimp",
+      "weight": 15,
+      "minCount": 2,
+      "maxCount": 5
+    },
+    {
+      "type": "shellfish:sea_snail",
+      "weight": 12,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "type": "shellfish:sea_urchin",
+      "weight": 15,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "type": "shellfish:clam",
+      "weight": 7,
+      "minCount": 1,
+      "maxCount": 2
+    },
+    {
+      "type": "shellfish:oyster",
+      "weight": 7,
+      "minCount": 1,
+      "maxCount": 2
+    },
+    {
+      "type": "shellfish:mussel",
+      "weight": 9,
+      "minCount": 1,
+      "maxCount": 3
+    }
+  ]
+}

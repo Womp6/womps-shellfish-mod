@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "minecraft:ocean",
+    "minecraft:cold_ocean",
+    "minecraft:frozen_ocean"
+  ],
+  "features": [
+    "shellfish:rockweed"
+  ],
+  "step": "vegetal_decoration"
+}

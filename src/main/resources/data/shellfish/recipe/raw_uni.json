@@ -1,0 +1,10 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "shellfish:sea_urchin"
+    ],
+    "result": {
+        "id": "shellfish:raw_uni",
+        "count": 5
+    }
+}

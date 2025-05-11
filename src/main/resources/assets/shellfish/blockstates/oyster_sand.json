@@ -1,0 +1,12 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/oyster_sand1"
+        },
+        {
+          "model": "shellfish:block/oyster_sand2"
+        }
+      ]
+    } 
+  }

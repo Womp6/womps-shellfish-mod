@@ -1,0 +1,11 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "shellfish:raw_uni",
+        "minecraft:dried_kelp"
+    ],
+    "result": {
+        "id": "shellfish:uni_sushi",
+        "count": 1
+    }
+}

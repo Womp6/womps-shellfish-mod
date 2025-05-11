@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "minecraft:beach"
+  ],
+  "features": [
+    "shellfish:oyster_shell"
+  ],
+  "step": "vegetal_decoration"
+}

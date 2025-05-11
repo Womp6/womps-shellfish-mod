@@ -1,0 +1,15 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/dead_mussel_block"
+        },
+        {
+          "model": "shellfish:block/dead_mussel_block2"
+        },
+        {
+          "model": "shellfish:block/dead_mussel_block3"
+        }
+      ]
+    }
+  }

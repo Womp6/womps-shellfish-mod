@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        "#O#",
+        " # "
+    ],
+    "key": {
+        "#": "shellfish:pearl",
+        "O": "shellfish:shellfish_trap"
+    },
+    "result": {
+        "id": "shellfish:reinforced_trap",
+        "count": 1
+    }
+}

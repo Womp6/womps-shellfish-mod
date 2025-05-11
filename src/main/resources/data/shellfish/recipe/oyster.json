@@ -1,0 +1,10 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "shellfish:oyster"
+    ],
+    "result": {
+        "id": "shellfish:raw_oyster",
+        "count": 1
+    }
+}

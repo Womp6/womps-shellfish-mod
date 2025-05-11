@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "shellfish:cooked_shrimp",
+        "shellfish:cooked_shrimp",
+        "shellfish:cooked_shrimp",
+        "minecraft:bread",
+        "minecraft:bowl"
+    ],
+    "result": {
+        "id": "shellfish:shrimp_scampi",
+        "count": 1
+    }
+}

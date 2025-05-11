@@ -1,0 +1,19 @@
+{
+  "parent": "shellfish:block/cube_inner_faces",
+  "display": {
+      "firstperson_righthand": {
+          "rotation": [ 0, 135, 0 ],
+          "translation": [ 0, 0, 0 ],
+          "scale": [ 0.40, 0.40, 0.40 ]
+      }
+  },
+  "textures": {
+      "particle": "shellfish:block/shellfish_trap_block",
+      "down": "shellfish:block/shellfish_trap_block",
+      "up": "shellfish:block/shellfish_trap_block",
+      "north": "shellfish:block/shellfish_trap_front",
+      "east": "shellfish:block/shellfish_trap_block",
+      "south": "shellfish:block/shellfish_trap_front",
+      "west": "shellfish:block/shellfish_trap_block"
+  }
+}

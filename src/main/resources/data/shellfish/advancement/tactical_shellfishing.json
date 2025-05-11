@@ -1,0 +1,123 @@
+{
+    "display": {
+      "icon": {
+        "id": "shellfish:sea_urchin_bucket"
+      },
+      "title": {
+        "translate": "advancements.shellfish.tactical.title"
+      },
+      "description": {
+        "translate": "advancements.shellfish.tactical.desc"
+      },
+      "hidden": false,
+      "frame": "task",
+      "show_toast": true,
+      "announce_to_chat": true
+    },
+    "parent": "shellfish:shell_seeker",
+    "criteria": {
+      "crayfish": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:crayfish_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      },
+      "lobster": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:lobster_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      },
+      "crab": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:crab_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      },
+      "shrimp": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:shrimp_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      },
+      "sea_snail": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:sea_snail_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      },
+      "sea_urchin": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:sea_urchin_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      },
+      "clam": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:clam_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      },
+      "oyster": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:oyster_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      },
+      "mussel": {
+        "conditions": {
+          "item": {
+            "items": [
+              "shellfish:mussel_bucket"
+            ]
+          }
+        },
+        "trigger": "minecraft:filled_bucket"
+      }
+    },
+    "requirements": [
+    [
+      "crayfish",
+      "lobster",
+      "crab",
+      "shrimp",
+      "sea_snail",
+      "sea_urchin",
+      "clam",
+      "oyster",
+      "mussel"
+    ]
+  ]
+}

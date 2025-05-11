@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+      "all": "shellfish:block/oyster_sand1"
+    }
+  }

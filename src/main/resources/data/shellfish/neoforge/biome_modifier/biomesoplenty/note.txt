@@ -1,0 +1,2 @@
+The files in this folder allow for spawning in the biomes of Biomes O' Plenty (if it is in use)
+Permission to do this has been received by Forstride

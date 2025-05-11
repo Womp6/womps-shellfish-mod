@@ -1,0 +1,6 @@
+{
+    "parent": "block/tinted_cross",
+    "textures": {
+      "cross": "shellfish:block/sea_lettuce_small"
+    }
+  }

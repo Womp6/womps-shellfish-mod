@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:smelting",
+    "ingredient": {
+      "item": "shellfish:cooked_shrimp"
+    },
+    "result": {
+      "id": "shellfish:burnt_shrimp"
+    },
+    "experience": 0.7,
+    "cookingtime": 200,
+    "group": "shellfish:burnt_shrimp"
+  }

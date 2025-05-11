@@ -1,0 +1,30 @@
+{
+  "type" : "neoforge:add_spawns",
+  "biomes": "minecraft:swamp",
+  "spawners": [
+    {
+      "type": "shellfish:crayfish",
+      "weight": 12,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "type": "shellfish:crab",
+      "weight": 7,
+      "minCount": 1,
+      "maxCount": 2
+    },
+    {
+      "type": "shellfish:shrimp",
+      "weight": 9,
+      "minCount": 1,
+      "maxCount": 4
+    },
+    {
+      "type": "shellfish:sea_snail",
+      "weight": 6,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

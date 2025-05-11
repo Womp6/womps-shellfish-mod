@@ -1,0 +1,19 @@
+{
+    "parent": "shellfish:block/cube_inner_faces",
+    "display": {
+        "firstperson_righthand": {
+            "rotation": [ 0, 135, 0 ],
+            "translation": [ 0, 0, 0 ],
+            "scale": [ 0.40, 0.40, 0.40 ]
+        }
+    },
+    "textures": {
+        "particle": "shellfish:block/reinforced_trap_broken",
+        "down": "shellfish:block/reinforced_trap_broken2",
+        "up": "shellfish:block/reinforced_trap_broken2",
+        "north": "shellfish:block/reinforced_trap_front_broken",
+        "east": "shellfish:block/reinforced_trap_broken",
+        "south": "shellfish:block/reinforced_trap_front_broken",
+        "west": "shellfish:block/reinforced_trap_broken"
+    }
+  }

@@ -1,0 +1,18 @@
+{
+  "type" : "neoforge:add_spawns",
+  "biomes": "#shellfish:dune_beach",
+  "spawners": [
+    {
+      "type": "shellfish:crab",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 2
+    },
+    {
+      "type": "shellfish:sea_snail",
+      "weight": 4,
+      "minCount": 1,
+      "maxCount": 3
+    }
+  ]
+}

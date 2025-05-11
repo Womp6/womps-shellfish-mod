@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 4,
+    "discard_chance_on_air_exposure": 0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "shellfish:clay"
+        },
+        "state": {
+          "Name": "shellfish:clam_clay"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "shellfish:sand"
+        },
+        "state": {
+          "Name": "shellfish:clam_sand"
+        }
+      }
+    ]
+  }
+}

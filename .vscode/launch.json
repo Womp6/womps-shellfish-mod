@@ -1,0 +1,93 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - shellfish neoforge 1.21.4",
+        "order": 0
+      },
+      "projectName": "shellfish neoforge 1.21.4",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/build/moddev/clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/build/moddev/clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dshellfish%%/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "ClientData",
+      "presentation": {
+        "group": "Mod Development - shellfish neoforge 1.21.4",
+        "order": 1
+      },
+      "projectName": "shellfish neoforge 1.21.4",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/build/moddev/clientDataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/build/moddev/clientDataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dshellfish%%/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "GameTestServer",
+      "presentation": {
+        "group": "Mod Development - shellfish neoforge 1.21.4",
+        "order": 2
+      },
+      "projectName": "shellfish neoforge 1.21.4",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/build/moddev/gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/build/moddev/gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dshellfish%%/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - shellfish neoforge 1.21.4",
+        "order": 3
+      },
+      "projectName": "shellfish neoforge 1.21.4",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/build/moddev/serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/build/moddev/serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dshellfish%%/Users/anthonyturcinovic/Desktop/shellfish mod/shellfish neoforge 1.21.4/bin/main"
+      ],
+      "cwd": "${workspaceFolder}/run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "shellfish:raw_uni",
+        "minecraft:milk_bucket",
+        "minecraft:egg",
+        "minecraft:red_mushroom",
+        "minecraft:bowl"
+    ],
+    "result": {
+        "id": "shellfish:uni_chawanmushi",
+        "count": 1
+    },
+    "group": "shellfish:uni_chawanmushi"
+}

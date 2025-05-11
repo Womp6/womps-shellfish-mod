@@ -1,0 +1,36 @@
+{
+    "display": {
+      "icon": {
+        "id": "shellfish:pearl"
+      },
+      "title": {
+        "translate": "advancements.shellfish.real_searich.title"
+      },
+      "description": {
+        "translate": "advancements.shellfish.real_searich.desc"
+      },
+      "hidden": false,
+      "frame": "challenge",
+      "show_toast": true,
+      "announce_to_chat": true
+    },
+    "rewards": {
+        "experience": 150
+    },
+    "parent": "shellfish:seariches",
+    "criteria": {
+      "requirement": {
+        "trigger": "minecraft:inventory_changed",
+        "conditions": {
+          "items": [
+            {
+              "items": [
+                "shellfish:pearl"
+              ],
+              "count": 64
+            }
+          ]
+        }
+      }
+    }
+  }

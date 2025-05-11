@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        "shellfish:cooked_oyster",
+        "minecraft:bread",
+        "minecraft:milk_bucket",
+        "minecraft:egg"
+    ],
+    "result": {
+        "id": "shellfish:fried_oyster",
+        "count": 1
+    }
+}

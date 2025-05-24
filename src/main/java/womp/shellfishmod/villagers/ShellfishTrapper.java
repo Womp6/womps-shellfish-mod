@@ -31,7 +31,7 @@ public class ShellfishTrapper {
     public static final ResourceKey<PoiType> TRAP_KEY = registerPOIKey("trap_poi"), REINFORCED_KEY = registerPOIKey("reinforced_poi");
 
     public static final ResourceKey<VillagerProfession> SHELLFISH_TRAPPER_KEY = ShellfishTags.createKey("shellfish_trapper", Registries.VILLAGER_PROFESSION);
-    public static final RegistryObject<VillagerProfession> SHELLFISH_TRAPPER = VILLAGER_PROFESSIONS.register("shellfish_trapper", () -> new VillagerProfession(Component.translatable("entity.minecraft.villager.shellfish.shellfish_trapper"), x -> true, x -> (x.is(TRAP_KEY) || x.is(REINFORCED_KEY)), ImmutableSet.of(), ImmutableSet.of(), ShellfishSounds.WORK_TRAPPER.get()));
+    public static final RegistryObject<VillagerProfession> SHELLFISH_TRAPPER = VILLAGER_PROFESSIONS.register("shellfish_trapper", () -> new VillagerProfession(Component.translatable("entity.minecraft.villager.shellfish.shellfish_trapper"), x -> (x.is(TRAP_KEY) || x.is(REINFORCED_KEY)), x -> (x.is(TRAP_KEY) || x.is(REINFORCED_KEY)), ImmutableSet.of(), ImmutableSet.of(), ShellfishSounds.WORK_TRAPPER.get()));
 
 
     private static RegistryObject<PoiType> registerPOI(String name, Supplier<Block> block) {

@@ -33,7 +33,7 @@ public class ShellfishTrapper {
 
     public static final RegistryKey<VillagerProfession> SHELLFISH_TRAPPER_KEY = ShellfishUtil.createKey("shellfish_trapper", RegistryKeys.VILLAGER_PROFESSION);
     public static final VillagerProfession SHELLFISH_TRAPPER = Registry.register(Registries.VILLAGER_PROFESSION, SHELLFISH_TRAPPER_KEY,
-                new VillagerProfession(Text.translatable("entity.minecraft.villager.shellfish_trapper"), entry -> true, entry -> entry.matchesKey(TRAP_KEY) || entry.matchesKey(REINFORCED_KEY),
+                new VillagerProfession(Text.translatable("entity.minecraft.villager.shellfish_trapper"), entry -> entry.matchesKey(TRAP_KEY) || entry.matchesKey(REINFORCED_KEY), entry -> entry.matchesKey(TRAP_KEY) || entry.matchesKey(REINFORCED_KEY),
                         ImmutableSet.of(), ImmutableSet.of(), ShellfishSounds.WORK_TRAPPER));
 
     private static PointOfInterestType registerPOI(String name, Block block) {

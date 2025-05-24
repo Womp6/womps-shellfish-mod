@@ -17,6 +17,8 @@ out
 build
 .gradle
 
+.vscode
+
 # macos
 *.DS_Store
 

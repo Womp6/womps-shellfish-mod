@@ -36,7 +36,7 @@ Feel free to use this mod in modpacks on CurseForge!
     </tr>
     <tr>
       <td style="padding: 10px; text-align: left; border: none;"><strong>🎣 Shellfish Traps</strong></td>
-      <td style="padding: 10px; text-align: left; border: none;">A completely new way of fishing through 2 different shellfish traps that grant your trash, treasure, and most of all, shellfish!</td>
+      <td style="padding: 10px; text-align: left; border: none;">A completely new way of fishing through 2 different shellfish traps that grant you trash, treasure, and most of all, shellfish!</td>
     </tr>
     <tr>
       <td style="padding: 10px; text-align: left; border: none;"><strong>🌎 Worldgen</strong></td>

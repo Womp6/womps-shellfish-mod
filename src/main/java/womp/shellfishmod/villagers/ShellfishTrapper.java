@@ -27,7 +27,7 @@ public class ShellfishTrapper {
     public static final RegistryKey<PointOfInterestType> TRAP_KEY = registerPOIKey("trap_poi"), REINFORCED_KEY = registerPOIKey("reinforced_poi");
 
     public static final VillagerProfession SHELLFISH_TRAPPER = Registry.register(Registries.VILLAGER_PROFESSION, new Identifier("shellfish", "shellfish_trapper"),
-                new VillagerProfession("shellfish_trapper", entry -> true, entry -> entry.matchesKey(TRAP_KEY) || entry.matchesKey(REINFORCED_KEY),
+                new VillagerProfession("shellfish_trapper", entry -> entry.matchesKey(TRAP_KEY) || entry.matchesKey(REINFORCED_KEY), entry -> entry.matchesKey(TRAP_KEY) || entry.matchesKey(REINFORCED_KEY),
                         ImmutableSet.of(), ImmutableSet.of(), ShellfishSounds.WORK_TRAPPER));
 
     private static PointOfInterestType registerPOI(String name, Block block) {

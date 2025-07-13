@@ -22,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import womp.shellfishmod.entity.goals.ShellfishLayEggGoal;
@@ -30,11 +31,8 @@ import womp.shellfishmod.entity.goals.WanderInWaterGoal;
 import womp.shellfishmod.entity.goals.WanderToWaterGoal;
 import womp.shellfishmod.entity.parents.EggLaying;
 import womp.shellfishmod.entity.parents.ShellfishEntity;
-import womp.shellfishmod.registry.ShellfishBlocks;
-import womp.shellfishmod.registry.ShellfishItems;
+import womp.shellfishmod.registry.*;
 import womp.shellfishmod.util.ShellfishTags;
-import womp.shellfishmod.registry.ShellfishEntities;
-import womp.shellfishmod.registry.ShellfishSounds;
 
 import java.util.function.IntFunction;
 
@@ -98,7 +96,7 @@ public class SeaSnailEntity extends ShellfishEntity<SeaSnailEntity.Variant> impl
     public static boolean canSpawn(EntityType<SeaSnailEntity> type, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, RandomSource random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        if(pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER)) {
+        if(pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER) && ((world.getBiome(pos).is(ShellfishWorldgen.MARSH) || world.getBiome(pos).is(Biomes.SWAMP) || world.getBiome(pos).is(Biomes.MANGROVE_SWAMP)) ? isBrightEnoughToSpawn(world, pos) : true)) {
             return true;
         } else if(pos.getY() >= i-6 && SeaSnailEntity.isBrightEnoughToSpawn(world, pos)) {
             return world.getBlockState(pos.below()).is(ShellfishTags.Blocks.SHELLFISH_SPAWNABLE_ON);
@@ -185,6 +183,7 @@ public class SeaSnailEntity extends ShellfishEntity<SeaSnailEntity.Variant> impl
             entityData = new SeaSnailData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 

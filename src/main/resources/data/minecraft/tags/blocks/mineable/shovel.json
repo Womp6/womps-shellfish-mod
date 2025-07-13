@@ -3,9 +3,12 @@
     "values": [
         "shellfish:clam_clay",
         "shellfish:clam_sand",
+        "shellfish:clam_mud",
         "shellfish:oyster_clay",
         "shellfish:oyster_sand",
+        "shellfish:oyster_mud",
         "shellfish:mussel_clay",
-        "shellfish:mussel_sand"
+        "shellfish:mussel_sand",
+        "shellfish:mussel_mud"
     ]
 }

@@ -1,5 +1,6 @@
 package womp.shellfishmod.registry;
 
+import net.minecraft.block.ComposterBlock;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
@@ -158,7 +159,7 @@ public class ShellfishItems {
     }
 
     private static Item registerBucket(String name, EntityType<? extends MobEntity> type) {
-        return registerItem(name, new ShellfishBucketItem(() -> type, Fluids.WATER, Items.BUCKET, false, new Item.Settings().maxCount(1).recipeRemainder(Items.BUCKET)));
+        return registerItem(name, new ShellfishBucketItem(() -> type, Fluids.WATER, Items.BUCKET, true, new Item.Settings().maxCount(1).recipeRemainder(Items.BUCKET)));
     }
 
     private static Item registerEgg(String name, EntityType<? extends MobEntity> type, int primaryColor, int secondaryColor) {
@@ -169,5 +170,21 @@ public class ShellfishItems {
         return Registry.register(Registries.ITEM, new Identifier("shellfish", name), factory);
     }
 
-    public static void register() {}
+    public static void register() {
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.ROCKWEED.asItem(), 0.3f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.WATER_LETTUCE.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.EELGRASS.asItem(), 0.3f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.PADDLEWEED.asItem(), 0.3f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.SEA_LETTUCE.asItem(), 0.3f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.CATTAIL.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.TALL_CATTAIL.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.PICKERELWEED.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.TALL_PICKERELWEED.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.WHEATGRASS.asItem(), 0.5f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.TALL_WHEATGRASS.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.WATER_GRASS.asItem(), 0.3f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(ShellfishBlocks.TALL_WATER_GRASS.asItem(), 0.5f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(SHELLFISH_BAIT, 0.3f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(DRIED_SHELLFISH_BAIT, 0.3f);
+    }
 }

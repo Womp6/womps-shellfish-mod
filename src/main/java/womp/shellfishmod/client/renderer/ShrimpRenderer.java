@@ -24,15 +24,11 @@ public class ShrimpRenderer extends MobEntityRenderer<ShrimpEntity, ShrimpModel>
     @Override
     public void render(ShrimpEntity entity, float entityYaw, float partialTick, MatrixStack poseStack,
                        VertexConsumerProvider bufferSource, int packedLight) {
-        if(entity.isBaby()) {
-            poseStack.scale(0.3f, 0.3f, 0.3f);
-            }
-        if(entity.isAlive() && !entity.isBaby()) {
-            poseStack.scale(0.65f, 0.65f, 0.65f);
-        }
-        if(!entity.isAlive() && !entity.isBaby()) {
-            poseStack.scale(0.65f, 0.65f, 0.65f);
-        }
+
+        int variant = entity.getVariant().getIndex();                  
+        if (variant == 0) entity.scale(poseStack, 0.75f, 0.6f, 0.5f);
+        else if (variant == 2) entity.scale(poseStack, 1.0f, 0.75f, 0.5f);
+        else entity.scale(poseStack, 0.45f, 0.25f);
 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }

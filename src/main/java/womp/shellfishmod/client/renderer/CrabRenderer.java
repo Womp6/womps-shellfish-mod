@@ -24,15 +24,13 @@ public class CrabRenderer extends MobEntityRenderer<CrabEntity, CrabModel> {
     @Override
     public void render(CrabEntity entity, float entityYaw, float partialTick, MatrixStack poseStack,
                        VertexConsumerProvider bufferSource, int packedLight) {
-            if(entity.isBaby()) {
-                poseStack.scale(0.4f, 0.4f, 0.4f);
-            }
-            if(entity.isAlive() && !entity.isBaby()) {
-                poseStack.scale(0.75f, 0.75f, 0.75f);
-            }
-            if(!entity.isAlive() && !entity.isBaby()) {
-                poseStack.scale(0.75f, 0.75f, 0.75f);
-            }
+        int variant = entity.getVariant().getIndex();                  
+        if (variant == 0) entity.scale(poseStack, 1.1f, 0.85f, 0.4f);
+        else if (variant == 1) entity.scale(poseStack, 0.6f, 0.35f);
+        else if (variant == 2) entity.scale(poseStack, 0.85f, 0.6f, 0.4f);
+        else if (variant == 3) entity.scale(poseStack, 1f, 0.75f, 0.4f);
+        else if (variant == 4) entity.scale(poseStack, 0.5f, 0.3f);
+        else entity.scale(poseStack, 0.75f, 0.4f);
 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }

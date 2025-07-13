@@ -22,26 +22,14 @@ public class MusselRenderer extends MobRenderer<MusselEntity, MusselModel> {
     }
 
     @Override
-    public void render(MusselEntity livingEntity, float f, float g, PoseStack matrixStack,
+    public void render(MusselEntity entity, float f, float g, PoseStack poseStack,
                        MultiBufferSource vertexConsumerProvider, int i) {
-        int variant = livingEntity.getVariant();
+        int variant = entity.getVariant();
+        if (variant == 1) entity.scale(poseStack, 0.95f, 0.65f, 0.4f);
+        else if (variant == 2) entity.scale(poseStack, 1.1f, 0.8f, 0.4f);
+        else if (variant == 3) entity.scale(poseStack, 0.55f, 0.3f);
+        else entity.scale(poseStack, 0.8f, 0.4f);
 
-        if(livingEntity.isBaby() && livingEntity.getVariant() != 3) {
-            matrixStack.scale(0.4f, 0.4f, 0.4f);
-        }
-
-        if(!livingEntity.isBaby() && livingEntity.getVariant() != 3) {
-            matrixStack.scale(0.8f, 0.8f, 0.8f);
-        }
-
-        if(livingEntity.isBaby() && livingEntity.getVariant() == 3) {
-            matrixStack.scale(0.35f, 0.35f, 0.35f);
-        }
-
-        if(variant == 3 && !livingEntity.isBaby()) {
-            matrixStack.scale(0.55f, 0.55f, 0.55f);
-        }
-
-        super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
+        super.render(entity, f, g, poseStack, vertexConsumerProvider, i);
     }
 }

@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_features",
+  "biomes": [
+    "minecraft:beach"
+  ],
+  "features": [
+    "shellfish:beached_driftwood"
+  ],
+  "step": "vegetal_decoration"
+}

@@ -133,6 +133,16 @@ public abstract class AbstractTrapBlock extends BaseEntityBlock implements Simpl
         return InteractionResult.sidedSuccess(world.isClientSide());
     }
 
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return (BlockState)state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    }
+
 
     @Nullable
     @Override

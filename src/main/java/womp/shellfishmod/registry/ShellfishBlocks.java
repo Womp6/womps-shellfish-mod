@@ -2,10 +2,7 @@ package womp.shellfishmod.registry;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FallingBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -19,10 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import womp.shellfishmod.ShellfishMod;
 import womp.shellfishmod.blocks.*;
-import womp.shellfishmod.blocks.parents.DeadBlock;
-import womp.shellfishmod.blocks.parents.EggsBlock;
-import womp.shellfishmod.blocks.parents.ShellBlock;
-import womp.shellfishmod.blocks.parents.ShellfishPlantBlock;
+import womp.shellfishmod.blocks.parents.*;
 import womp.shellfishmod.blocks.traps.ReinforcedTrapBlock;
 import womp.shellfishmod.blocks.traps.ReinforcedTrapBlockEntity;
 import womp.shellfishmod.blocks.traps.ShellfishTrapBlock;
@@ -50,13 +44,16 @@ public class ShellfishBlocks {
     public static final RegistryObject<Block> OYSTER_SHELL = registerShell("oyster_shell", Block.box(4.5, 0, 4.5, 11.5, 2, 11.5));
     public static final RegistryObject<Block> MUSSEL_SHELL = registerShell("mussel_shell", Block.box(4.5, 0, 4.5, 11.5, 2, 11.5));
 
-    //CLAY AND SAND BLOCKS
-    public static final RegistryObject<Block> CLAM_CLAY = registerCS("clam_clay", true);
-    public static final RegistryObject<Block> CLAM_SAND = registerCS("clam_sand", false);
-    public static final RegistryObject<Block> OYSTER_CLAY = registerCS("oyster_clay", true);
-    public static final RegistryObject<Block> OYSTER_SAND = registerCS("oyster_sand", false);
-    public static final RegistryObject<Block> MUSSEL_CLAY = registerCS("mussel_clay", true);
-    public static final RegistryObject<Block> MUSSEL_SAND = registerCS("mussel_sand", false);
+    //CLAY, SAND, AND MUD BLOCKS
+    public static final RegistryObject<Block> CLAM_CLAY = registerCSM("clam_clay", 1);
+    public static final RegistryObject<Block> CLAM_SAND = registerCSM("clam_sand", 2);
+    public static final RegistryObject<Block> CLAM_MUD = registerCSM("clam_mud", 3);
+    public static final RegistryObject<Block> OYSTER_CLAY = registerCSM("oyster_clay", 1);
+    public static final RegistryObject<Block> OYSTER_SAND = registerCSM("oyster_sand", 2);
+    public static final RegistryObject<Block> OYSTER_MUD = registerCSM("oyster_mud", 3);
+    public static final RegistryObject<Block> MUSSEL_CLAY = registerCSM("mussel_clay", 1);
+    public static final RegistryObject<Block> MUSSEL_SAND = registerCSM("mussel_sand", 2);
+    public static final RegistryObject<Block> MUSSEL_MUD = registerCSM("mussel_mud", 3);
 
     //DEAD BLOCKS
     public static final RegistryObject<Block> DEAD_CLAM_BLOCK = registerDeadBlock("dead_clam_block", Block.box(5.5, 0, 5.75, 10.5, 3.5, 10.75), true);
@@ -70,6 +67,15 @@ public class ShellfishBlocks {
     public static final RegistryObject<Block> PADDLEWEED = registerPlant("paddleweed", Block.box(1.0, 0.0, 1.0, 15.0, 5.0, 15.0));
     public static final RegistryObject<Block> EELGRASS = registerPlant("eelgrass", Block.box(4.0, 0.0, 4.0, 12.0, 11.0, 12.0));
     public static final RegistryObject<Block> SEA_LETTUCE = BLOCKS.register("sea_lettuce", () -> new SeaLettuceBlock(settingsPlant(ROCKWEED.get(), false)));
+    public static final RegistryObject<Block> TALL_CATTAIL = registerTallPlant("tall_cattail", false, false);
+    public static final RegistryObject<Block> CATTAIL = registerLandWaterPlant("cattail", false, TALL_CATTAIL, false);
+    public static final RegistryObject<Block> TALL_PICKERELWEED = registerTallPlant("tall_pickerelweed", false, false);
+    public static final RegistryObject<Block> PICKERELWEED = registerLandWaterPlant("pickerelweed", false, TALL_PICKERELWEED, false);
+    public static final RegistryObject<Block> TALL_WHEATGRASS = registerTallPlant("tall_wheatgrass", false, true);
+    public static final RegistryObject<Block> WHEATGRASS = registerLandWaterPlant("wheatgrass", false, TALL_WHEATGRASS, true);
+    public static final RegistryObject<Block> TALL_WATER_GRASS = registerTallPlant("tall_water_grass", true, true);
+    public static final RegistryObject<Block> WATER_GRASS = registerLandWaterPlant("water_grass", true, TALL_WATER_GRASS, true);
+    public static final RegistryObject<Block> DRIFTWOOD = BLOCKS.register("driftwood", () -> new DriftwoodBlock(BlockBehaviour.Properties.of().strength(0.2f).sound(SoundType.WOOD).ignitedByLava().pushReaction(PushReaction.DESTROY)));
 
     //SHELLFISH TRAPS
     public static final RegistryObject<Block> SHELLFISH_TRAP_BLOCK = BLOCKS.register("shellfish_trap_block", () -> new ShellfishTrapBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).strength(5.0f, 6.0f).sound(SoundType.CHAIN).noOcclusion()));
@@ -81,6 +87,16 @@ public class ShellfishBlocks {
     public static final RegistryObject<BlockEntityType<ShellfishTrapBlockEntity>> SHELLFISH_TRAP_BLOCK_ENTITY = registerBE("shellfish_trap_block_entity", ShellfishTrapBlockEntity::new, SHELLFISH_TRAP_BLOCK);
     public static final RegistryObject<BlockEntityType<ReinforcedTrapBlockEntity>> REINFORCED_TRAP_BLOCK_ENTITY = registerBE("reinforced_trap_block_entity", ReinforcedTrapBlockEntity::new, REINFORCED_TRAP);
 
+    //BARREL FOR TRAPPER HUT
+    public static final RegistryObject<Block> BARREL_NO_POI = BLOCKS.register("barrel", () -> new BarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL)));
+
+    private static RegistryObject<Block> registerLandWaterPlant(String name, boolean waterOnly, Supplier<? extends Block> tallPlantBlock, boolean grass) {
+        return BLOCKS.register(name, () -> grass ? new ShellfishLandPlantBlock(BlockBehaviour.Properties.copy(Blocks.GRASS), waterOnly, tallPlantBlock) : new WaterFlowerBlock(BlockBehaviour.Properties.copy(Blocks.DANDELION), tallPlantBlock));
+    }
+
+    private static RegistryObject<Block> registerTallPlant(String name, boolean waterOnly, boolean grass) {
+        return BLOCKS.register(name, () -> new ShellfishLandTallBlock(BlockBehaviour.Properties.copy(grass ? Blocks.GRASS : Blocks.DANDELION), waterOnly));
+    }
 
     private static RegistryObject<Block> registerPlant(String name, VoxelShape shape) {
         return BLOCKS.register(name, () -> new ShellfishPlantBlock(settingsPlant(Blocks.SEAGRASS, true), shape, ShellfishPlantBlock.PlaceType.MUD_SAND));
@@ -97,8 +113,8 @@ public class ShellfishBlocks {
         return BLOCKS.register(name, () -> new DeadBlock(sets, shape, solid));
     }
 
-    private static RegistryObject<Block> registerCS(String name, boolean clay) {
-        return BLOCKS.register(name, () -> clay ? new Block(BlockBehaviour.Properties.copy(Blocks.CLAY).instrument(NoteBlockInstrument.FLUTE).strength(0.6F).sound(SoundType.GRAVEL)) : new FallingBlock(BlockBehaviour.Properties.copy(Blocks.SAND).instrument(NoteBlockInstrument.SNARE).strength(0.5F).sound(SoundType.SAND)));
+    private static RegistryObject<Block> registerCSM(String name, int type) {
+        return BLOCKS.register(name, () -> type == 1 ? new Block(BlockBehaviour.Properties.copy(Blocks.CLAY).instrument(NoteBlockInstrument.FLUTE).strength(0.6F).sound(SoundType.GRAVEL)) : type == 2 ? new FallingBlock(BlockBehaviour.Properties.copy(Blocks.SAND).instrument(NoteBlockInstrument.SNARE).strength(0.5F).sound(SoundType.SAND)) : new MudBlock(BlockBehaviour.Properties.copy(Blocks.MUD)));
     }
 
     private static RegistryObject<Block> registerShell(String name, VoxelShape shape) {
@@ -132,6 +148,14 @@ public class ShellfishBlocks {
             PADDLEWEED.get(),
             EELGRASS.get(),
             SEA_LETTUCE.get(),
+            WATER_GRASS.get(),
+            TALL_WATER_GRASS.get(),
+            CATTAIL.get(),
+            TALL_CATTAIL.get(),
+            PICKERELWEED.get(),
+            TALL_PICKERELWEED.get(),
+            WHEATGRASS.get(),
+            TALL_WHEATGRASS.get(),
             SHELLFISH_TRAP_BLOCK.get(),
             REINFORCED_TRAP.get()
         };

@@ -24,7 +24,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import womp.shellfishmod.registry.ShellfishBlocks;
 import womp.shellfishmod.registry.ShellfishItems;
 
 public class TallRockWeedBlock extends DoublePlantBlock implements LiquidBlockContainer {

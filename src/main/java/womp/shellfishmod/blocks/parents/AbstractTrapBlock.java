@@ -1,9 +1,7 @@
 package womp.shellfishmod.blocks.parents;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -12,7 +10,6 @@ import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
@@ -32,11 +29,9 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import womp.shellfishmod.registry.ShellfishComponents;
 import womp.shellfishmod.registry.ShellfishSounds;
 
 import java.util.HashMap;
-import java.util.List;
 
 // Block entity code made using help from Kaupenjoe
 public abstract class AbstractTrapBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
@@ -119,6 +114,16 @@ public abstract class AbstractTrapBlock extends BaseEntityBlock implements Simpl
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return (BlockState)state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+    
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
 

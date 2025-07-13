@@ -1,5 +1,6 @@
 package womp.shellfishmod.client.model;
 
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -11,8 +12,15 @@ import womp.shellfishmod.entity.animations.ShellfishAnimations;
 // The new model (1.2+) was revised with help from underapreciatedpigeon
 public class ShrimpModel extends EntityModel<ShellfishRenderState<ShrimpEntity.Variant>> {
 
+    private final KeyframeAnimation swimAnimation;
+    private final KeyframeAnimation moveAnimation;
+    private final KeyframeAnimation idleAnimation;
+
     public ShrimpModel(ModelPart root) {
         super(root);
+        this.swimAnimation = ShellfishAnimations.SHRIMP_SWIM.bake(root);
+        this.moveAnimation = ShellfishAnimations.SHRIMP_WALK.bake(root);
+        this.idleAnimation = ShellfishAnimations.SHRIMP_IDLE.bake(root);
     }
 
     public static LayerDefinition getTexturedModelData() {
@@ -108,9 +116,9 @@ public class ShrimpModel extends EntityModel<ShellfishRenderState<ShrimpEntity.V
     public void setupAnim(ShellfishRenderState<ShrimpEntity.Variant> entity) {
         super.setupAnim(entity);
         if (!entity.isInWater) {
-            this.animateWalk(ShellfishAnimations.SHRIMP_WALK, entity.walkAnimationPos, entity.walkAnimationSpeed, 12, 15f);
+            this.swimAnimation.applyWalk(entity.walkAnimationPos, entity.walkAnimationSpeed, 12, 15f);
         }
-        this.animate(entity.idleAnimationState, ShellfishAnimations.SHRIMP_IDLE, entity.ageInTicks, 1f);
-        this.animate(entity.moveAnimationState, ShellfishAnimations.SHRIMP_SWIM, entity.ageInTicks, 2f);
+        this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 2f);
+        this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
     }
 }

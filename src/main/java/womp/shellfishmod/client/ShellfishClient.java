@@ -1,17 +1,21 @@
 package womp.shellfishmod.client;
 
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import womp.shellfishmod.ShellfishMod;
 import womp.shellfishmod.client.model.*;
@@ -22,7 +26,7 @@ import womp.shellfishmod.registry.ShellfishEntities;
 import womp.shellfishmod.registry.ShellfishScreens;
 import womp.shellfishmod.screens.ShellfishTrapScreen;
 
-@EventBusSubscriber(modid = ShellfishMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = ShellfishMod.MOD_ID, value = Dist.CLIENT)
 public class ShellfishClient {
 
     public static final ModelLayerLocation OYSTER_MODEL = registerML("oyster", "oyster_model");
@@ -73,12 +77,22 @@ public class ShellfishClient {
     }
 
     @SubscribeEvent
+    public static void addBlockColors(RegisterColorHandlersEvent.Block event) {
+        event.register((state, world, pos, tintIndex) -> {
+            if (world != null && pos != null) {
+                return BiomeColors.getAverageGrassColor(world, pos);
+            }
+            return GrassColor.getDefaultColor();
+        }, ShellfishBlocks.WATER_GRASS.get(), ShellfishBlocks.TALL_WATER_GRASS.get());
+    }
+
+    @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         registerClientEntityRenders();
 
-        ItemBlockRenderTypes.setRenderLayer(ShellfishBlocks.SEA_SNAIL_EGGS_BLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ShellfishBlocks.SEA_SNAIL_EGGS_BLOCK.get(), ChunkSectionLayer.TRANSLUCENT);
         for (Block block : ShellfishBlocks.getCutouts()) {
-            ItemBlockRenderTypes.setRenderLayer(block, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(block, ChunkSectionLayer.CUTOUT);
         }
 
         BlockEntityRenderers.register(ShellfishBlocks.WATER_LETTUCE_BLOCK_ENTITY.get(), WaterLettuceRenderer::new);

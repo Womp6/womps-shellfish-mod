@@ -1,5 +1,6 @@
 package womp.shellfishmod.client.model;
 
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -10,8 +11,13 @@ import womp.shellfishmod.entity.animations.ShellfishAnimations;
 
 public class OysterModel extends EntityModel<ShellfishRenderState<OysterEntity.Variant>> {
 
+    private final KeyframeAnimation moveAnimation;
+    private final KeyframeAnimation idleAnimation;
+
     public OysterModel(ModelPart root) {
         super(root);
+        this.moveAnimation = ShellfishAnimations.OYSTER_MOVE.bake(root);
+        this.idleAnimation = ShellfishAnimations.OYSTER_IDLE.bake(root);
     }
 
     public static LayerDefinition getTexturedModelData() {
@@ -32,7 +38,7 @@ public class OysterModel extends EntityModel<ShellfishRenderState<OysterEntity.V
     @Override
     public void setupAnim(ShellfishRenderState<OysterEntity.Variant> entity) {
         super.setupAnim(entity);
-        this.animate(entity.moveAnimationState, ShellfishAnimations.OYSTER_MOVE, entity.ageInTicks, 1f);
-        this.animate(entity.idleAnimationState, ShellfishAnimations.OYSTER_IDLE, entity.ageInTicks, 1f);
+        this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 1f);
+        this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
     }
 }

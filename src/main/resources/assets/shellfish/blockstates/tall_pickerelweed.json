@@ -1,0 +1,10 @@
+{
+    "variants": {
+      "half=lower": {
+        "model": "shellfish:block/tall_pickerelweed_bottom"
+      },
+      "half=upper": {
+        "model": "shellfish:block/tall_pickerelweed_top"
+      }
+    }
+  }

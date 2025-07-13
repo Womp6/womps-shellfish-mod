@@ -30,6 +30,8 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -145,27 +147,25 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
-        NonNullList<ItemStack> bait = NonNullList.withSize(1, ItemStack.EMPTY);
-        super.saveAdditional(nbt, provider);
-        nbt.put("inventory", itemHandler.serializeNBT(provider));
+    public void saveAdditional(ValueOutput nbt) {
+        super.saveAdditional(nbt);
+        NonNullList<ItemStack> items = NonNullList.withSize(itemHandler.getSlots(), ItemStack.EMPTY);
+        for (int i = 0; i < items.size(); i++) items.set(i, itemHandler.getStackInSlot(i));
         nbt.putInt("progress", progress);
         nbt.putInt("durability", durability);
         nbt.putBoolean("canTrap", canTrap);
-        bait.set(0, itemHandler.getStackInSlot(BAIT_SLOT));
-        ContainerHelper.saveAllItems(nbt, bait, provider);
+        ContainerHelper.saveAllItems(nbt, items);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
-        NonNullList<ItemStack> bait = NonNullList.withSize(1, ItemStack.EMPTY);
-        itemHandler.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
+    public void loadAdditional(ValueInput nbt) {
+        NonNullList<ItemStack> items = NonNullList.withSize(itemHandler.getSlots(), ItemStack.EMPTY);
         progress = nbt.getIntOr("progress", 0);
         durability = nbt.getIntOr("durability", maxDurability);
         canTrap = nbt.getBooleanOr("canTrap", true);
-        ContainerHelper.loadAllItems(nbt, bait, provider);
-        itemHandler.setStackInSlot(BAIT_SLOT, bait.getFirst());
-        super.loadAdditional(nbt, provider);
+        ContainerHelper.loadAllItems(nbt, items);
+        for (int i = 0; i < items.size(); i++) itemHandler.setStackInSlot(i, items.get(i));
+        super.loadAdditional(nbt);
     }
 
     public void tick(Level world, BlockPos pos, BlockState state) {
@@ -509,8 +509,8 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag nbt) {
-        nbt.remove("durability");
+    public void removeComponentsFromTag(ValueOutput nbt) {
+        nbt.discard("durability");
     }
 
 
@@ -527,8 +527,8 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider wrapper) {
-        super.onDataPacket(net, pkt, wrapper);
+    public void onDataPacket(Connection net, ValueInput valueInput) {
+        super.onDataPacket(net, valueInput);
     }
 
     @Override

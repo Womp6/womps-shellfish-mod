@@ -7,6 +7,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import womp.shellfishmod.blocks.parents.ShellfishPlantBlockEntity3d;
 import womp.shellfishmod.registry.ShellfishBlocks;
@@ -47,8 +49,8 @@ public class SeaLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider wrapper) {
-        super.loadAdditional(tag, wrapper);
+    public void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
         this.large = tag.getBooleanOr("large", false);
         this.animationStartTime = tag.getLongOr("AnimationStartTime", 0);
 
@@ -61,8 +63,8 @@ public class SeaLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider wrapper) {
-        super.saveAdditional(tag, wrapper);
+    public void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("large", this.large);
         tag.putLong("AnimationStartTime", animationStartTime);
     }

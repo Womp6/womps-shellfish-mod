@@ -25,12 +25,11 @@ public class ShrimpRenderer extends MobRenderer<ShrimpEntity, ShellfishRenderSta
     @Override
     public void render(ShellfishRenderState<ShrimpEntity.Variant> entity, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        if(entity.isBaby) {
-            poseStack.scale(0.3f, 0.3f, 0.3f);
-        }
-        if(!entity.isBaby) {
-            poseStack.scale(0.65f, 0.65f, 0.65f);
-        }
+
+        int variant = entity.variant.getIndex();
+        if (variant == 0) entity.shellfish.scale(poseStack, 0.75f, 0.6f, 0.5f);
+        else if (variant == 2) entity.shellfish.scale(poseStack, 1.0f, 0.75f, 0.5f);
+        else entity.shellfish.scale(poseStack, 0.45f, 0.25f);
 
         super.render(entity, poseStack, bufferSource, packedLight);
     }
@@ -44,6 +43,7 @@ public class ShrimpRenderer extends MobRenderer<ShrimpEntity, ShellfishRenderSta
     public void extractRenderState(ShrimpEntity shrimp, ShellfishRenderState<ShrimpEntity.Variant> shrimpState, float f) {
         super.extractRenderState(shrimp, shrimpState, f);
         shrimpState.variant = shrimp.getVariant();
+        shrimpState.shellfish = shrimp;
         shrimpState.idleAnimationState.copyFrom(shrimp.idleAnimationState);
         shrimpState.moveAnimationState.copyFrom(shrimp.swimAnimationState);
     }

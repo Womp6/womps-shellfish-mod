@@ -1,5 +1,6 @@
 package womp.shellfishmod.client.model;
 
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -17,6 +18,8 @@ public class SeaSnailModel extends EntityModel<ShellfishRenderState<SeaSnailEnti
     public final ModelPart shell3;
     public final ModelPart shell4;
     public final ModelPart shell5;
+    private final KeyframeAnimation moveAnimation;
+    private final KeyframeAnimation idleAnimation;
 
     public SeaSnailModel(ModelPart root) {
         super(root);
@@ -27,6 +30,8 @@ public class SeaSnailModel extends EntityModel<ShellfishRenderState<SeaSnailEnti
         this.shell3 = shell.getChild("shell3");
         this.shell4 = shell.getChild("shell4");
         this.shell5 = shell.getChild("shell5");
+        this.moveAnimation = ShellfishAnimations.SNAIL_MOVE.bake(root);
+        this.idleAnimation = ShellfishAnimations.SNAIL_HIDE.bake(root);
     }
 
     public static LayerDefinition getTexturedModelData() {
@@ -89,7 +94,7 @@ public class SeaSnailModel extends EntityModel<ShellfishRenderState<SeaSnailEnti
     @Override
     public void setupAnim(ShellfishRenderState<SeaSnailEntity.Variant> entity) {
         super.setupAnim(entity);
-        this.animate(entity.moveAnimationState, ShellfishAnimations.SNAIL_MOVE, entity.ageInTicks, 1f);
-        this.animate(entity.idleAnimationState, ShellfishAnimations.SNAIL_HIDE, entity.ageInTicks, 1f);
+        this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 1f);
+        this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
     }
 }

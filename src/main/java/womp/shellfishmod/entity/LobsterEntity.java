@@ -14,7 +14,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Monster;
@@ -53,7 +52,7 @@ public class LobsterEntity extends ShellfishEntity<LobsterEntity.Variant> implem
         this.goalSelector.addGoal(1, new ShellfishMateGoal(this, 1));
         this.goalSelector.addGoal(1, new FollowParentGoal(this, 1.1));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1d, true));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new HungryRevengeGoal(this, new Class[0]));
         this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, AbstractFish.class, false));
         this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, Drowned.class, false));
         this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, CrabEntity.class, false));
@@ -155,6 +154,7 @@ public class LobsterEntity extends ShellfishEntity<LobsterEntity.Variant> implem
             entityData = new LobsterData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 

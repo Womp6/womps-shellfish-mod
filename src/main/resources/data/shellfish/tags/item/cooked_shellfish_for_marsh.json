@@ -1,0 +1,11 @@
+{
+    "replace": false,
+    "values": [
+        "shellfish:cooked_crayfish",
+        "shellfish:cooked_crab",
+        "shellfish:cooked_shrimp",
+        "shellfish:cooked_sea_snail",
+        "shellfish:cooked_clam",
+        "shellfish:cooked_mussel"
+    ]
+}

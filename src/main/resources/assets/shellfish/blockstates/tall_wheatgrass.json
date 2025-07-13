@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "shellfish:block/tall_wheatgrass_bottom"
+    },
+    "half=upper": [
+        {
+          "model": "shellfish:block/tall_wheatgrass_top"
+        },
+        {
+          "model": "shellfish:block/tall_wheatgrass_top2"
+        }
+    ]
+  }
+}

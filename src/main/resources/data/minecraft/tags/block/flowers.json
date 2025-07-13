@@ -1,0 +1,9 @@
+{
+    "replace": false,
+    "values": [
+        "shellfish:cattail",
+        "shellfish:tall_cattail",
+        "shellfish:pickerelweed",
+        "shellfish:tall_pickerelweed"
+    ]
+}

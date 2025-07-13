@@ -45,7 +45,7 @@ public class CrayfishEntity extends ShellfishEntity implements Hungry, EggLaying
         this.goalSelector.addGoal(1, new ShellfishMateGoal(this, 1));
         this.goalSelector.addGoal(1, new FollowParentGoal(this, 1.1));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1d, true));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new HungryRevengeGoal(this, new Class[0]));
         this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, Tadpole.class, false));
         this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, AbstractFish.class, false));
         this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, Turtle.class, 10, true, true, LivingEntity::isBaby));

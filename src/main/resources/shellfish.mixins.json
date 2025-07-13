@@ -3,7 +3,13 @@
   "minVersion": "0.8",
   "package": "womp.shellfishmod.mixins",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [],
+  "mixins": [
+    "AddMarshMixin",
+    "SpawnerMixin",
+    "InfoInvoker",
+    "DensityGetter",
+    "DensityCapGetter"
+  ],
   "client": [
     "ShellfishGraphicsMixin"
   ],

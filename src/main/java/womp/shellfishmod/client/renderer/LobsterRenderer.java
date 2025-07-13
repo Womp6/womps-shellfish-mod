@@ -24,9 +24,10 @@ public class LobsterRenderer extends MobRenderer<LobsterEntity, LobsterModel> {
     @Override
     public void render(LobsterEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        if(entity.isBaby()) {
-            poseStack.scale(0.5f, 0.5f, 0.5f);
-        }
+        int variant = entity.getVariant();
+        if (variant == 0) entity.scale(poseStack, 1.2f, 0.8f, 0.5f);
+        else if (variant == 4) entity.scale(poseStack, 1.3f, 0.85f, 0.5f);
+        else entity.scale(poseStack, 1f, 0.5f);
 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }

@@ -25,6 +25,18 @@
       "weight": 6,
       "minCount": 1,
       "maxCount": 1
+    },
+    {
+      "type": "shellfish:clam",
+      "weight": 9,
+      "minCount": 1,
+      "maxCount": 4
+    },
+    {
+      "type": "shellfish:mussel",
+      "weight": 10,
+      "minCount": 1,
+      "maxCount": 6
     }
   ]
 }

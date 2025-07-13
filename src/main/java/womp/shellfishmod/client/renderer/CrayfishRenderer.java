@@ -26,17 +26,15 @@ public class CrayfishRenderer extends MobRenderer<CrayfishEntity, CrayfishModel>
     }
 
     @Override
-    public void render(CrayfishEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
-                       MultiBufferSource bufferSource, int packedLight) {
-        if(entity.isBaby()) {
-            poseStack.scale(0.4f, 0.4f, 0.4f);
-        }
-        if(entity.isAlive() && !entity.isBaby()) {
-            poseStack.scale(0.75f, 0.75f, 0.75f);
-        }
-        if(!entity.isAlive() && !entity.isBaby()) {
-            poseStack.scale(0.75f, 0.75f, 0.75f);
-        }
+    public void render(CrayfishEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+
+        int variant = entity.getVariant();
+        if (variant == 11 || variant == 17 || variant == 25) entity.scale(poseStack, 0.9f, 0.65f, 0.4f);
+        else if (variant == 18) entity.scale(poseStack, 1.4f, 0.9f, 0.4f);
+        else if (variant == 10 || variant == 21) entity.scale(poseStack, 0.4f, 0.2f);
+        else if (variant == 14 || variant == 19) entity.scale(poseStack, 0.6f, 0.3f);
+        else if (variant == 23) entity.scale(poseStack, 0.5f, 0.25f);
+        else entity.scale(poseStack, 0.75f, 0.4f);
 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }

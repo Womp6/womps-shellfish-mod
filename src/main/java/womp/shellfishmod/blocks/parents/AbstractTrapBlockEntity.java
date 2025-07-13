@@ -133,15 +133,17 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
 
     @Override
     public void markDirty() {
-        if (!world.isClient) {
-            PacketByteBuf data = PacketByteBufs.create();
-            data.writeInt(inventory.size());
-            for (int i = 0; i < inventory.size(); i++) {
-                data.writeItemStack(inventory.get(i));
-            }
-            data.writeBlockPos(getPos());
-            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)world, getPos())) {
-                ServerPlayNetworking.send(player, ShellfishMessages.ITEM_SYNC, data);
+        if (world != null) {
+            if (!world.isClient) {
+                PacketByteBuf data = PacketByteBufs.create();
+                data.writeInt(inventory.size());
+                for (int i = 0; i < inventory.size(); i++) {
+                    data.writeItemStack(inventory.get(i));
+                }
+                data.writeBlockPos(getPos());
+                for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)world, getPos())) {
+                    ServerPlayNetworking.send(player, ShellfishMessages.ITEM_SYNC, data);
+                }
             }
         }
         super.markDirty();

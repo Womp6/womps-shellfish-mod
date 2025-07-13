@@ -1,0 +1,12 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/oyster_mud1"
+        },
+        {
+          "model": "shellfish:block/oyster_mud2"
+        }
+      ]
+    } 
+  }

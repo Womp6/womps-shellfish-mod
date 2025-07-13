@@ -1,17 +1,20 @@
 package womp.shellfishmod.client;
 
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import womp.shellfishmod.ShellfishMod;
 import womp.shellfishmod.client.model.*;
@@ -70,6 +73,16 @@ public class ShellfishClient {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ShellfishScreens.SHELLFISH_TRAP_SCREEN_HANDLER.get(), ShellfishTrapScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void addBlockColors(RegisterColorHandlersEvent.Block event) {
+        event.register((state, world, pos, tintIndex) -> {
+            if (world != null && pos != null) {
+                return BiomeColors.getAverageGrassColor(world, pos);
+            }
+            return GrassColor.getDefaultColor();
+        }, ShellfishBlocks.WATER_GRASS.get(), ShellfishBlocks.TALL_WATER_GRASS.get());
     }
 
     @SubscribeEvent

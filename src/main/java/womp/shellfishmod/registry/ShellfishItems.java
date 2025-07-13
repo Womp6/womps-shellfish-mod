@@ -21,6 +21,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import womp.shellfishmod.ShellfishMod;
 import womp.shellfishmod.item.CrayfishItem;
+import womp.shellfishmod.item.DriftwoodItem;
 import womp.shellfishmod.item.ShellfishBucketItem;
 import womp.shellfishmod.util.ShellfishTags;
 
@@ -45,10 +46,13 @@ public class ShellfishItems {
 
     public static final DeferredItem<Item> CLAM_CLAY = registerBI("clam_clay", ShellfishBlocks.CLAM_CLAY);
     public static final DeferredItem<Item> CLAM_SAND = registerBI("clam_sand", ShellfishBlocks.CLAM_SAND);
+    public static final DeferredItem<Item> CLAM_MUD = registerBI("clam_mud", ShellfishBlocks.CLAM_MUD);
     public static final DeferredItem<Item> OYSTER_CLAY = registerBI("oyster_clay", ShellfishBlocks.OYSTER_CLAY);
     public static final DeferredItem<Item> OYSTER_SAND = registerBI("oyster_sand", ShellfishBlocks.OYSTER_SAND);
+    public static final DeferredItem<Item> OYSTER_MUD = registerBI("oyster_mud", ShellfishBlocks.OYSTER_MUD);
     public static final DeferredItem<Item> MUSSEL_CLAY = registerBI("mussel_clay", ShellfishBlocks.MUSSEL_CLAY);
     public static final DeferredItem<Item> MUSSEL_SAND = registerBI("mussel_sand", ShellfishBlocks.MUSSEL_SAND);
+    public static final DeferredItem<Item> MUSSEL_MUD = registerBI("mussel_mud", ShellfishBlocks.MUSSEL_MUD);
 
     public static final DeferredItem<Item> DEAD_CLAM = registerBI("dead_clam_block", ShellfishBlocks.DEAD_CLAM_BLOCK);
     public static final DeferredItem<Item> DEAD_OYSTER = registerBI("dead_oyster_block", ShellfishBlocks.DEAD_OYSTER_BLOCK);
@@ -59,6 +63,15 @@ public class ShellfishItems {
     public static final DeferredItem<Item> PADDLEWEED = registerBI("paddleweed", ShellfishBlocks.PADDLEWEED);
     public static final DeferredItem<Item> EELGRASS = registerBI("eelgrass", ShellfishBlocks.EELGRASS);
     public static final DeferredItem<Item> SEA_LETTUCE = ITEMS.register("sea_lettuce", () -> new BlockItem(ShellfishBlocks.SEA_LETTUCE.get(), new Item.Properties().food(new FoodProperties.Builder().nutrition(1).saturationModifier((float) 0.1).build()).setId(ShellfishTags.createKey("sea_lettuce", Registries.ITEM))));
+    public static final DeferredItem<Item> TALL_CATTAIL = registerTallBI("tall_cattail", ShellfishBlocks.TALL_CATTAIL);
+    public static final DeferredItem<Item> CATTAIL = registerBI("cattail", ShellfishBlocks.CATTAIL);
+    public static final DeferredItem<Item> TALL_PICKERELWEED = registerTallBI("tall_pickerelweed", ShellfishBlocks.TALL_PICKERELWEED);
+    public static final DeferredItem<Item> PICKERELWEED = registerBI("pickerelweed", ShellfishBlocks.PICKERELWEED);
+    public static final DeferredItem<Item> TALL_WHEATGRASS = registerTallBI("tall_wheatgrass", ShellfishBlocks.TALL_WHEATGRASS);
+    public static final DeferredItem<Item> WHEATGRASS = registerBI("wheatgrass", ShellfishBlocks.WHEATGRASS);
+    public static final DeferredItem<Item> TALL_WATER_GRASS = registerTallBI("tall_water_grass", ShellfishBlocks.TALL_WATER_GRASS);
+    public static final DeferredItem<Item> WATER_GRASS = registerBI("water_grass", ShellfishBlocks.WATER_GRASS);
+    public static final DeferredItem<Item> DRIFTWOOD = ITEMS.register("driftwood", () -> new DriftwoodItem(ShellfishBlocks.DRIFTWOOD.get(), new Item.Properties().setId(ShellfishTags.createKey("driftwood", Registries.ITEM)), 200));
 
     public static final DeferredItem<Item> SHELLFISH_TRAP = registerBI("shellfish_trap", ShellfishBlocks.SHELLFISH_TRAP_BLOCK);
     public static final DeferredItem<Item> REINFORCED_TRAP = registerBI("reinforced_trap", ShellfishBlocks.REINFORCED_TRAP);
@@ -213,7 +226,7 @@ public class ShellfishItems {
     }
 
     private static DeferredItem<Item> registerBucket(String name, Supplier<? extends EntityType<? extends Mob>> type) {
-        return ITEMS.register(name, () -> new ShellfishBucketItem(type, Fluids.WATER, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET).setId(ShellfishTags.createKey(name, Registries.ITEM))));
+        return ITEMS.register(name, () -> new ShellfishBucketItem(type, Fluids.WATER, Items.BUCKET, true, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET).setId(ShellfishTags.createKey(name, Registries.ITEM))));
     }
 
     private static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> type, int primaryColor, int secondaryColor) {
@@ -222,6 +235,10 @@ public class ShellfishItems {
 
     private static DeferredItem<Item> registerBI(String name, Supplier<? extends Block> block) {
         return ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().setId(ShellfishTags.createKey(name, Registries.ITEM))));
+    }
+
+    private static DeferredItem<Item> registerTallBI(String name, Supplier<? extends Block> block) {
+        return ITEMS.register(name, () -> new DoubleHighBlockItem(block.get(), new Item.Properties().setId(ShellfishTags.createKey(name, Registries.ITEM))));
     }
 
     public static void register(IEventBus bus) {

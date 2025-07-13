@@ -7,7 +7,7 @@ import womp.shellfishmod.registry.ShellfishBlocks;
 
 public class WaterLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
 
-    public boolean swamp;
+    public boolean swamp, marsh;
 
     public WaterLettuceBlockEntity(BlockPos pos, BlockState state) {
         super(ShellfishBlocks.WATER_LETTUCE_BLOCK_ENTITY.get(), pos, state);
@@ -17,6 +17,10 @@ public class WaterLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
         return swamp;
     }
 
+    public boolean isMarsh() {
+        return marsh;
+    }
+
     public void setSwamp(boolean swamp) {
         this.swamp = swamp;
 
@@ -24,6 +28,17 @@ public class WaterLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
             BlockState state = level.getBlockState(worldPosition);
             if (state.getBlock() instanceof WaterLettuceBlock) {
                 level.setBlockAndUpdate(worldPosition, state.setValue(WaterLettuceBlock.IS_SWAMP, this.swamp));
+            }
+        }
+    }
+
+    public void setMarsh(boolean marsh) {
+        this.marsh = marsh;
+
+        if (level != null) {
+            BlockState state = level.getBlockState(worldPosition);
+            if (state.getBlock() instanceof WaterLettuceBlock) {
+                level.setBlockAndUpdate(worldPosition, state.setValue(WaterLettuceBlock.IS_MARSH, this.marsh));
             }
         }
     }

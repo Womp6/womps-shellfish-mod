@@ -1,0 +1,69 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "feature": {
+      "feature": {
+        "type": "minecraft:simple_block",
+        "config": {
+          "to_place": {
+            "type": "minecraft:weighted_state_provider",
+            "entries": [
+              {
+                "data": {
+                  "Name": "shellfish:driftwood",
+                  "Properties": {
+                    "facing": "north",
+                    "on_water": "false"
+                  }
+                },
+                "weight": 1
+              },
+              {
+                "data": {
+                  "Name": "shellfish:driftwood",
+                  "Properties": {
+                    "facing": "east",
+                    "on_water": "false"
+                  }
+                },
+                "weight": 1
+              },
+              {
+                "data": {
+                  "Name": "shellfish:driftwood",
+                  "Properties": {
+                    "facing": "south",
+                    "on_water": "false"
+                  }
+                },
+                "weight": 1
+              },
+              {
+                "data": {
+                  "Name": "shellfish:driftwood",
+                  "Properties": {
+                    "facing": "west",
+                    "on_water": "false"
+                  }
+                },
+                "weight": 1
+              }
+            ]
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:matching_blocks",
+            "blocks": "minecraft:air"
+          }
+        }
+      ]
+    },
+    "tries": 1,
+    "xz_spread": 1,
+    "y_spread": 0
+  }
+}

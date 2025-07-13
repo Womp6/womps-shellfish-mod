@@ -6,12 +6,10 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PlaceOnWaterBlockItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -19,6 +17,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import womp.shellfishmod.ShellfishMod;
+import womp.shellfishmod.item.DriftwoodItem;
 import womp.shellfishmod.item.ReturnOnConsumptionItem;
 import womp.shellfishmod.item.ShellfishBucketItem;
 
@@ -43,10 +42,13 @@ public class ShellfishItems {
 
     public static final RegistryObject<Item> CLAM_CLAY = registerBI("clam_clay", ShellfishBlocks.CLAM_CLAY);
     public static final RegistryObject<Item> CLAM_SAND = registerBI("clam_sand", ShellfishBlocks.CLAM_SAND);
+    public static final RegistryObject<Item> CLAM_MUD = registerBI("clam_mud", ShellfishBlocks.CLAM_MUD);
     public static final RegistryObject<Item> OYSTER_CLAY = registerBI("oyster_clay", ShellfishBlocks.OYSTER_CLAY);
     public static final RegistryObject<Item> OYSTER_SAND = registerBI("oyster_sand", ShellfishBlocks.OYSTER_SAND);
+    public static final RegistryObject<Item> OYSTER_MUD = registerBI("oyster_mud", ShellfishBlocks.OYSTER_MUD);
     public static final RegistryObject<Item> MUSSEL_CLAY = registerBI("mussel_clay", ShellfishBlocks.MUSSEL_CLAY);
     public static final RegistryObject<Item> MUSSEL_SAND = registerBI("mussel_sand", ShellfishBlocks.MUSSEL_SAND);
+    public static final RegistryObject<Item> MUSSEL_MUD = registerBI("mussel_mud", ShellfishBlocks.MUSSEL_MUD);
 
     public static final RegistryObject<Item> DEAD_CLAM = registerBI("dead_clam_block", ShellfishBlocks.DEAD_CLAM_BLOCK);
     public static final RegistryObject<Item> DEAD_OYSTER = registerBI("dead_oyster_block", ShellfishBlocks.DEAD_OYSTER_BLOCK);
@@ -57,6 +59,15 @@ public class ShellfishItems {
     public static final RegistryObject<Item> PADDLEWEED = registerBI("paddleweed", ShellfishBlocks.PADDLEWEED);
     public static final RegistryObject<Item> EELGRASS = registerBI("eelgrass", ShellfishBlocks.EELGRASS);
     public static final RegistryObject<Item> SEA_LETTUCE = ITEMS.register("sea_lettuce", () -> new BlockItem(ShellfishBlocks.SEA_LETTUCE.get(), new Item.Properties().food(new FoodProperties.Builder().nutrition(1).saturationMod((float) 0.1).build())));
+    public static final RegistryObject<Item> TALL_CATTAIL = registerTallBI("tall_cattail", ShellfishBlocks.TALL_CATTAIL);
+    public static final RegistryObject<Item> CATTAIL = registerBI("cattail", ShellfishBlocks.CATTAIL);
+    public static final RegistryObject<Item> TALL_PICKERELWEED = registerTallBI("tall_pickerelweed", ShellfishBlocks.TALL_PICKERELWEED);
+    public static final RegistryObject<Item> PICKERELWEED = registerBI("pickerelweed", ShellfishBlocks.PICKERELWEED);
+    public static final RegistryObject<Item> TALL_WHEATGRASS = registerTallBI("tall_wheatgrass", ShellfishBlocks.TALL_WHEATGRASS);
+    public static final RegistryObject<Item> WHEATGRASS = registerBI("wheatgrass", ShellfishBlocks.WHEATGRASS);
+    public static final RegistryObject<Item> TALL_WATER_GRASS = registerTallBI("tall_water_grass", ShellfishBlocks.TALL_WATER_GRASS);
+    public static final RegistryObject<Item> WATER_GRASS = registerBI("water_grass", ShellfishBlocks.WATER_GRASS);
+    public static final RegistryObject<Item> DRIFTWOOD = ITEMS.register("driftwood", () -> new DriftwoodItem(ShellfishBlocks.DRIFTWOOD.get(), new Item.Properties(), 200));
 
     public static final RegistryObject<Item> SHELLFISH_TRAP = registerBI("shellfish_trap", ShellfishBlocks.SHELLFISH_TRAP_BLOCK);
     public static final RegistryObject<Item> REINFORCED_TRAP = registerBI("reinforced_trap", ShellfishBlocks.REINFORCED_TRAP);
@@ -207,7 +218,7 @@ public class ShellfishItems {
     }
 
     private static RegistryObject<Item> registerBucket(String name, Supplier<? extends EntityType<? extends Mob>> type) {
-        return ITEMS.register(name, () -> new ShellfishBucketItem(type, Fluids.WATER, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET)));
+        return ITEMS.register(name, () -> new ShellfishBucketItem(type, Fluids.WATER, Items.BUCKET, true, new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET)));
     }
 
     private static RegistryObject<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> type, int primaryColor, int secondaryColor) {
@@ -216,6 +227,10 @@ public class ShellfishItems {
 
     private static RegistryObject<Item> registerBI(String name, Supplier<? extends Block> block) {
         return ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+    private static RegistryObject<Item> registerTallBI(String name, Supplier<? extends Block> block) {
+        return ITEMS.register(name, () -> new DoubleHighBlockItem(block.get(), new Item.Properties()));
     }
 
     public static void register(IEventBus bus) {

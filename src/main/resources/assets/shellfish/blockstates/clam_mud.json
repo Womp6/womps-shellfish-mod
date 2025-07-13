@@ -1,0 +1,12 @@
+{
+    "variants": {
+      "": [
+        {
+          "model": "shellfish:block/clam_mud1"
+        },
+        {
+          "model": "shellfish:block/clam_mud2"
+        }
+      ]
+    } 
+  }

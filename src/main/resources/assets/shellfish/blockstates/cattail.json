@@ -1,0 +1,10 @@
+{
+    "variants": {
+      "bloomed=true": {
+        "model": "shellfish:block/cattail1"
+      },
+      "bloomed=false": {
+        "model": "shellfish:block/cattail2"
+      }
+    }
+  }

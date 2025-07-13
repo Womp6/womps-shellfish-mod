@@ -25,6 +25,24 @@
       "weight": 20,
       "minCount": 1,
       "maxCount": 3
+    },
+    {
+      "type": "shellfish:clam",
+      "weight": 19,
+      "minCount": 1,
+      "maxCount": 4
+    },
+    {
+      "type": "shellfish:oyster",
+      "weight": 18,
+      "minCount": 1,
+      "maxCount": 3
+    },
+    {
+      "type": "shellfish:mussel",
+      "weight": 21,
+      "minCount": 1,
+      "maxCount": 6
     }
   ]
 }

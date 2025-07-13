@@ -1,12 +1,21 @@
 {
-  "replace": false,
-  "values": [
-    "minecraft:grass_block",
-    "minecraft:dirt",
-    "minecraft:sand",
-    "minecraft:stone",
-    "minecraft:gravel",
-    "minecraft:clay",
-    "minecraft:mud"
-  ]
+    "replace": false,
+    "values": [
+        "minecraft:grass_block",
+        "minecraft:dirt",
+        "minecraft:sand",
+        "minecraft:stone",
+        "minecraft:gravel",
+        "minecraft:clay",
+        "minecraft:mud",
+        "shellfish:clam_sand",
+        "shellfish:clam_clay",
+        "shellfish:clam_mud",
+        "shellfish:oyster_sand",
+        "shellfish:oyster_clay",
+        "shellfish:oyster_mud",
+        "shellfish:mussel_sand",
+        "shellfish:mussel_clay",
+        "shellfish:mussel_mud"
+    ]
 }

@@ -24,9 +24,11 @@ public class SeaUrchinRenderer extends MobEntityRenderer<SeaUrchinEntity, SeaUrc
     @Override
     public void render(SeaUrchinEntity entity, float entityYaw, float partialTick, MatrixStack poseStack,
                        VertexConsumerProvider bufferSource, int packedLight) {
-        if(entity.isBaby()) {
-            poseStack.scale(0.5f, 0.5f, 0.5f);
-        }
+        int variant = entity.getVariant();                  
+        if (variant == 1) entity.scale(poseStack, 2f, 1.2f, 0.5f);
+        else if (variant == 3) entity.scale(poseStack, 0.6f, 0.3f);
+        else if (variant == 4) entity.scale(poseStack, 1.5f, 1.0f, 0.5f);
+        else entity.scale(poseStack, 1.0f, 0.5f);
 
         super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }

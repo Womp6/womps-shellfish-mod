@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"womp.shellfishmod.client.ShellfishClient"
+		],
+		"terrablender": [
+			"womp.shellfishmod.compat.terrablender.TerraBlender"
 		]
 	},
 	"mixins": [

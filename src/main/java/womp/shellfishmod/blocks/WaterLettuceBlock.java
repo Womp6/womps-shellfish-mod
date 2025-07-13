@@ -22,23 +22,21 @@ import womp.shellfishmod.util.config.ShellfishConfig;
 public class WaterLettuceBlock extends PlantBlock implements BlockEntityProvider {
 
     protected static final VoxelShape SHAPE = Block.createCuboidShape(2.5, -1.0, 2.5, 13.5, 0.5, 13.5);
-
     protected static final VoxelShape SHAPE_2D = Block.createCuboidShape(1.0, 0.0, 1.0, 15.0, 1.5, 15.0);
 
     public static final BooleanProperty SHOW_3D = BooleanProperty.of("is3d");
-
     public static final BooleanProperty IS_SWAMP = BooleanProperty.of("swamp");
+    public static final BooleanProperty IS_MARSH = BooleanProperty.of("marsh");
 
     public WaterLettuceBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(SHOW_3D, true).with(IS_SWAMP, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(SHOW_3D, true).with(IS_SWAMP, false).with(IS_MARSH, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(SHOW_3D);
-        builder.add(IS_SWAMP);
+        builder.add(SHOW_3D).add(IS_SWAMP).add(IS_MARSH);
     }
 
     @Override

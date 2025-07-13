@@ -27,9 +27,11 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeKeys;
 import womp.shellfishmod.entity.goals.SitAroundGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
 import womp.shellfishmod.registry.ShellfishItems;
+import womp.shellfishmod.registry.ShellfishWorldgen;
 
 public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
     
@@ -58,7 +60,7 @@ public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
     public static boolean canSpawn(EntityType<MossBallEntity> type, ServerWorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER);
+        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? world.getLightLevel(pos, 0) > 8 : true);
     }
 
     @Override
@@ -126,6 +128,7 @@ public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
         NbtCompound nbtCompound = bucket.getOrCreateNbt();
         nbtCompound.putFloat("Health", this.getHealth());
         nbtCompound.putBoolean("IsSmall", this.isSmall());
+        nbtCompound.putInt("Variant", this.isSmall() ? 1 : 0);
     }
 
     @Override

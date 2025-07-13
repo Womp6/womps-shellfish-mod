@@ -6,11 +6,19 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.world.gen.foliage.FoliagePlacerType;
+import womp.shellfishmod.mixin.FoliagePlacerHelper;
+import womp.shellfishmod.worldgen.MarshFoliagePlacer;
 
 public class ShellfishWorldgen {
+
+    // MARSH
+    public static final RegistryKey<Biome> MARSH = RegistryKey.of(RegistryKeys.BIOME, new Identifier("shellfish", "marsh"));
+    public static final FoliagePlacerType<?> MARSH_FOLIAGE_PLACER = FoliagePlacerHelper.callRegister("marsh_foliage_placer", MarshFoliagePlacer.CODEC);
 
     // BLOCK GENERATION
     public static final RegistryKey<PlacedFeature> CLAM_CLAY = of("clam_clay");
@@ -31,22 +39,25 @@ public class ShellfishWorldgen {
     public static final RegistryKey<PlacedFeature> EELGRASS = of("eelgrass");
     public static final RegistryKey<PlacedFeature> SEA_LETTUCE = of("sea_lettuce");
     public static final RegistryKey<PlacedFeature> COLD_SEA_LETTUCE = of("cold_sea_lettuce");
+    public static final RegistryKey<PlacedFeature> BEACHED_DRIFTWOOD = of("beached_driftwood");
 
     public static RegistryKey<PlacedFeature> of(String id) {
         return RegistryKey.of(RegistryKeys.PLACED_FEATURE, new Identifier("shellfish", id));
     }
+
     
     public static void registerBlockgen(){
 
-        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.DEEP_COLD_OCEAN, BiomeKeys.DEEP_OCEAN, BiomeKeys.DEEP_FROZEN_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN, BiomeKeys.RIVER, BiomeKeys.FROZEN_RIVER), GenerationStep.Feature.UNDERGROUND_ORES, CLAM_CLAY);
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.DEEP_COLD_OCEAN, BiomeKeys.DEEP_OCEAN, BiomeKeys.DEEP_FROZEN_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN, BiomeKeys.RIVER, BiomeKeys.FROZEN_RIVER, BiomeKeys.SWAMP, BiomeKeys.MANGROVE_SWAMP), GenerationStep.Feature.UNDERGROUND_ORES, CLAM_CLAY);
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.OCEAN, BiomeKeys.COLD_OCEAN, BiomeKeys.FROZEN_OCEAN, BiomeKeys.LUKEWARM_OCEAN, BiomeKeys.WARM_OCEAN), GenerationStep.Feature.UNDERGROUND_ORES, CLAM_ORE_OCEAN);
-        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.OCEAN, BiomeKeys.COLD_OCEAN, BiomeKeys.FROZEN_OCEAN, BiomeKeys.LUKEWARM_OCEAN, BiomeKeys.WARM_OCEAN, BiomeKeys.DEEP_COLD_OCEAN, BiomeKeys.DEEP_OCEAN, BiomeKeys.DEEP_FROZEN_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN), GenerationStep.Feature.UNDERGROUND_ORES, OYSTER_ORE);        
-        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.OCEAN, BiomeKeys.COLD_OCEAN, BiomeKeys.FROZEN_OCEAN, BiomeKeys.RIVER, BiomeKeys.FROZEN_RIVER, BiomeKeys.LUKEWARM_OCEAN, BiomeKeys.WARM_OCEAN, BiomeKeys.DEEP_COLD_OCEAN, BiomeKeys.DEEP_OCEAN, BiomeKeys.DEEP_FROZEN_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN), GenerationStep.Feature.UNDERGROUND_ORES, MUSSEL_ORE);
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.OCEAN, BiomeKeys.COLD_OCEAN, BiomeKeys.FROZEN_OCEAN, BiomeKeys.LUKEWARM_OCEAN, BiomeKeys.WARM_OCEAN, BiomeKeys.DEEP_COLD_OCEAN, BiomeKeys.DEEP_OCEAN, BiomeKeys.DEEP_FROZEN_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN, BiomeKeys.MANGROVE_SWAMP), GenerationStep.Feature.UNDERGROUND_ORES, OYSTER_ORE);        
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.OCEAN, BiomeKeys.COLD_OCEAN, BiomeKeys.FROZEN_OCEAN, BiomeKeys.RIVER, BiomeKeys.FROZEN_RIVER, BiomeKeys.LUKEWARM_OCEAN, BiomeKeys.WARM_OCEAN, BiomeKeys.DEEP_COLD_OCEAN, BiomeKeys.DEEP_OCEAN, BiomeKeys.DEEP_FROZEN_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN, BiomeKeys.SWAMP, BiomeKeys.MANGROVE_SWAMP), GenerationStep.Feature.UNDERGROUND_ORES, MUSSEL_ORE);
         
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION, SHELL_PLACE_KEY);        
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION, CLAM_SHELL_PLACE_KEY);        
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION, OYSTER_SHELL);
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION, MUSSEL_SHELL);
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.BEACH), GenerationStep.Feature.VEGETAL_DECORATION, BEACHED_DRIFTWOOD);
 
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.OCEAN, BiomeKeys.COLD_OCEAN, BiomeKeys.FROZEN_OCEAN, BiomeKeys.LUKEWARM_OCEAN, BiomeKeys.WARM_OCEAN, BiomeKeys.DEEP_COLD_OCEAN, BiomeKeys.DEEP_OCEAN, BiomeKeys.DEEP_FROZEN_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN, BiomeKeys.RIVER, BiomeKeys.FROZEN_RIVER), GenerationStep.Feature.VEGETAL_DECORATION, DEAD_CLAM_BLOCK);        
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.OCEAN, BiomeKeys.COLD_OCEAN, BiomeKeys.FROZEN_OCEAN, BiomeKeys.LUKEWARM_OCEAN, BiomeKeys.WARM_OCEAN, BiomeKeys.DEEP_COLD_OCEAN, BiomeKeys.DEEP_OCEAN, BiomeKeys.DEEP_FROZEN_OCEAN, BiomeKeys.DEEP_LUKEWARM_OCEAN), GenerationStep.Feature.VEGETAL_DECORATION, DEAD_OYSTER_BLOCK);        
@@ -153,6 +164,8 @@ public class ShellfishWorldgen {
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SWAMP), SpawnGroup.WATER_AMBIENT, ShellfishEntities.CRAB, 7, 1, 2);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SWAMP), SpawnGroup.WATER_AMBIENT, ShellfishEntities.SHRIMP, 9, 1, 4);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SWAMP), SpawnGroup.WATER_AMBIENT, ShellfishEntities.SEA_SNAIL, 6, 1, 1);
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SWAMP), SpawnGroup.AMBIENT, ShellfishEntities.CLAM, 9, 1, 4);
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SWAMP), SpawnGroup.AMBIENT, ShellfishEntities.MUSSEL, 10, 1, 6);
 
 
         //MANGROVE SWAMP
@@ -160,6 +173,9 @@ public class ShellfishWorldgen {
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.MANGROVE_SWAMP), SpawnGroup.WATER_AMBIENT, ShellfishEntities.CRAB, 25, 1, 3);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.MANGROVE_SWAMP), SpawnGroup.WATER_AMBIENT, ShellfishEntities.SHRIMP, 20, 2, 5);
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.MANGROVE_SWAMP), SpawnGroup.WATER_AMBIENT, ShellfishEntities.SEA_SNAIL, 20, 1, 3);
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.MANGROVE_SWAMP), SpawnGroup.AMBIENT, ShellfishEntities.CLAM, 19, 1, 4);
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.MANGROVE_SWAMP), SpawnGroup.AMBIENT, ShellfishEntities.OYSTER, 18, 1, 3);
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.MANGROVE_SWAMP), SpawnGroup.AMBIENT, ShellfishEntities.MUSSEL, 21, 1, 6);
     }
 
     

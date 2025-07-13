@@ -7,6 +7,7 @@ import net.minecraft.client.model.ModelPartBuilder;
 import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.EntityModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.LobsterEntity;
@@ -15,8 +16,13 @@ import womp.shellfishmod.entity.animations.MoreShellfishAnimations;
 // The new model (1.2+) was revised with help from underapreciatedpigeon
 public class LobsterModel extends EntityModel<ShellfishRenderState<LobsterEntity.Variant>> {
 	
+	private final Animation moveAnimation;
+	private final Animation idleAnimation;
+	
 	public LobsterModel(ModelPart root) {
 		super(root);
+		this.moveAnimation = MoreShellfishAnimations.LOBSTER_WALK.createAnimation(root);
+		this.idleAnimation = MoreShellfishAnimations.LOBSTER_IDLE.createAnimation(root);
 	}
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
@@ -104,9 +110,9 @@ public class LobsterModel extends EntityModel<ShellfishRenderState<LobsterEntity
 	public void setAngles(ShellfishRenderState<LobsterEntity.Variant> entity) {
 		super.setAngles(entity);
 		if (!entity.touchingWater) {
-			this.animateWalking(MoreShellfishAnimations.LOBSTER_WALK, entity.limbSwingAnimationProgress, entity.limbSwingAmplitude, 12, 15f);
+			this.moveAnimation.applyWalking(entity.limbSwingAnimationProgress, entity.limbSwingAmplitude, 12, 15f);
 		}
-		this.animate(entity.moveAnimationState, MoreShellfishAnimations.LOBSTER_WALK, entity.age, 2f);
-		this.animate(entity.idleAnimationState, MoreShellfishAnimations.LOBSTER_IDLE, entity.age, 1f);
+		this.moveAnimation.apply(entity.moveAnimationState, entity.age, 2f);
+		this.idleAnimation.apply(entity.idleAnimationState, entity.age, 1f);
 	}
 }

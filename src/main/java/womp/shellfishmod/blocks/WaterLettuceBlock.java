@@ -29,19 +29,19 @@ public class WaterLettuceBlock extends PlantBlock implements BlockEntityProvider
 
     public static final BooleanProperty SHOW_3D = BooleanProperty.of("is3d");
     public static final BooleanProperty IS_SWAMP = BooleanProperty.of("swamp");
+    public static final BooleanProperty IS_MARSH = BooleanProperty.of("marsh");
 
     public static final MapCodec<WaterLettuceBlock> CODEC = createCodec(WaterLettuceBlock::new);
 
     public WaterLettuceBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(SHOW_3D, true).with(IS_SWAMP, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(SHOW_3D, true).with(IS_SWAMP, false).with(IS_MARSH, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(SHOW_3D);
-        builder.add(IS_SWAMP);
+        builder.add(SHOW_3D).add(IS_SWAMP).add(IS_MARSH);
     }
 
     @Override

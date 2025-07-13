@@ -7,6 +7,7 @@ import net.minecraft.client.model.ModelPartBuilder;
 import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.EntityModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.CrayfishEntity;
@@ -15,8 +16,13 @@ import womp.shellfishmod.entity.animations.MoreShellfishAnimations;
 // The new model (1.2+) was revised with help from underapreciatedpigeon
 public class CrayfishModel extends EntityModel<ShellfishRenderState<CrayfishEntity.Variant>> {
 	
+	private final Animation moveAnimation;
+	private final Animation idleAnimation;
+
 	public CrayfishModel(ModelPart root) {
 		super(root);
+		this.moveAnimation = MoreShellfishAnimations.CRAYFISH_WALK.createAnimation(root);
+		this.idleAnimation = MoreShellfishAnimations.CRAYFISH_IDLE.createAnimation(root);
 	}
 
 	public static TexturedModelData getTexturedModelData() {
@@ -90,9 +96,9 @@ public class CrayfishModel extends EntityModel<ShellfishRenderState<CrayfishEnti
 	public void setAngles(ShellfishRenderState<CrayfishEntity.Variant> entity) {
 		super.setAngles(entity);
 		if (!entity.touchingWater) {
-			this.animateWalking(MoreShellfishAnimations.CRAYFISH_WALK, entity.limbSwingAnimationProgress, entity.limbSwingAmplitude, 12, 15f);
+			this.moveAnimation.applyWalking(entity.limbSwingAnimationProgress, entity.limbSwingAmplitude, 12, 15f);
 		}
-		this.animate(entity.moveAnimationState, MoreShellfishAnimations.CRAYFISH_WALK, entity.age, 2f);
-		this.animate(entity.idleAnimationState, MoreShellfishAnimations.CRAYFISH_IDLE, entity.age, 1f);
+		this.moveAnimation.apply(entity.moveAnimationState, entity.age, 2f);
+		this.idleAnimation.apply(entity.idleAnimationState, entity.age, 1f);
 	}
 }

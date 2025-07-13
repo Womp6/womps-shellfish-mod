@@ -7,6 +7,7 @@ import net.minecraft.client.model.ModelPartBuilder;
 import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.EntityModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.SeaUrchinEntity;
@@ -14,8 +15,13 @@ import womp.shellfishmod.entity.animations.ShellfishAnimations;
 
 public class SeaUrchinModel extends EntityModel<ShellfishRenderState<SeaUrchinEntity.Variant>> {
 
+	private final Animation moveAnimation;
+	private final Animation idleAnimation;
+
 	public SeaUrchinModel(ModelPart root) {
 		super(root);
+		this.moveAnimation = ShellfishAnimations.SEA_URCHIN_WALK.createAnimation(root);
+		this.idleAnimation = ShellfishAnimations.SEA_URCHIN_IDLE.createAnimation(root);
 	}
 
 	public static TexturedModelData getTexturedModelData() {
@@ -99,7 +105,7 @@ public class SeaUrchinModel extends EntityModel<ShellfishRenderState<SeaUrchinEn
 	@Override
 	public void setAngles(ShellfishRenderState<SeaUrchinEntity.Variant> entity) {
 		super.setAngles(entity);
-		this.animate(entity.moveAnimationState, ShellfishAnimations.SEA_URCHIN_WALK, entity.age, 1f);
-		this.animate(entity.idleAnimationState, ShellfishAnimations.SEA_URCHIN_IDLE, entity.age, 1f);
+		this.moveAnimation.apply(entity.moveAnimationState, entity.age, 1f);
+		this.idleAnimation.apply(entity.idleAnimationState, entity.age, 1f);
 	}
 }

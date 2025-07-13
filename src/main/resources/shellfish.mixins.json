@@ -2,7 +2,14 @@
 	"required": true,
 	"package": "womp.shellfishmod.mixin",
 	"compatibilityLevel": "JAVA_21",
-	"mixins": [],
+	"mixins": [
+		"AddMarshMixin",
+		"FoliagePlacerHelper",
+		"SpawnerMixin",
+		"InfoInvoker",
+		"DensityGetter",
+		"DensityCapGetter"
+	],
 	"client": [
 		"ShellfishGraphicsMixin"
 	],

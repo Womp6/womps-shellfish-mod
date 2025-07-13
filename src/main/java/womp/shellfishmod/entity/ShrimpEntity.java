@@ -187,6 +187,7 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
             entityData = new ShrimpData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 

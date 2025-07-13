@@ -30,6 +30,8 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -137,9 +139,11 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
 
     @Override
     public void markDirty() {
-        if (!world.isClient) {
-            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)world, getPos())) {
-                ServerPlayNetworking.send(player, new BaitPacket(inventory, this.getPos()));
+        if (world != null) {
+            if (!world.isClient) {
+                for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)world, getPos())) {
+                    ServerPlayNetworking.send(player, new BaitPacket(inventory, this.getPos()));
+                }
             }
         }
         super.markDirty();
@@ -163,21 +167,21 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        Inventories.writeNbt(nbt, inventory, registryLookup);
+    public void writeData(WriteView nbt) {
+        super.writeData(nbt);
+        Inventories.writeData(nbt, inventory);
         nbt.putInt("progress", progress);
         nbt.putInt("durability", durability);
         nbt.putBoolean("canTrap", canTrap);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        Inventories.readNbt(nbt, inventory, registryLookup);
+    public void readData(ReadView nbt) {
+        Inventories.readData(nbt, inventory);
         progress = nbt.getInt("progress", 0);
         durability = nbt.getInt("durability", maxDurability);
         canTrap = nbt.getBoolean("canTrap", true);
-        super.readNbt(nbt, registryLookup);
+        super.readData(nbt);
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
@@ -456,8 +460,8 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
     }
  
     @Override
-    public void removeFromCopiedStackNbt(NbtCompound nbt) {
-        super.removeFromCopiedStackNbt(nbt);
+    public void removeFromCopiedStackData(WriteView nbt) {
+        super.removeFromCopiedStackData(nbt);
         nbt.remove("durability");
     }
 }

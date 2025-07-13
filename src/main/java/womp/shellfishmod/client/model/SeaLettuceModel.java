@@ -13,7 +13,7 @@ import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.client.render.entity.animation.AnimationDefinition;
 import net.minecraft.client.render.entity.animation.Keyframe;
 import net.minecraft.client.render.entity.animation.Transformation;
 import net.minecraft.client.util.math.MatrixStack;
@@ -25,7 +25,7 @@ import womp.shellfishmod.util.config.ShellfishConfig;
 public class SeaLettuceModel {
 
     public final ModelPart sea_lettuce;
-	private final Animation animation;
+	private final AnimationDefinition animation;
 
 	private final List<String> boneNames = List.of(
     "leaf1", "leaf2", "leaf3", "leaf4", 

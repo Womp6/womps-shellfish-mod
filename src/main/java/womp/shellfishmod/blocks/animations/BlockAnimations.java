@@ -1,6 +1,6 @@
 package womp.shellfishmod.blocks.animations;
 
-import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.client.render.entity.animation.AnimationDefinition;
 import net.minecraft.client.render.entity.animation.AnimationHelper;
 import net.minecraft.client.render.entity.animation.Keyframe;
 import net.minecraft.client.render.entity.animation.Transformation;
@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.animation.Transformation;
 public class BlockAnimations {
     
     //Sea Lettuce
-    public static final Animation NATURAL = Animation.Builder.create(7.958343f).looping()
+    public static final AnimationDefinition NATURAL = AnimationDefinition.Builder.create(7.958343f).looping()
 		.addBoneAnimation("leaf20",
 			new Transformation(Transformation.Targets.ROTATE,
 				new Keyframe(0f, AnimationHelper.createRotationalVector(-1.5f, 0f, 0f),

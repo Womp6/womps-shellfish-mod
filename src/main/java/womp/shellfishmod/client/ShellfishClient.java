@@ -3,15 +3,18 @@ package womp.shellfishmod.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.GrassColors;
 import womp.shellfishmod.client.model.ClamModel;
 import womp.shellfishmod.client.model.CrabModel;
 import womp.shellfishmod.client.model.CrayfishModel;
@@ -92,9 +95,16 @@ public class ShellfishClient implements ClientModInitializer {
         registerClientEntityRenders();
         registerClientEntityModels();
         
-        BlockRenderLayerMap.INSTANCE.putBlock(ShellfishBlocks.SEA_SNAIL_EGGS_BLOCK, RenderLayer.getTranslucent());
-        for (Block cut : ShellfishBlocks.getCutouts()) BlockRenderLayerMap.INSTANCE.putBlock(cut, RenderLayer.getCutout());
+        BlockRenderLayerMap.putBlock(ShellfishBlocks.SEA_SNAIL_EGGS_BLOCK, BlockRenderLayer.TRANSLUCENT);
+        for (Block cut : ShellfishBlocks.getCutouts()) BlockRenderLayerMap.putBlock(cut, BlockRenderLayer.CUTOUT);
 
+        ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> {
+            if (world != null && pos != null) {
+                return BiomeColors.getGrassColor(world, pos);
+            }
+            return GrassColors.getDefaultColor();
+        }, ShellfishBlocks.WATER_GRASS, ShellfishBlocks.TALL_WATER_GRASS);
+        
         BlockEntityRendererFactories.register(ShellfishBlocks.WATER_LETTUCE_BLOCK_ENTITY, WaterLettuceRenderer::new);
         BlockEntityRendererFactories.register(ShellfishBlocks.SEA_LETTUCE_BLOCK_ENTITY, SeaLettuceRenderer::new);
         BlockEntityRendererFactories.register(ShellfishBlocks.SHELLFISH_TRAP_BLOCK_ENTITY, ShellfishTrapRenderer::new);

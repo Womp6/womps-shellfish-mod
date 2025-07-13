@@ -1,6 +1,6 @@
 package womp.shellfishmod.entity.animations;
 
-import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.client.render.entity.animation.AnimationDefinition;
 import net.minecraft.client.render.entity.animation.AnimationHelper;
 import net.minecraft.client.render.entity.animation.Keyframe;
 import net.minecraft.client.render.entity.animation.Transformation;
@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.animation.Transformation;
 public class ShellfishAnimations {
  
 //OYSTER
-public static final Animation OYSTER_IDLE = Animation.Builder.create(34f).looping()
+public static final AnimationDefinition OYSTER_IDLE = AnimationDefinition.Builder.create(34f).looping()
 .addBoneAnimation("topshell",
 	new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, 0f),
@@ -325,7 +325,7 @@ public static final Animation OYSTER_IDLE = Animation.Builder.create(34f).loopin
 	new Transformation(Transformation.Targets.SCALE,
 		new Keyframe(0f, AnimationHelper.createScalingVector(1f, 1f, 1f),
 			Transformation.Interpolations.LINEAR))).build();
-public static final Animation OYSTER_MOVE = Animation.Builder.create(1.5834333f).looping()
+public static final AnimationDefinition OYSTER_MOVE = AnimationDefinition.Builder.create(1.5834333f).looping()
 .addBoneAnimation("topshell",
 	new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0.07f, -0.07f),
@@ -376,7 +376,7 @@ public static final Animation OYSTER_MOVE = Animation.Builder.create(1.5834333f)
 			Transformation.Interpolations.LINEAR))).build();
 	
 //CLAM
-public static final Animation CLAM_IDLE = Animation.Builder.create(34f).looping()
+public static final AnimationDefinition CLAM_IDLE = AnimationDefinition.Builder.create(34f).looping()
 .addBoneAnimation("mainbody1",
 	new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, 0f),
@@ -696,7 +696,7 @@ public static final Animation CLAM_IDLE = Animation.Builder.create(34f).looping(
 		new Keyframe(30.25f, AnimationHelper.createScalingVector(1f, 1f, 1f),
 			Transformation.Interpolations.LINEAR))).build();
 			
-	public static final Animation CLAM_MOVE = Animation.Builder.create(1.5834333f).looping()
+	public static final AnimationDefinition CLAM_MOVE = AnimationDefinition.Builder.create(1.5834333f).looping()
 		.addBoneAnimation("mainbody1",
 			new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 				new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, -0.06f, 0.02f),
@@ -751,7 +751,7 @@ public static final Animation CLAM_IDLE = Animation.Builder.create(34f).looping(
 					Transformation.Interpolations.LINEAR))).build();
 	
 //SEA URCHN
-public static final Animation SEA_URCHIN_WALK = Animation.Builder.create(3.5834335f).looping()
+public static final AnimationDefinition SEA_URCHIN_WALK = AnimationDefinition.Builder.create(3.5834335f).looping()
 .addBoneAnimation("spikegroup1",
 	new Transformation(Transformation.Targets.ROTATE,
 		new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -1234,7 +1234,7 @@ public static final Animation SEA_URCHIN_WALK = Animation.Builder.create(3.58343
 			Transformation.Interpolations.LINEAR), 
 		new Keyframe(3.5834335f, AnimationHelper.createTranslationalVector(0f, -0.75f, 0.74f),
 			Transformation.Interpolations.LINEAR))).build();
-public static final Animation SEA_URCHIN_IDLE = Animation.Builder.create(4f).looping()
+public static final AnimationDefinition SEA_URCHIN_IDLE = AnimationDefinition.Builder.create(4f).looping()
 .addBoneAnimation("spikegroup1",
 	new Transformation(Transformation.Targets.ROTATE,
 		new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -1273,7 +1273,7 @@ public static final Animation SEA_URCHIN_IDLE = Animation.Builder.create(4f).loo
 			Transformation.Interpolations.LINEAR))).build();
 
 //SEA SNAIL
-public static final Animation SNAIL_MOVE = Animation.Builder.create(1.1676667f).looping()
+public static final AnimationDefinition SNAIL_MOVE = AnimationDefinition.Builder.create(1.1676667f).looping()
 .addBoneAnimation("eyes",
 	new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, 0f),
@@ -1315,7 +1315,7 @@ public static final Animation SNAIL_MOVE = Animation.Builder.create(1.1676667f).
 		new Keyframe(1.1676667f, AnimationHelper.createTranslationalVector(0f, 0f, 0.01f),
 			Transformation.Interpolations.LINEAR))).build();
 			
-public static final Animation SNAIL_HIDE = Animation.Builder.create(0f).looping()
+public static final AnimationDefinition SNAIL_HIDE = AnimationDefinition.Builder.create(0f).looping()
 .addBoneAnimation("body",
 	new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 1f, 0f),
@@ -1342,7 +1342,7 @@ public static final Animation SNAIL_HIDE = Animation.Builder.create(0f).looping(
 			Transformation.Interpolations.LINEAR))).build();
 
 //SHRIMP
-public static final Animation SHRIMP_WALK = Animation.Builder.create(1.5f).looping()
+public static final AnimationDefinition SHRIMP_WALK = AnimationDefinition.Builder.create(1.5f).looping()
 .addBoneAnimation("leg1",
 	new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, 0f),
@@ -2627,7 +2627,7 @@ public static final Animation SHRIMP_WALK = Animation.Builder.create(1.5f).loopi
 			Transformation.Interpolations.LINEAR),
 		new Keyframe(1.5f, AnimationHelper.createRotationalVector(0f, -0.5f, -0.5f),
 			Transformation.Interpolations.LINEAR))).build();
-public static final Animation SHRIMP_IDLE = Animation.Builder.create(0.7916766f).looping()
+public static final AnimationDefinition SHRIMP_IDLE = AnimationDefinition.Builder.create(0.7916766f).looping()
 .addBoneAnimation("tail",
 	new Transformation(Transformation.Targets.ROTATE,
 		new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -2922,7 +2922,7 @@ public static final Animation SHRIMP_IDLE = Animation.Builder.create(0.7916766f)
 			Transformation.Interpolations.LINEAR),
 		new Keyframe(0.7916766f, AnimationHelper.createRotationalVector(0f, -0.05f, -0.05f),
 			Transformation.Interpolations.LINEAR))).build();
-public static final Animation SHRIMP_SWIM = Animation.Builder.create(1.625f).looping()
+public static final AnimationDefinition SHRIMP_SWIM = AnimationDefinition.Builder.create(1.625f).looping()
 .addBoneAnimation("leftlegs",
 	new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, 0f),

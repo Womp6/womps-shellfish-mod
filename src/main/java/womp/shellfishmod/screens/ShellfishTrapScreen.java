@@ -1,8 +1,8 @@
 package womp.shellfishmod.screens;
 
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -30,14 +30,14 @@ public class ShellfishTrapScreen extends HandledScreen<ShellfishTrapScreenHandle
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
 
-        context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight, 256, 256);
         renderProgressArrow(context, x, y);
         renderDurabilityBar(context, x, y);
     }
 
     public void renderProgressArrow(DrawContext context, int x, int y) {
         if (handler.isTrapping()) {
-            context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 32, y + 38, 176, 0, handler.getScaledProgress(), 10, 256, 256);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 32, y + 38, 176, 0, handler.getScaledProgress(), 10, 256, 256);
         }
     }
 
@@ -54,18 +54,18 @@ public class ShellfishTrapScreen extends HandledScreen<ShellfishTrapScreenHandle
 
     public void renderDurabilityBar(DrawContext context, int x, int y) {
         if (handler.getDurability() > handler.getMaxDurability() / 2) {
-            context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 12, y + 16, 177, 10, handler.getScaledDurability(), 8, 256, 256);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 12, y + 16, 177, 10, handler.getScaledDurability(), 8, 256, 256);
         } else if (handler.getDurability() > handler.getMaxDurability() / 5) {
-            context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 12, y + 16, 177, 18, handler.getScaledDurability(), 8, 256, 256);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 12, y + 16, 177, 18, handler.getScaledDurability(), 8, 256, 256);
         } else {
-            context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 12, y + 16, 177, 26, handler.getScaledDurability(), 8, 256, 256);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 12, y + 16, 177, 26, handler.getScaledDurability(), 8, 256, 256);
         }
 
         if (handler.getDurability() != 0) {
-            context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 11, y + 16, 176, 10, 1, 8, 256, 256);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 11, y + 16, 176, 10, 1, 8, 256, 256);
         }
         if (handler.getDurability() == handler.getMaxDurability()) {
-            context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 52, y + 16, 217, 10, 1, 8, 256, 256);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 52, y + 16, 217, 10, 1, 8, 256, 256);
         }
     }
 

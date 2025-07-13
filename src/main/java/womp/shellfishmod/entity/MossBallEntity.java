@@ -28,6 +28,8 @@ import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
@@ -38,9 +40,11 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeKeys;
 import womp.shellfishmod.entity.goals.SitAroundGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
 import womp.shellfishmod.registry.ShellfishItems;
+import womp.shellfishmod.registry.ShellfishWorldgen;
 
 public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
     
@@ -64,7 +68,7 @@ public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
     public static boolean canSpawn(EntityType<MossBallEntity> type, ServerWorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER);
+        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? world.getLightLevel(pos, 0) > 8 : true);
     }
 
     @Override
@@ -90,15 +94,15 @@ public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void writeCustomData(WriteView nbt) {
+        super.writeCustomData(nbt);
         nbt.putBoolean("FromBucket", this.isFromBucket());
         nbt.putInt("Variant", this.getVariant().id);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readCustomData(ReadView nbt) {
+        super.readCustomData(nbt);
         this.setFromBucket(nbt.getBoolean("FromBucket", false));
         this.setVariant(Variant.byId(nbt.getInt("Variant", 0)));
     }

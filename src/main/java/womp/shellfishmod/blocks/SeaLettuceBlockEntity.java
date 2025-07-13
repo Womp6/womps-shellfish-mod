@@ -9,6 +9,8 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.math.BlockPos;
 import womp.shellfishmod.blocks.parents.ShellfishPlantBlockEntity3d;
 import womp.shellfishmod.registry.ShellfishBlocks;
@@ -49,8 +51,8 @@ public class SeaLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
     }
 
     @Override
-    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(tag, registryLookup);
+    public void readData(ReadView tag) {
+        super.readData(tag);
         this.large = tag.getBoolean("large", false);
         this.animationStartTime = tag.getLong("AnimationStartTime", 0);
 
@@ -63,8 +65,8 @@ public class SeaLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
     }
 
     @Override
-    public void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(tag, registryLookup);
+    public void writeData(WriteView tag) {
+        super.writeData(tag);
         tag.putBoolean("large", this.large);
         tag.putLong("AnimationStartTime", animationStartTime);
     }

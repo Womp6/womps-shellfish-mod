@@ -1,0 +1,43 @@
+{
+  "feature": "shellfish:patch_plain_grass",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:any_of",
+        "predicates": [
+          {
+            "type": "minecraft:all_of",
+            "predicates": [
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:air"
+              },
+              {
+                "type": "minecraft:would_survive",
+                "state": {
+                  "Name": "minecraft:short_grass"
+                }
+              }
+            ]
+          },
+          {
+            "type": "minecraft:all_of",
+            "predicates": [
+              {
+                "type": "minecraft:matching_blocks",
+                "blocks": "minecraft:water"
+              },
+              {
+                "type": "minecraft:would_survive",
+                "state": {
+                  "Name": "shellfish:water_grass"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

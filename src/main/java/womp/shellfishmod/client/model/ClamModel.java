@@ -7,6 +7,7 @@ import net.minecraft.client.model.ModelPartBuilder;
 import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.EntityModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.ClamEntity;
@@ -14,8 +15,13 @@ import womp.shellfishmod.entity.animations.ShellfishAnimations;
 
 public class ClamModel extends EntityModel<ShellfishRenderState<ClamEntity.Variant>> {
 
+	private final Animation moveAnimation;
+	private final Animation idleAnimation;
+
 	public ClamModel(ModelPart root) {
 		super(root);
+		this.moveAnimation = ShellfishAnimations.CLAM_MOVE.createAnimation(root);
+		this.idleAnimation = ShellfishAnimations.CLAM_IDLE.createAnimation(root);
 	}
 
 	public static TexturedModelData getTexturedModelData() {
@@ -38,7 +44,7 @@ public class ClamModel extends EntityModel<ShellfishRenderState<ClamEntity.Varia
 	@Override
 	public void setAngles(ShellfishRenderState<ClamEntity.Variant> entity) {
 		super.setAngles(entity);
-		this.animate(entity.moveAnimationState, ShellfishAnimations.CLAM_MOVE, entity.age, 1f);
-		this.animate(entity.idleAnimationState, ShellfishAnimations.CLAM_IDLE, entity.age, 1f);
+		this.moveAnimation.apply(entity.moveAnimationState, entity.age, 1f);
+		this.idleAnimation.apply(entity.idleAnimationState, entity.age, 1f);
 	}
 }

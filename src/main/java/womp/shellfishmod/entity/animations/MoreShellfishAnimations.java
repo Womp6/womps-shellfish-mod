@@ -1,6 +1,6 @@
 package womp.shellfishmod.entity.animations;
 
-import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.client.render.entity.animation.AnimationDefinition;
 import net.minecraft.client.render.entity.animation.AnimationHelper;
 import net.minecraft.client.render.entity.animation.Keyframe;
 import net.minecraft.client.render.entity.animation.Transformation;
@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.animation.Transformation;
 public class MoreShellfishAnimations {
 
 //LOBSTER
-    public static final Animation LOBSTER_WALK = Animation.Builder.create(1.5416767f).looping()
+    public static final AnimationDefinition LOBSTER_WALK = AnimationDefinition.Builder.create(1.5416767f).looping()
 .addBoneAnimation("body",
 	new Transformation(Transformation.Targets.ROTATE,
 		new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -861,7 +861,7 @@ public class MoreShellfishAnimations {
 			Transformation.Interpolations.LINEAR),
 		new Keyframe(1.5f, AnimationHelper.createRotationalVector(0f, 0.5f, 0f),
 			Transformation.Interpolations.LINEAR))).build();
-public static final Animation LOBSTER_IDLE = Animation.Builder.create(0.7916766f).looping()
+public static final AnimationDefinition LOBSTER_IDLE = AnimationDefinition.Builder.create(0.7916766f).looping()
 .addBoneAnimation("tail",
 	new Transformation(Transformation.Targets.ROTATE,
 		new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -1074,7 +1074,7 @@ public static final Animation LOBSTER_IDLE = Animation.Builder.create(0.7916766f
 			Transformation.Interpolations.LINEAR))).build();
         
 //CRAYFISH
-public static final Animation CRAYFISH_WALK = Animation.Builder.create(1.5f).looping()
+public static final AnimationDefinition CRAYFISH_WALK = AnimationDefinition.Builder.create(1.5f).looping()
 .addBoneAnimation("body",
 	new Transformation(Transformation.Targets.ROTATE,
 		new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -1931,7 +1931,7 @@ public static final Animation CRAYFISH_WALK = Animation.Builder.create(1.5f).loo
 			Transformation.Interpolations.LINEAR),
 		new Keyframe(1.5f, AnimationHelper.createRotationalVector(0f, 0.5f, 0.5f),
 			Transformation.Interpolations.LINEAR))).build();
-public static final Animation CRAYFISH_IDLE = Animation.Builder.create(0.7916766f).looping()
+public static final AnimationDefinition CRAYFISH_IDLE = AnimationDefinition.Builder.create(0.7916766f).looping()
 .addBoneAnimation("tail",
 	new Transformation(Transformation.Targets.ROTATE,
 		new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -2144,7 +2144,7 @@ public static final Animation CRAYFISH_IDLE = Animation.Builder.create(0.7916766
 			Transformation.Interpolations.LINEAR))).build();
 
 //CRAB
-public static final Animation CRAB_WALK = Animation.Builder.create(1.5f).looping()
+public static final AnimationDefinition CRAB_WALK = AnimationDefinition.Builder.create(1.5f).looping()
 .addBoneAnimation("body",
 	new Transformation(Transformation.Targets.ROTATE,
 		new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -3277,7 +3277,7 @@ public static final Animation CRAB_WALK = Animation.Builder.create(1.5f).looping
 			Transformation.Interpolations.LINEAR),
 		new Keyframe(1.5f, AnimationHelper.createRotationalVector(0.31f, 0f, 0f),
 			Transformation.Interpolations.LINEAR))).build();
-public static final Animation CRAB_IDLE = Animation.Builder.create(0.8343334f).looping()
+public static final AnimationDefinition CRAB_IDLE = AnimationDefinition.Builder.create(0.8343334f).looping()
 .addBoneAnimation("claw1",
 	new Transformation(Transformation.Targets.ROTATE,
 		new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
@@ -3456,7 +3456,7 @@ public static final Animation CRAB_IDLE = Animation.Builder.create(0.8343334f).l
 			Transformation.Interpolations.LINEAR))).build();
 
 //MUSSEL
-public static final Animation MUSSEL_IDLE = Animation.Builder.create(34f).looping()
+public static final AnimationDefinition MUSSEL_IDLE = AnimationDefinition.Builder.create(34f).looping()
 .addBoneAnimation("topshell",
 	new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, 0f),
@@ -3773,7 +3773,7 @@ public static final Animation MUSSEL_IDLE = Animation.Builder.create(34f).loopin
 	new Transformation(Transformation.Targets.SCALE,
 		new Keyframe(0f, AnimationHelper.createScalingVector(1f, 1f, 1f),
 			Transformation.Interpolations.LINEAR))).build();
-public static final Animation MUSSEL_MOVE = Animation.Builder.create(1.5834333f).looping()
+public static final AnimationDefinition MUSSEL_MOVE = AnimationDefinition.Builder.create(1.5834333f).looping()
 .addBoneAnimation("topshell",
 	new Transformation(Transformation.Targets.MOVE_ORIGIN, 
 		new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0.07f, -0.07f),

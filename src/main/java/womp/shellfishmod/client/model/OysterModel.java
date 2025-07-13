@@ -7,6 +7,7 @@ import net.minecraft.client.model.ModelPartBuilder;
 import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
+import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.EntityModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.OysterEntity;
@@ -14,8 +15,13 @@ import womp.shellfishmod.entity.animations.ShellfishAnimations;
 
 public class OysterModel extends EntityModel<ShellfishRenderState<OysterEntity.Variant>> {
 
+	private final Animation moveAnimation;
+	private final Animation idleAnimation;
+
 	public OysterModel(ModelPart root) {
 		super(root);
+		this.moveAnimation = ShellfishAnimations.OYSTER_MOVE.createAnimation(root);
+		this.idleAnimation = ShellfishAnimations.OYSTER_IDLE.createAnimation(root);
 	}
 
 	public static TexturedModelData getTexturedModelData() {
@@ -36,7 +42,7 @@ public class OysterModel extends EntityModel<ShellfishRenderState<OysterEntity.V
 	@Override
 	public void setAngles(ShellfishRenderState<OysterEntity.Variant> entity) {
 		super.setAngles(entity);
-		this.animate(entity.moveAnimationState, ShellfishAnimations.OYSTER_MOVE, entity.age, 1f);
-		this.animate(entity.idleAnimationState, ShellfishAnimations.OYSTER_IDLE, entity.age, 1f);
+		this.moveAnimation.apply(entity.moveAnimationState, entity.age, 1f);
+		this.idleAnimation.apply(entity.idleAnimationState, entity.age, 1f);
 	}
 }

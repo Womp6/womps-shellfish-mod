@@ -25,9 +25,11 @@ public class SeaUrchinRenderer extends MobRenderer<SeaUrchinEntity, ShellfishRen
     @Override
     public void render(ShellfishRenderState<SeaUrchinEntity.Variant> entity, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        if(entity.isBaby) {
-            poseStack.scale(0.5f, 0.5f, 0.5f);
-        }
+        int variant = entity.variant.getIndex();
+        if (variant == 1) entity.shellfish.scale(poseStack, 2f, 1.2f, 0.5f);
+        else if (variant == 3) entity.shellfish.scale(poseStack, 0.6f, 0.3f);
+        else if (variant == 4) entity.shellfish.scale(poseStack, 1.5f, 1.0f, 0.5f);
+        else entity.shellfish.scale(poseStack, 1.0f, 0.5f);
 
         super.render(entity, poseStack, bufferSource, packedLight);
     }
@@ -41,6 +43,7 @@ public class SeaUrchinRenderer extends MobRenderer<SeaUrchinEntity, ShellfishRen
     public void extractRenderState(SeaUrchinEntity seaUrchin, ShellfishRenderState<SeaUrchinEntity.Variant> seaUrchinState, float f) {
         super.extractRenderState(seaUrchin, seaUrchinState, f);
         seaUrchinState.variant = seaUrchin.getVariant();
+        seaUrchinState.shellfish = seaUrchin;
         seaUrchinState.idleAnimationState.copyFrom(seaUrchin.idleAnimationState);
         seaUrchinState.moveAnimationState.copyFrom(seaUrchin.moveAnimationState);
     }

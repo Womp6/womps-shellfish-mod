@@ -1,0 +1,11 @@
+{
+    "replace": false,
+    "values": [
+        "shellfish:raw_crayfish",
+        "shellfish:raw_crab",
+        "shellfish:raw_shrimp",
+        "shellfish:raw_sea_snail",
+        "shellfish:raw_clam",
+        "shellfish:raw_mussel"
+    ]
+}

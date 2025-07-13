@@ -8,12 +8,15 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import womp.shellfishmod.blocks.WaterLettuceBlockEntity;
 import womp.shellfishmod.client.model.WaterLettuceModel;
+import womp.shellfishmod.registry.ShellfishWorldgen;
 import womp.shellfishmod.util.config.ShellfishConfig;
 
 @Environment(EnvType.CLIENT)
@@ -21,6 +24,7 @@ public class WaterLettuceRenderer implements BlockEntityRenderer<WaterLettuceBlo
 
     private final WaterLettuceModel lettuceModel;
     private final Identifier darkTexture = Identifier.of("shellfish", "textures/block/water_lettuce_dark.png");
+    private final Identifier marshTexture = Identifier.of("shellfish", "textures/block/water_lettuce_marsh.png");
     private final Identifier defaultTexture = Identifier.of("shellfish", "textures/block/water_lettuce.png");
 
     protected static final VoxelShape SHAPE = ShellfishConfig.getShellfishGraphics() == 2 ? Block.createCuboidShape(2.5, -1.0, 2.5, 13.5, 0.5, 13.5) : Block.createCuboidShape(1.0, 0.0, 1.0, 15.0, 1.5, 15.0);
@@ -33,7 +37,8 @@ public class WaterLettuceRenderer implements BlockEntityRenderer<WaterLettuceBlo
     public void render(WaterLettuceBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
 
         blockEntity.set3d(ShellfishConfig.getShellfishGraphics() >= 1);
-        blockEntity.setSwamp(isSwamp(blockEntity));
+        blockEntity.setSwamp(isBiome(BiomeKeys.SWAMP, blockEntity));
+        blockEntity.setMarsh(isBiome(ShellfishWorldgen.MARSH, blockEntity));
 
         if (ShellfishConfig.getShellfishGraphics() >= 1) {
             matrices.push();
@@ -47,14 +52,16 @@ public class WaterLettuceRenderer implements BlockEntityRenderer<WaterLettuceBlo
     }
 
     private Identifier getTexture(WaterLettuceBlockEntity lettuce) {
-        if (lettuce.getWorld().getBiome(lettuce.getPos()).matchesKey(BiomeKeys.SWAMP)) {
+        if (isBiome(BiomeKeys.SWAMP, lettuce)) {
             return darkTexture;
+        } else if (isBiome(ShellfishWorldgen.MARSH, lettuce)) {
+            return marshTexture;
         }
         return defaultTexture;
     }
 
-    private boolean isSwamp(WaterLettuceBlockEntity blockEntity) {
-        if (blockEntity.getWorld().getBiome(blockEntity.getPos()).matchesKey(BiomeKeys.SWAMP)) {
+    private boolean isBiome(RegistryKey<Biome> biome, WaterLettuceBlockEntity blockEntity) {
+        if (blockEntity.getWorld().getBiome(blockEntity.getPos()).matchesKey(biome)) {
             return true;
         } else {
             return false;

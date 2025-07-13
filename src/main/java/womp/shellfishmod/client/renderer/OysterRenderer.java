@@ -24,13 +24,14 @@ public class OysterRenderer extends MobEntityRenderer<OysterEntity, ShellfishRen
     }
 
     @Override
-    public void render(ShellfishRenderState<OysterEntity.Variant> livingEntity, MatrixStack matrixStack,
+    public void render(ShellfishRenderState<OysterEntity.Variant> entity, MatrixStack poseStack,
             VertexConsumerProvider vertexConsumerProvider, int i) {
-        if(livingEntity.baby) {
-                    matrixStack.scale(0.5f, 0.5f, 0.5f);
-        }
+        int variant = entity.variant.getIndex();                  
+        if (variant == 0) entity.shellfish.scale(poseStack, 0.8f, 0.4f);
+        else if (variant == 2 || variant == 3) entity.shellfish.scale(poseStack, 1.2f, 0.85f, 0.5f);
+        else entity.shellfish.scale(poseStack, 1.0f, 0.5f);
 
-        super.render(livingEntity, matrixStack, vertexConsumerProvider, i);
+        super.render(entity, poseStack, vertexConsumerProvider, i);
     }
 
     @Override
@@ -42,6 +43,7 @@ public class OysterRenderer extends MobEntityRenderer<OysterEntity, ShellfishRen
     public void updateRenderState(OysterEntity oyster, ShellfishRenderState<Variant> oysterState, float f) {
         super.updateRenderState(oyster, oysterState, f);
         oysterState.variant = oyster.getVariant();
+        oysterState.shellfish = oyster;
         oysterState.idleAnimationState.copyFrom(oyster.idleAnimationState);
         oysterState.moveAnimationState.copyFrom(oyster.moveAnimationState);
     }

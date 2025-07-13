@@ -13,7 +13,6 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.FollowParentGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.RevengeGoal;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -37,6 +36,7 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import womp.shellfishmod.entity.goals.HungryActiveTargetGoal;
+import womp.shellfishmod.entity.goals.HungryRevengeGoal;
 import womp.shellfishmod.entity.goals.ShellfishLayEggGoal;
 import womp.shellfishmod.entity.goals.ShellfishMateGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
@@ -69,7 +69,7 @@ public class CrayfishEntity extends ShellfishEntity<Variant> implements Hungry, 
         this.goalSelector.add(1, new ShellfishMateGoal(this, 1));
         this.goalSelector.add(1, new FollowParentGoal(this, 1.1));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1d, true));
-        this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
+        this.targetSelector.add(2, new HungryRevengeGoal(this, new Class[0]));
         this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, TadpoleEntity.class, false));
         this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, FishEntity.class, false));
         this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, TurtleEntity.class, 10, true, true, (entity, world) -> {
@@ -151,6 +151,7 @@ public class CrayfishEntity extends ShellfishEntity<Variant> implements Hungry, 
             entityData = new CrayfishData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 

@@ -136,9 +136,11 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
 
     @Override
     public void markDirty() {
-        if (!world.isClient) {
-            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)world, getPos())) {
-                ServerPlayNetworking.send(player, new BaitPacket(inventory, this.getPos()));
+        if (world != null) {
+            if (!world.isClient) {
+                for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)world, getPos())) {
+                    ServerPlayNetworking.send(player, new BaitPacket(inventory, this.getPos()));
+                }
             }
         }
         super.markDirty();

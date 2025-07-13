@@ -8,11 +8,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import womp.shellfishmod.entity.MossBallEntity;
+import womp.shellfishmod.entity.parents.ShellfishEntity;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Bucketable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SpawnReason;
@@ -43,10 +46,9 @@ public class ShellfishBucketItem extends BucketItem {
     @Override
     public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
         super.appendTooltip(stack, context, tooltip, type);
-        NbtComponent nbtComponent = stack.getOrDefault(DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT);
-        if (hasTooltip && nbtComponent.isEmpty()) {
-            assert nbtComponent.copyNbt() != null;
-            tooltip.add((Text.translatable(getEntityType().getTranslationKey() + "." + nbtComponent.copyNbt().getInt("Variant"))).formatted(Formatting.GRAY, Formatting.ITALIC));
+        if (hasTooltip && stack.contains(DataComponentTypes.BUCKET_ENTITY_DATA)) {
+            assert stack.get(DataComponentTypes.BUCKET_ENTITY_DATA) != null;
+            tooltip.add((Text.translatable(entityType.get().getTranslationKey() + "." + stack.get(DataComponentTypes.BUCKET_ENTITY_DATA).copyNbt().getInt("Variant"))).formatted(Formatting.GRAY, Formatting.ITALIC));
         }
     }
 
@@ -55,15 +57,18 @@ public class ShellfishBucketItem extends BucketItem {
         if (entity != null) {
             if (entity instanceof Entity) {
                 Bucketable bucketable = (Bucketable)entity;
-                NbtComponent nbtComponent = stack.getOrDefault(DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT);
-                bucketable.copyDataFromNbt(nbtComponent.copyNbt());
+                NbtCompound nbt;
+                if (stack.contains(DataComponentTypes.BUCKET_ENTITY_DATA)) nbt = stack.get(DataComponentTypes.BUCKET_ENTITY_DATA).copyNbt();
+                else nbt = new NbtCompound();
+                bucketable.copyDataFromNbt(nbt);
                 bucketable.setFromBucket(true);
+                if (!nbt.contains("Variant")) {
+                    Random random = Random.create();
+                    if (bucketable instanceof ShellfishEntity shellfish) shellfish.setVariantNumerical(random.nextBetween(0, shellfish.getMaxVariants() - 1));
+                    if (bucketable instanceof MossBallEntity mossBall) mossBall.setVariant(MossBallEntity.Variant.byId(random.nextBetween(0, 1)));
+                }
             }
         }
-    }
-
-    private EntityType<?> getEntityType() {
-        return entityType.get();
     }
 
     public static ItemStack getEmptiedStack(ItemStack stack, PlayerEntity player) {

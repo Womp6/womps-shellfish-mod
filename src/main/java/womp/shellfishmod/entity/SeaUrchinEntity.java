@@ -116,6 +116,7 @@ public class SeaUrchinEntity extends ShellfishEntity<Variant> {
             entityData = new SeaUrchinData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 

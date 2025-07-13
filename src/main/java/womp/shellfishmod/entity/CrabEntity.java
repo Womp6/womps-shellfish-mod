@@ -2,13 +2,11 @@ package womp.shellfishmod.entity;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.FollowParentGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.RevengeGoal;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -28,7 +26,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeKeys;
 import womp.shellfishmod.entity.goals.HungryActiveTargetGoal;
+import womp.shellfishmod.entity.goals.HungryRevengeGoal;
 import womp.shellfishmod.entity.goals.ShellfishLayEggGoal;
 import womp.shellfishmod.entity.goals.ShellfishMateGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
@@ -40,6 +40,7 @@ import womp.shellfishmod.registry.ShellfishBlocks;
 import womp.shellfishmod.registry.ShellfishEntities;
 import womp.shellfishmod.registry.ShellfishItems;
 import womp.shellfishmod.registry.ShellfishSounds;
+import womp.shellfishmod.registry.ShellfishWorldgen;
 import womp.shellfishmod.util.ShellfishTags;
 
 public class CrabEntity extends ShellfishEntity implements Hungry, EggLaying {
@@ -59,7 +60,7 @@ public class CrabEntity extends ShellfishEntity implements Hungry, EggLaying {
         this.goalSelector.add(1, new ShellfishMateGoal(this, 1));
         this.goalSelector.add(1, new FollowParentGoal(this, 1.1));
         this.goalSelector.add(2, new MeleeAttackGoal(this, 1d, true));
-        this.targetSelector.add(2, new RevengeGoal(this, new Class[0]));
+        this.targetSelector.add(2, new HungryRevengeGoal(this, new Class[0]));
         this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, FishEntity.class, false));
         this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, SquidEntity.class, false));
         this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, ShrimpEntity.class, false));
@@ -95,9 +96,9 @@ public class CrabEntity extends ShellfishEntity implements Hungry, EggLaying {
     public static boolean canSpawn(EntityType<CrabEntity> type, ServerWorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        if(pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER)) {
+        if (pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getFluidState(pos).isIn(FluidTags.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? isLightLevelValidForNaturalSpawn(world, pos) : true)) {
             return true;
-        } else if(pos.getY() >= i-6 && CrabEntity.isLightLevelValidForNaturalSpawn(world, pos)) {
+        } else if (pos.getY() >= i-6 && CrabEntity.isLightLevelValidForNaturalSpawn(world, pos)) {
             return world.getBlockState(pos.down()).isIn(ShellfishTags.Blocks.SHELLFISH_SPAWNABLE_ON);
         }
         return false;

@@ -2,7 +2,7 @@ package womp.shellfishmod.entity.parents;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.Blocks;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Bucketable;
 import net.minecraft.entity.Entity;
@@ -36,6 +36,8 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.biome.BiomeKeys;
+import womp.shellfishmod.registry.ShellfishWorldgen;
 
 public abstract class ShellfishEntity extends AnimalEntity implements Bucketable {
     
@@ -56,6 +58,7 @@ public abstract class ShellfishEntity extends AnimalEntity implements Bucketable
     private int slowCounter = 0;    // For mobs with broken animations
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> FROM_BUCKET = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> NEWBORN = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public int partnerVariantStorage = -1;
     
     public ShellfishEntity(EntityType<? extends ShellfishEntity> entityType, World world) {
@@ -128,6 +131,7 @@ public abstract class ShellfishEntity extends AnimalEntity implements Bucketable
     @Override
     public void tick() {
         super.tick();
+        if (!this.getWorld().isClient && this.isBaby()) this.setNewborn(this.getBreedingAge() <= -12000);
 
         // ANIMATION
         if (this.getWorld().isClient()) {
@@ -145,11 +149,10 @@ public abstract class ShellfishEntity extends AnimalEntity implements Bucketable
         return world.doesNotIntersectEntities(this);
     }
 
-    @SuppressWarnings("deprecation")
     public static boolean canSpawn(EntityType<? extends ShellfishEntity> type, WorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
-        int i = world.getSeaLevel();
+        int i = 63;
         int j = i - depth;
-        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER);
+        return pos.getY() >= j && pos.getY() < i && (world.getFluidState(pos.up()).isIn(FluidTags.WATER) || world.getFluidState(pos.down()).isIn(FluidTags.WATER)) && world.getFluidState(pos).isIn(FluidTags.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? isLightLevelValidForNaturalSpawn(world, pos) : true);
     }
 
     @Override
@@ -190,6 +193,7 @@ public abstract class ShellfishEntity extends AnimalEntity implements Bucketable
         super.initDataTracker();
         this.dataTracker.startTracking(VARIANT, 0);
         this.dataTracker.startTracking(FROM_BUCKET, false);
+        this.dataTracker.startTracking(NEWBORN, true);
         if (this instanceof EggLaying egg) {
             this.dataTracker.startTracking(egg.getEggTracker(), false);
         }
@@ -236,6 +240,7 @@ public abstract class ShellfishEntity extends AnimalEntity implements Bucketable
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("Variant", this.getVariant());
         nbt.putBoolean("FromBucket", this.isFromBucket());
+        nbt.putBoolean("newborn", this.isNewborn());
         if (this instanceof EggLaying egg) {
             nbt.putBoolean("HasEgg", egg.hasEgg());
             nbt.putInt("partnerVariantStorage", partnerVariantStorage);
@@ -250,6 +255,7 @@ public abstract class ShellfishEntity extends AnimalEntity implements Bucketable
         super.readCustomDataFromNbt(nbt);
         setVariant(MathHelper.clamp(nbt.getInt("Variant"), 0, getMaxVariants() - 1));
         this.setFromBucket(nbt.getBoolean("FromBucket"));
+        this.setNewborn(nbt.getBoolean("newborn"));
         if (this instanceof EggLaying egg) {
             egg.setHasEgg(nbt.getBoolean("HasEgg"));
             partnerVariantStorage = nbt.getInt("partnerVariantStorage");
@@ -273,6 +279,7 @@ public abstract class ShellfishEntity extends AnimalEntity implements Bucketable
                 this.setHealth(entityNbt.getFloat("Health"));
             }
         }
+        this.setNewborn(true);
         return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
@@ -284,6 +291,7 @@ public abstract class ShellfishEntity extends AnimalEntity implements Bucketable
         nbtCompound.putInt("Variant", this.getVariant());
         nbtCompound.putFloat("Health", this.getHealth());
         nbtCompound.putInt("Age", this.getBreedingAge());
+        nbtCompound.putBoolean("newborn", this.isNewborn());
     }
 
     @Override
@@ -360,5 +368,25 @@ public abstract class ShellfishEntity extends AnimalEntity implements Bucketable
     @Override
     public float getPathfindingFavor(BlockPos pos, WorldView world) {
         return 0.0f;
+    }
+
+    public void setNewborn(boolean value) {
+        this.dataTracker.set(NEWBORN, value);
+    }
+
+    public boolean isNewborn() {
+        return this.dataTracker.get(NEWBORN);
+    }
+
+
+    // Used in renderers
+    public void scale(MatrixStack poseStack, float scale, float babyScale) {
+        scale(poseStack, scale, babyScale, babyScale);
+    }
+
+    public void scale(MatrixStack poseStack, float scale, float babyScale, float smallBabyScale) {
+        if (this.isBaby() && this.isNewborn()) poseStack.scale(smallBabyScale, smallBabyScale, smallBabyScale);
+        else if (this.isBaby() && !this.isNewborn()) poseStack.scale(babyScale, babyScale, babyScale);
+        else poseStack.scale(scale, scale, scale);
     }
 }

@@ -8,8 +8,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+import womp.shellfishmod.entity.MossBallEntity;
+import womp.shellfishmod.entity.parents.ShellfishEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Bucketable;
 import net.minecraft.entity.Entity;
@@ -53,6 +56,11 @@ public class ShellfishBucketItem extends BucketItem {
                 Bucketable bucketable = (Bucketable)entity;
                 bucketable.copyDataFromNbt(stack.getOrCreateNbt());
                 bucketable.setFromBucket(true);
+                if (!stack.getOrCreateNbt().contains("Variant")) {
+                    Random random = Random.create();
+                    if (bucketable instanceof ShellfishEntity shellfish) shellfish.setVariant(random.nextBetween(0, shellfish.getMaxVariants() - 1));
+                    if (bucketable instanceof MossBallEntity mossBall) mossBall.setSmall(random.nextBoolean());
+                }
             }
         }
     }

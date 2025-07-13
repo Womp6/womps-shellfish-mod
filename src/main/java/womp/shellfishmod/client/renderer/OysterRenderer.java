@@ -22,12 +22,13 @@ public class OysterRenderer extends MobEntityRenderer<OysterEntity, OysterModel>
     }
 
     @Override
-    public void render(OysterEntity livingEntity, float f, float g, MatrixStack matrixStack,
+    public void render(OysterEntity entity, float f, float g, MatrixStack poseStack,
             VertexConsumerProvider vertexConsumerProvider, int i) {
-        if(livingEntity.isBaby()) {
-                    matrixStack.scale(0.5f, 0.5f, 0.5f);
-        }
+        int variant = entity.getVariant();                  
+        if (variant == 0) entity.scale(poseStack, 0.8f, 0.4f);
+        else if (variant == 2 || variant == 3) entity.scale(poseStack, 1.2f, 0.85f, 0.5f);
+        else entity.scale(poseStack, 1.0f, 0.5f);
 
-        super.render(livingEntity, f, g, matrixStack, vertexConsumerProvider, i);
+        super.render(entity, f, g, poseStack, vertexConsumerProvider, i);
     }
 }

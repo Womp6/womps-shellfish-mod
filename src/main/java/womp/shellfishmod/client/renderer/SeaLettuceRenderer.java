@@ -54,11 +54,6 @@ public class SeaLettuceRenderer implements BlockEntityRenderer<SeaLettuceBlockEn
         }
     }
 
-    @Override
-    public boolean rendersOutsideBoundingBox(SeaLettuceBlockEntity blockEntity) {
-        return true;
-    }
-
     private Identifier getTexture(SeaLettuceBlockEntity lettuce) {
         return texture;
     }

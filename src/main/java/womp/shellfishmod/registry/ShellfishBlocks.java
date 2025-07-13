@@ -1,10 +1,13 @@
 package womp.shellfishmod.registry;
 
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ColoredFallingBlock;
 import net.minecraft.block.MapColor;
+import net.minecraft.block.MudBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.BlockEntityType.BlockEntityFactory;
@@ -15,6 +18,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.PlaceableOnWaterItem;
+import net.minecraft.item.TallBlockItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
@@ -22,15 +26,21 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ColorCode;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.shape.VoxelShape;
+import womp.shellfishmod.blocks.DriftwoodBlock;
 import womp.shellfishmod.blocks.RockWeedBlock;
 import womp.shellfishmod.blocks.SeaLettuceBlock;
 import womp.shellfishmod.blocks.SeaLettuceBlockEntity;
+import womp.shellfishmod.blocks.ShellfishBarrelBlock;
+import womp.shellfishmod.blocks.ShellfishBarrelBlockEntity;
 import womp.shellfishmod.blocks.TallRockWeedBlock;
+import womp.shellfishmod.blocks.WaterFlowerBlock;
 import womp.shellfishmod.blocks.WaterLettuceBlock;
 import womp.shellfishmod.blocks.WaterLettuceBlockEntity;
 import womp.shellfishmod.blocks.parents.DeadBlock;
 import womp.shellfishmod.blocks.parents.EggsBlock;
 import womp.shellfishmod.blocks.parents.ShellBlock;
+import womp.shellfishmod.blocks.parents.ShellfishLandPlantBlock;
+import womp.shellfishmod.blocks.parents.ShellfishLandTallBlock;
 import womp.shellfishmod.blocks.parents.ShellfishPlantBlock;
 import womp.shellfishmod.blocks.parents.ShellfishPlantBlock.PlaceType;
 import womp.shellfishmod.blocks.traps.ReinforcedTrapBlock;
@@ -54,13 +64,16 @@ public class ShellfishBlocks {
     public static final Block OYSTER_SHELL = registerShell("oyster_shell", Block.createCuboidShape(4.5, 0, 4.5, 11.5, 2, 11.5));
     public static final Block MUSSEL_SHELL = registerShell("mussel_shell", Block.createCuboidShape(4.5, 0, 4.5, 11.5, 2, 11.5));
 
-    //CLAY AND SAND BLOCKS
-    public static final Block CLAM_CLAY = registerCS("clam_clay", true);
-    public static final Block CLAM_SAND = registerCS("clam_sand", false);
-    public static final Block OYSTER_CLAY = registerCS("oyster_clay", true);
-    public static final Block OYSTER_SAND = registerCS("oyster_sand", false);
-    public static final Block MUSSEL_CLAY = registerCS("mussel_clay", true);
-    public static final Block MUSSEL_SAND = registerCS("mussel_sand", false);
+    //CLAY, SAND, AND MUD BLOCKS
+    public static final Block CLAM_CLAY = registerCSM("clam_clay", 1);
+    public static final Block CLAM_SAND = registerCSM("clam_sand", 2);
+    public static final Block CLAM_MUD = registerCSM("clam_mud", 3);
+    public static final Block OYSTER_CLAY = registerCSM("oyster_clay", 1);
+    public static final Block OYSTER_SAND = registerCSM("oyster_sand", 2);
+    public static final Block OYSTER_MUD = registerCSM("oyster_mud", 3);
+    public static final Block MUSSEL_CLAY = registerCSM("mussel_clay", 1);
+    public static final Block MUSSEL_SAND = registerCSM("mussel_sand", 2);
+    public static final Block MUSSEL_MUD = registerCSM("mussel_mud", 3);
 
     //DEAD BLOCKS
     public static final Block DEAD_CLAM_BLOCK = registerDeadBlock("dead_clam_block", Block.createCuboidShape(5.5, 0, 5.75, 10.5, 3.5, 10.75), true);
@@ -75,7 +88,17 @@ public class ShellfishBlocks {
     public static final Block PADDLEWEED = registerPlant("paddleweed", Block.createCuboidShape(1.0, 0.0, 1.0, 15.0, 5.0, 15.0));
     public static final Block EELGRASS = registerPlant("eelgrass", Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 11.0, 12.0));
     private static final Block sea_lettuce_data = new SeaLettuceBlock(settingsPlant(ROCKWEED, false));
-    public static final Block SEA_LETTUCE = registerCBI("sea_lettuce", sea_lettuce_data, "sea_lettuce", new BlockItem(sea_lettuce_data, new Item.Settings().food((new FoodComponent.Builder()).nutrition(1).saturationModifier((float) 0.1).build())));    
+    public static final Block SEA_LETTUCE = registerCBI("sea_lettuce", sea_lettuce_data, "sea_lettuce", new BlockItem(sea_lettuce_data, new Item.Settings().food((new FoodComponent.Builder()).nutrition(1).saturationModifier((float) 0.1).build())));
+    public static final Block TALL_CATTAIL = registerTallPlant("tall_cattail", false, false);
+    public static final Block CATTAIL = registerLandWaterPlant("cattail", false, TALL_CATTAIL, false);
+    public static final Block TALL_PICKERELWEED = registerTallPlant("tall_pickerelweed", false, false);
+    public static final Block PICKERELWEED = registerLandWaterPlant("pickerelweed", false, TALL_PICKERELWEED, false);
+    public static final Block TALL_WHEATGRASS = registerTallPlant("tall_wheatgrass", false, true);
+    public static final Block WHEATGRASS = registerLandWaterPlant("wheatgrass", false, TALL_WHEATGRASS, true);
+    public static final Block TALL_WATER_GRASS = registerTallPlant("tall_water_grass", true, true); 
+    public static final Block WATER_GRASS = registerLandWaterPlant("water_grass", true, TALL_WATER_GRASS, true);
+    public static final Block driftwood_data = new DriftwoodBlock(AbstractBlock.Settings.create().strength(0.2f).sounds(BlockSoundGroup.WOOD).burnable().pistonBehavior(PistonBehavior.DESTROY));
+    public static final Block DRIFTWOOD = registerCBI("driftwood", driftwood_data, "driftwood", new PlaceableOnWaterItem(driftwood_data, new Item.Settings()));  
 
     //SHELLFISH TRAPS
     public static final Block SHELLFISH_TRAP_BLOCK = register("shellfish_trap_block", new ShellfishTrapBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).strength(5.0f, 6.0f).sounds(BlockSoundGroup.CHAIN).nonOpaque()), "shellfish_trap");
@@ -87,6 +110,18 @@ public class ShellfishBlocks {
 	public static final BlockEntityType<ShellfishTrapBlockEntity> SHELLFISH_TRAP_BLOCK_ENTITY = registerBE("shellfish_trap_block_entity", ShellfishTrapBlockEntity::new, SHELLFISH_TRAP_BLOCK);
     public static final BlockEntityType<ReinforcedTrapBlockEntity> REINFORCED_TRAP_BLOCK_ENTITY = registerBE("reinforced_trap_block_entity", ReinforcedTrapBlockEntity::new, REINFORCED_TRAP);
 
+    //BARREL FOR TRAPPER HUT
+    public static final Block BARREL_NO_POI = registerNoBI("barrel", new ShellfishBarrelBlock(AbstractBlock.Settings.copy(Blocks.BARREL)));
+    public static final BlockEntityType<ShellfishBarrelBlockEntity> BARREL_BE_NO_POI = registerBE("barrel_block_entity", ShellfishBarrelBlockEntity::new, BARREL_NO_POI);
+
+    private static Block registerLandWaterPlant(String name, boolean waterOnly, Block tallPlantBlock, boolean grass) {
+        return register(name, grass ? new ShellfishLandPlantBlock(AbstractBlock.Settings.copy(Blocks.SHORT_GRASS), waterOnly, tallPlantBlock) : new WaterFlowerBlock(AbstractBlock.Settings.copy(Blocks.DANDELION), tallPlantBlock), name);
+    }
+
+    private static Block registerTallPlant(String name, boolean waterOnly, boolean grass) {
+        Block block = new ShellfishLandTallBlock(AbstractBlock.Settings.copy(grass ? Blocks.SHORT_GRASS : Blocks.DANDELION), waterOnly);
+        return registerCBI(name, block, name, new TallBlockItem(block, new Item.Settings()));
+    }
 
     private static Block registerPlant(String name, VoxelShape shape) {
         return register(name, new ShellfishPlantBlock(settingsPlant(Blocks.SEAGRASS, true), shape, PlaceType.MUD_SAND), name);
@@ -103,8 +138,11 @@ public class ShellfishBlocks {
         return register(name, new DeadBlock(sets, shape, solid), name);
     }
 
-    private static Block registerCS(String name, boolean clay) {
-        return register(name, clay ? new Block(AbstractBlock.Settings.copy(Blocks.CLAY).instrument(NoteBlockInstrument.FLUTE).strength(0.6F).sounds(BlockSoundGroup.GRAVEL)) : new ColoredFallingBlock(new ColorCode(14406560), AbstractBlock.Settings.copy(Blocks.SAND).instrument(NoteBlockInstrument.SNARE).strength(0.5F).sounds(BlockSoundGroup.SAND)), name);
+    /**
+     * For type: 1 is clay, 2 is sand, 3 is mud.
+     */
+    private static Block registerCSM(String name, int type) {
+        return register(name, type == 1 ? new Block(AbstractBlock.Settings.copy(Blocks.CLAY).instrument(NoteBlockInstrument.FLUTE).strength(0.6F).sounds(BlockSoundGroup.GRAVEL)) : type == 2 ? new ColoredFallingBlock(new ColorCode(14406560), AbstractBlock.Settings.copy(Blocks.SAND).instrument(NoteBlockInstrument.SNARE).strength(0.5F).sounds(BlockSoundGroup.SAND)) : new MudBlock(AbstractBlock.Settings.copy(Blocks.MUD)), name);
     }
 
     private static Block registerShell(String name, VoxelShape shape) {
@@ -132,7 +170,10 @@ public class ShellfishBlocks {
         return Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of("shellfish", name), BlockEntityType.Builder.create(factory, block).build(null));
     }
     
-    public static void register() {}
+    public static void register() {
+        FuelRegistry.INSTANCE.add(DRIFTWOOD, 200);
+        FlammableBlockRegistry.getDefaultInstance().add(DRIFTWOOD, 5, 5);
+    }
 
     public static Block[] getCutouts() {
         return new Block[] {
@@ -148,6 +189,14 @@ public class ShellfishBlocks {
             PADDLEWEED,
             EELGRASS,
             SEA_LETTUCE,
+            WATER_GRASS,
+            TALL_WATER_GRASS,
+            CATTAIL,
+            TALL_CATTAIL,
+            PICKERELWEED,
+            TALL_PICKERELWEED,
+            WHEATGRASS,
+            TALL_WHEATGRASS,
             SHELLFISH_TRAP_BLOCK,
             REINFORCED_TRAP
         };

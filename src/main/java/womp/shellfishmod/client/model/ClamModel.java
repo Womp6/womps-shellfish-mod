@@ -1,5 +1,6 @@
 package womp.shellfishmod.client.model;
 
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -10,8 +11,13 @@ import womp.shellfishmod.entity.animations.ShellfishAnimations;
 
 public class ClamModel extends EntityModel<ShellfishRenderState<ClamEntity.Variant>> {
 
+    private final KeyframeAnimation moveAnimation;
+    private final KeyframeAnimation idleAnimation;
+
     public ClamModel(ModelPart root) {
         super(root);
+        this.moveAnimation = ShellfishAnimations.CLAM_MOVE.bake(root);
+        this.idleAnimation = ShellfishAnimations.CLAM_IDLE.bake(root);
     }
 
     public static LayerDefinition getTexturedModelData() {
@@ -34,7 +40,7 @@ public class ClamModel extends EntityModel<ShellfishRenderState<ClamEntity.Varia
     @Override
     public void setupAnim(ShellfishRenderState<ClamEntity.Variant> entity) {
         super.setupAnim(entity);
-        this.animate(entity.moveAnimationState, ShellfishAnimations.CLAM_MOVE, entity.ageInTicks, 1f);
-        this.animate(entity.idleAnimationState, ShellfishAnimations.CLAM_IDLE, entity.ageInTicks, 1f);
+        this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 1f);
+        this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
     }
 }

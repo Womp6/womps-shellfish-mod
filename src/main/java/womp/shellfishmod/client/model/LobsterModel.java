@@ -1,5 +1,6 @@
 package womp.shellfishmod.client.model;
 
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -11,9 +12,15 @@ import womp.shellfishmod.entity.animations.MoreShellfishAnimations;
 // The new model (1.2+) was revised with help from underapreciatedpigeon
 public class LobsterModel extends EntityModel<ShellfishRenderState<LobsterEntity.Variant>> {
 
+    private final KeyframeAnimation moveAnimation;
+    private final KeyframeAnimation idleAnimation;
+
     public LobsterModel(ModelPart root) {
         super(root);
+        this.moveAnimation = MoreShellfishAnimations.LOBSTER_WALK.bake(root);
+        this.idleAnimation = MoreShellfishAnimations.LOBSTER_IDLE.bake(root);
     }
+
     public static LayerDefinition getTexturedModelData() {
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
@@ -100,9 +107,9 @@ public class LobsterModel extends EntityModel<ShellfishRenderState<LobsterEntity
     public void setupAnim(ShellfishRenderState<LobsterEntity.Variant> entity) {
         super.setupAnim(entity);
         if (!entity.isInWater) {
-            this.animateWalk(MoreShellfishAnimations.LOBSTER_WALK, entity.walkAnimationPos, entity.walkAnimationSpeed, 12, 15f);
+            this.moveAnimation.applyWalk(entity.walkAnimationPos, entity.walkAnimationSpeed, 12, 15f);
         }
-        this.animate(entity.moveAnimationState, MoreShellfishAnimations.LOBSTER_WALK, entity.ageInTicks, 2f);
-        this.animate(entity.idleAnimationState, MoreShellfishAnimations.LOBSTER_IDLE, entity.ageInTicks, 1f);
+        this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 2f);
+        this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
     }
 }

@@ -1,0 +1,112 @@
+{
+  "type": "minecraft:random_patch",
+  "config": {
+    "feature": {
+      "feature": {
+        "type": "shellfish:conditional_block",
+        "config": {
+          "to_place": {
+            "type": "shellfish:conditional_state_provider",
+            "entries": [
+              {
+                "condition": {
+                    "type": "minecraft:matching_fluids",
+                    "fluids": [ "minecraft:water" ]
+                },
+                "states": [
+                  {
+                    "weight": 2,
+                    "data": {
+                      "Name": "shellfish:water_grass"
+                    }
+                  },
+                  {
+                    "weight": 1,
+                    "data": {
+                      "Name": "shellfish:tall_water_grass",
+                      "Properties": {
+                        "half": "lower"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "condition": {
+                    "type": "minecraft:matching_blocks",
+                    "blocks": [ "minecraft:air" ]
+                },
+                "states": [
+                  {
+                    "weight": 3,
+                    "data": {
+                      "Name": "minecraft:short_grass"
+                    }
+                  },
+                  {
+                    "weight": 1,
+                    "data": {
+                      "Name": "minecraft:bush"
+                    }
+                  },
+                  {
+                    "weight": 2,
+                    "data": {
+                      "Name": "minecraft:tall_grass",
+                      "Properties": {
+                        "half": "lower"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "placement": [
+        {
+          "type": "minecraft:block_predicate_filter",
+          "predicate": {
+            "type": "minecraft:any_of",
+            "predicates": [
+              {
+                "type": "minecraft:all_of",
+                "predicates": [
+                  {
+                    "type": "minecraft:matching_blocks",
+                    "blocks": "minecraft:air"
+                  },
+                  {
+                    "type": "minecraft:would_survive",
+                    "state": {
+                      "Name": "minecraft:short_grass"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "minecraft:all_of",
+                "predicates": [
+                  {
+                    "type": "minecraft:matching_blocks",
+                    "blocks": "minecraft:water"
+                  },
+                  {
+                    "type": "minecraft:would_survive",
+                    "state": {
+                      "Name": "shellfish:water_grass"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "tries": 150,
+    "xz_spread": 5,
+    "y_spread": 4
+  }
+}

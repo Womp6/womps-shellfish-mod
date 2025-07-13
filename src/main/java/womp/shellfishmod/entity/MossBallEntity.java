@@ -29,11 +29,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import womp.shellfishmod.entity.goals.SitAroundGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
 import womp.shellfishmod.registry.ShellfishItems;
+import womp.shellfishmod.registry.ShellfishWorldgen;
 
 import java.util.function.IntFunction;
 
@@ -59,7 +63,7 @@ public class MossBallEntity extends WaterAnimal implements Bucketable {
     public static boolean canSpawn(EntityType<MossBallEntity> type, ServerLevelAccessor world, EntitySpawnReason reason, BlockPos pos, RandomSource random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER);
+        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER) && ((world.getBiome(pos).is(ShellfishWorldgen.MARSH) || world.getBiome(pos).is(Biomes.SWAMP) || world.getBiome(pos).is(Biomes.MANGROVE_SWAMP)) ? world.getRawBrightness(pos, 0) > 8 : true);
     }
 
     @Override
@@ -85,14 +89,14 @@ public class MossBallEntity extends WaterAnimal implements Bucketable {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(ValueOutput nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("FromBucket", this.fromBucket());
         nbt.putInt("Variant", this.getVariant().id);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(ValueInput nbt) {
         super.readAdditionalSaveData(nbt);
         this.setFromBucket(nbt.getBooleanOr("FromBucket", false));
         this.setVariant(Variant.byId(nbt.getIntOr("Variant", 0)));

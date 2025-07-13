@@ -2,15 +2,19 @@ package womp.shellfishmod.client;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import womp.shellfishmod.ShellfishMod;
@@ -68,12 +72,22 @@ public class ShellfishClient {
     }
 
     @SubscribeEvent
+    public static void addBlockColors(RegisterColorHandlersEvent.Block event) {
+        event.register((state, world, pos, tintIndex) -> {
+            if (world != null && pos != null) {
+                return BiomeColors.getAverageGrassColor(world, pos);
+            }
+            return GrassColor.getDefaultColor();
+        }, ShellfishBlocks.WATER_GRASS.get(), ShellfishBlocks.TALL_WATER_GRASS.get());
+    }
+
+    @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         registerClientEntityRenders();
 
-        ItemBlockRenderTypes.setRenderLayer(ShellfishBlocks.SEA_SNAIL_EGGS_BLOCK.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ShellfishBlocks.SEA_SNAIL_EGGS_BLOCK.get(), ChunkSectionLayer.TRANSLUCENT);
         for (Block block : ShellfishBlocks.getCutouts()) {
-            ItemBlockRenderTypes.setRenderLayer(block, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(block, ChunkSectionLayer.CUTOUT);
         }
 
         BlockEntityRenderers.register(ShellfishBlocks.WATER_LETTUCE_BLOCK_ENTITY.get(), WaterLettuceRenderer::new);

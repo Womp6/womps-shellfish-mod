@@ -1,5 +1,6 @@
 package womp.shellfishmod.client.model;
 
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -11,8 +12,13 @@ import womp.shellfishmod.entity.animations.MoreShellfishAnimations;
 // The new model (1.2+) was revised with help from underapreciatedpigeon
 public class CrabModel extends EntityModel<ShellfishRenderState<CrabEntity.Variant>> {
 
+    private final KeyframeAnimation moveAnimation;
+    private final KeyframeAnimation idleAnimation;
+
     public CrabModel(ModelPart root) {
         super(root);
+        this.moveAnimation = MoreShellfishAnimations.CRAB_WALK.bake(root);
+        this.idleAnimation = MoreShellfishAnimations.CRAB_IDLE.bake(root);
     }
 
     public static LayerDefinition getTexturedModelData() {
@@ -84,9 +90,9 @@ public class CrabModel extends EntityModel<ShellfishRenderState<CrabEntity.Varia
     public void setupAnim(ShellfishRenderState<CrabEntity.Variant> entity) {
         super.setupAnim(entity);
         if (!entity.isInWater) {
-            this.animateWalk(MoreShellfishAnimations.CRAB_WALK, entity.walkAnimationPos, entity.walkAnimationSpeed, 12, 15f);
+            this.moveAnimation.applyWalk(entity.walkAnimationPos, entity.walkAnimationSpeed, 12, 15f);
         }
-        this.animate(entity.moveAnimationState, MoreShellfishAnimations.CRAB_WALK, entity.ageInTicks, 2f);
-        this.animate(entity.idleAnimationState, MoreShellfishAnimations.CRAB_IDLE, entity.ageInTicks, 1f);
+        this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 2f);
+        this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
     }
 }

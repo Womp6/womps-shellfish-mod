@@ -10,7 +10,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.VegetationBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -32,12 +31,13 @@ public class WaterLettuceBlock extends VegetationBlock implements EntityBlock {
 
     public static final BooleanProperty SHOW_3D = BooleanProperty.create("is3d");
     public static final BooleanProperty IS_SWAMP = BooleanProperty.create("swamp");
+    public static final BooleanProperty IS_MARSH = BooleanProperty.create("marsh");
 
     public static final MapCodec<WaterLettuceBlock> CODEC = simpleCodec(WaterLettuceBlock::new);
 
     public WaterLettuceBlock(BlockBehaviour.Properties settings) {
         super(settings);
-        this.registerDefaultState(this.stateDefinition.any().setValue(SHOW_3D, true).setValue(IS_SWAMP, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(SHOW_3D, true).setValue(IS_SWAMP, false).setValue(IS_MARSH, false));
     }
 
     @Override
@@ -48,8 +48,7 @@ public class WaterLettuceBlock extends VegetationBlock implements EntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(SHOW_3D);
-        builder.add(IS_SWAMP);
+        builder.add(SHOW_3D).add(IS_SWAMP).add(IS_MARSH);
     }
 
     @Override

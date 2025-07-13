@@ -2,7 +2,7 @@ package womp.shellfishmod.registry;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -52,7 +52,7 @@ public class ShellfishSounds {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));
     }
 
-    public static void register(IEventBus bus) {
+    public static void register(BusGroup bus) {
         SOUND_EVENTS.register(bus);
     }
 }

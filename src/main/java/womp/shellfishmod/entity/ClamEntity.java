@@ -89,6 +89,7 @@ public class ClamEntity extends ShellfishEntity<Variant> {
             entityData = new ClamData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 

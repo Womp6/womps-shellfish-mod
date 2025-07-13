@@ -1,5 +1,6 @@
 package womp.shellfishmod.client.model;
 
+import net.minecraft.client.animation.KeyframeAnimation;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -10,8 +11,13 @@ import womp.shellfishmod.entity.animations.MoreShellfishAnimations;
 
 public class MusselModel extends EntityModel<ShellfishRenderState<MusselEntity.Variant>> {
 
+    private final KeyframeAnimation moveAnimation;
+    private final KeyframeAnimation idleAnimation;
+
     public MusselModel(ModelPart root) {
         super(root);
+        this.moveAnimation = MoreShellfishAnimations.MUSSEL_MOVE.bake(root);
+        this.idleAnimation = MoreShellfishAnimations.MUSSEL_IDLE.bake(root);
     }
 
     public static LayerDefinition getTexturedModelData() {
@@ -32,7 +38,7 @@ public class MusselModel extends EntityModel<ShellfishRenderState<MusselEntity.V
     @Override
     public void setupAnim(ShellfishRenderState<MusselEntity.Variant> entity) {
         super.setupAnim(entity);
-        this.animate(entity.moveAnimationState, MoreShellfishAnimations.MUSSEL_MOVE, entity.ageInTicks, 1f);
-        this.animate(entity.idleAnimationState, MoreShellfishAnimations.MUSSEL_IDLE, entity.ageInTicks, 1f);
+        this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 1f);
+        this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
     }
 }

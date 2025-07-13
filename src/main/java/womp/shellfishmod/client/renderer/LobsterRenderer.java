@@ -25,9 +25,10 @@ public class LobsterRenderer extends MobRenderer<LobsterEntity, ShellfishRenderS
     @Override
     public void render(ShellfishRenderState<LobsterEntity.Variant> entity, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
-        if(entity.isBaby) {
-            poseStack.scale(0.5f, 0.5f, 0.5f);
-        }
+        int variant = entity.variant.getIndex();
+        if (variant == 0) entity.shellfish.scale(poseStack, 1.2f, 0.8f, 0.5f);
+        else if (variant == 4) entity.shellfish.scale(poseStack, 1.3f, 0.85f, 0.5f);
+        else entity.shellfish.scale(poseStack, 1f, 0.5f);
 
         super.render(entity, poseStack, bufferSource, packedLight);
     }
@@ -41,6 +42,7 @@ public class LobsterRenderer extends MobRenderer<LobsterEntity, ShellfishRenderS
     public void extractRenderState(LobsterEntity lobster, ShellfishRenderState<LobsterEntity.Variant> lobsterState, float f) {
         super.extractRenderState(lobster, lobsterState, f);
         lobsterState.variant = lobster.getVariant();
+        lobsterState.shellfish = lobster;
         lobsterState.idleAnimationState.copyFrom(lobster.idleAnimationState);
         lobsterState.moveAnimationState.copyFrom(lobster.moveAnimationState);
     }

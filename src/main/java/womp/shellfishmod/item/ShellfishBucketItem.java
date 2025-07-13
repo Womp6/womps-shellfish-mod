@@ -1,45 +1,82 @@
 package womp.shellfishmod.item;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
+import womp.shellfishmod.entity.MossBallEntity;
+import womp.shellfishmod.entity.parents.ShellfishEntity;
 
-import javax.annotation.Nullable;
-import java.util.function.Supplier;
-
-public class ShellfishBucketItem extends MobBucketItem {
-
-    public ShellfishBucketItem(Supplier<? extends EntityType<? extends Mob>> shellfish, Fluid water, Item.Properties builder) {
-        super(shellfish, () -> water, () -> SoundEvents.BUCKET_EMPTY_FISH, builder.stacksTo(1));
+public class ShellfishBucketItem extends BucketItem {
+    private final Supplier<? extends EntityType<?>> entityType;
+    private final boolean hasTooltip;
+    public ShellfishBucketItem(Supplier<? extends EntityType<?>> entityType, Fluid fluid, Item item, boolean hasTooltip, Properties settings) {
+        super(fluid, settings);
+        this.entityType = entityType;
+        this.hasTooltip = hasTooltip;
     }
 
     @Override
-    public void checkExtraContent(@Nullable LivingEntity player, Level level, ItemStack stack, BlockPos pos) {
-        if (level instanceof ServerLevel) {
-            this.spawnShellfish((ServerLevel)level, stack, pos);
-            level.gameEvent(player, GameEvent.ENTITY_PLACE, pos);
+    public void checkExtraContent(@Nullable LivingEntity user, Level world, ItemStack stack, BlockPos pos) {
+        if (world instanceof ServerLevel) {
+            this.spawnEntity((ServerLevel)world, stack, pos);
+            world.gameEvent(user, GameEvent.ENTITY_PLACE, pos);
         }
     }
 
-    private void spawnShellfish(ServerLevel serverLevel, ItemStack stack, BlockPos pos) {
-        if (this.getFishType().spawn(serverLevel, stack, null, pos, EntitySpawnReason.BUCKET, true, false) instanceof Bucketable bucketable) {
-            CustomData customdata = stack.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
-            bucketable.loadFromBucketTag(customdata.copyTag());
-            bucketable.setFromBucket(true);
+    @SuppressWarnings("deprecation")
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay displayComponent, Consumer<Component> textConsumer, TooltipFlag type) {
+        super.appendHoverText(stack, context, displayComponent, textConsumer, type);
+        if (hasTooltip && stack.has(DataComponents.BUCKET_ENTITY_DATA)) {
+            assert stack.get(DataComponents.BUCKET_ENTITY_DATA) != null;
+            textConsumer.accept(Component.translatable(entityType.get().getDescriptionId() + "." + stack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag().getInt("Variant").get()).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         }
+    }
+
+    private void spawnEntity(ServerLevel world, ItemStack stack, BlockPos pos) {
+        Mob mobEntity = (Mob)this.entityType.get().create(world, EntityType.createDefaultStackConfig(world, stack, (LivingEntity)null), pos, EntitySpawnReason.BUCKET, true, false);
+        if (mobEntity instanceof Bucketable) {
+            Bucketable bucketable = (Bucketable)mobEntity;
+            CustomData nbtComponent = stack.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
+            bucketable.loadFromBucketTag(nbtComponent.copyTag());
+            bucketable.setFromBucket(true);
+            RandomSource random = RandomSource.create();
+            if (!nbtComponent.contains("Variant") && bucketable instanceof ShellfishEntity<?> shellfish) shellfish.setVariantNumerical(random.nextIntBetweenInclusive(0, shellfish.getMaxVariants() - 1));
+            else if (!nbtComponent.contains("Variant") && bucketable instanceof MossBallEntity mossBall) mossBall.setVariant(MossBallEntity.Variant.byId(random.nextIntBetweenInclusive(0, 1)));
+        }
+
+        if (mobEntity != null) {
+            world.addFreshEntityWithPassengers(mobEntity);
+            mobEntity.playAmbientSound();
+        }
+
+    }
+
+    @Override
+    protected void playEmptySound(@Nullable LivingEntity pEntity, LevelAccessor pLevel, BlockPos pPos) {
+        pLevel.playSound(pEntity, pPos, SoundEvents.BUCKET_EMPTY_FISH, SoundSource.NEUTRAL, 1.0F, 1.0F);
     }
 }

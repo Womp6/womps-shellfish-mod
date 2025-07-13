@@ -150,6 +150,15 @@ public class ShellfishGroup {
                 content.accept(ShellfishItems.PADDLEWEED.get());
                 content.accept(ShellfishItems.EELGRASS.get());
                 content.accept(ShellfishItems.SEA_LETTUCE.get());
+                content.accept(ShellfishItems.CATTAIL.get());
+                content.accept(ShellfishItems.TALL_CATTAIL.get());
+                content.accept(ShellfishItems.PICKERELWEED.get());
+                content.accept(ShellfishItems.TALL_PICKERELWEED.get());
+                content.accept(ShellfishItems.WHEATGRASS.get());
+                content.accept(ShellfishItems.TALL_WHEATGRASS.get());
+                content.accept(ShellfishItems.WATER_GRASS.get());
+                content.accept(ShellfishItems.TALL_WATER_GRASS.get());
+                content.accept(ShellfishItems.DRIFTWOOD.get());
                 content.accept(ShellfishItems.SHELLFISH_BAIT.get());
                 content.accept(ShellfishItems.DRIED_SHELLFISH_BAIT.get());
 
@@ -168,10 +177,13 @@ public class ShellfishGroup {
                 //MISC
                 content.accept(ShellfishItems.CLAM_CLAY.get());
                 content.accept(ShellfishItems.CLAM_SAND.get());
+                content.accept(ShellfishItems.CLAM_MUD.get());
                 content.accept(ShellfishItems.OYSTER_CLAY.get());
                 content.accept(ShellfishItems.OYSTER_SAND.get());
+                content.accept(ShellfishItems.OYSTER_MUD.get());
                 content.accept(ShellfishItems.MUSSEL_CLAY.get());
                 content.accept(ShellfishItems.MUSSEL_SAND.get());
+                content.accept(ShellfishItems.MUSSEL_MUD.get());
                 content.accept(ShellfishItems.DEAD_CLAM.get());
                 content.accept(ShellfishItems.DEAD_OYSTER.get());
                 content.accept(ShellfishItems.DEAD_MUSSEL.get());

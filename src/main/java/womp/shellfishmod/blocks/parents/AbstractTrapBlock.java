@@ -37,6 +37,7 @@ import womp.shellfishmod.registry.ShellfishSounds;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 // Block entity code made using help from Kaupenjoe
 public abstract class AbstractTrapBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
@@ -119,6 +120,16 @@ public abstract class AbstractTrapBlock extends BaseEntityBlock implements Simpl
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return (BlockState)state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+    
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
 

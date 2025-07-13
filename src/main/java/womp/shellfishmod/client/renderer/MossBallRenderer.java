@@ -25,7 +25,7 @@ public class MossBallRenderer extends MobRenderer<MossBallEntity, ShellfishRende
     public void render(ShellfishRenderState<MossBallEntity.Variant> entity, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight)  {
 
-        if(entity.variant.getIndex() == 0) {
+        if(entity.variant.getIndex() == 1) {
             poseStack.scale(0.5f, 0.5f, 0.5f);
         } else {
             poseStack.scale(0.75f, 0.75f, 0.75f);

@@ -80,4 +80,11 @@ public class HungryActiveTargetGoal<T extends LivingEntity> extends TargetGoal {
     public void setTarget(@Nullable LivingEntity targetEntity) {
         this.targetEntity = targetEntity;
     }
+
+    @Override
+    public boolean canContinueToUse() {
+        if (this.mob instanceof Hungry hungry && !hungry.isHungry()) return false;
+        if (ShellfishStateUtil.isShellfishPassive((ServerLevel) this.mob.level())) return false;
+        return super.canContinueToUse();
+    }
 }

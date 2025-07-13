@@ -79,6 +79,14 @@
                 "shellfish:paddleweed",
                 "shellfish:eelgrass",
                 "shellfish:sea_lettuce",
+                "shellfish:water_grass",
+                "shellfish:tall_water_grass",
+                "shellfish:cattail",
+                "shellfish:tall_cattail",
+                "shellfish:wheatgrass",
+                "shellfish:tall_wheatgrass",
+                "shellfish:pickerelweed",
+                "shellfish:tall_pickerelweed",
 
                 "shellfish:crayfish_eggs",
                 "shellfish:lobster_eggs",
@@ -101,6 +109,9 @@
                 "shellfish:clam_clay",
                 "shellfish:oyster_clay",
                 "shellfish:mussel_clay",
+                "shellfish:clam_mud",
+                "shellfish:oyster_mud",
+                "shellfish:mussel_mud",
 
                 "shellfish:pearl",
 
@@ -157,9 +168,12 @@
                 "shellfish:caviar_bucket",
 
                 "shellfish:shellfish_trap",
+                "shellfish:reinforced_trap",
 
                 "shellfish:shellfish_bait",
-                "shellfish:dried_shellfish_bait"
+                "shellfish:dried_shellfish_bait",
+
+                "shellfish:driftwood"
               ]
             }
           ]

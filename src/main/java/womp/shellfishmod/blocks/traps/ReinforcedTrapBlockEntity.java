@@ -12,6 +12,7 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.state.BlockState;
 import womp.shellfishmod.blocks.parents.AbstractTrapBlockEntity;
 import womp.shellfishmod.registry.ShellfishBlocks;
+import womp.shellfishmod.registry.ShellfishWorldgen;
 
 public class ReinforcedTrapBlockEntity extends AbstractTrapBlockEntity {
 
@@ -28,7 +29,7 @@ public class ReinforcedTrapBlockEntity extends AbstractTrapBlockEntity {
         } else {
             Holder<Biome> biome = this.getLevel().getBiome(this.getBlockPos());
             if (biome.unwrapKey().isEmpty()) return Items.GLASS_BOTTLE;
-            if (biome.is(BiomeTags.IS_RIVER) || biome.unwrapKey().get().equals(Biomes.SWAMP) || biome.unwrapKey().get().equals(Biomes.MANGROVE_SWAMP)) {
+            if (biome.is(BiomeTags.IS_RIVER) || biome.unwrapKey().get().equals(Biomes.SWAMP) || biome.unwrapKey().get().equals(Biomes.MANGROVE_SWAMP) || biome.unwrapKey().get().equals(ShellfishWorldgen.MARSH)) {
                 return Items.LILY_PAD;
             } else return Items.GLASS_BOTTLE;
         }
@@ -51,7 +52,7 @@ public class ReinforcedTrapBlockEntity extends AbstractTrapBlockEntity {
             } else if (biome.is(BiomeTags.IS_RIVER)) {
                 count = i == 3 ? count : random.nextIntBetweenInclusive(4, 8);
                 return i == 3 ? Items.COPPER_INGOT : Items.GOLD_NUGGET;
-            } else if (biome.unwrapKey().get().equals(Biomes.SWAMP) || biome.unwrapKey().get().equals(Biomes.MANGROVE_SWAMP)) {
+            } else if (biome.unwrapKey().get().equals(Biomes.SWAMP) || biome.unwrapKey().get().equals(Biomes.MANGROVE_SWAMP) || biome.unwrapKey().get().equals(ShellfishWorldgen.MARSH)) {
                 count = random.nextIntBetweenInclusive(2, 4);
                 return Items.SLIME_BALL;
             } else return selectTreasure(1);

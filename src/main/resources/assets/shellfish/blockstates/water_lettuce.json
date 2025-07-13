@@ -3,10 +3,16 @@
     "is3d=true": {
       "model": "shellfish:block/water_lettuce"
     },
-    "is3d=false,swamp=false": {
+    "is3d=false,swamp=false,marsh=false": {
       "model": "shellfish:block/water_lettuce_2d"
     },
-    "is3d=false,swamp=true": {
+    "is3d=false,swamp=true,marsh=false": {
+      "model": "shellfish:block/water_lettuce_2d_swamp"
+    },
+    "is3d=false,swamp=false,marsh=true": {
+      "model": "shellfish:block/water_lettuce_2d_marsh"
+    },
+    "is3d=false,swamp=true,marsh=true": {
       "model": "shellfish:block/water_lettuce_2d_swamp"
     }
   }

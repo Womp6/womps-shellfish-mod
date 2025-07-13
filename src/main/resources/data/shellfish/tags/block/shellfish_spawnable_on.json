@@ -7,6 +7,15 @@
         "minecraft:stone",
         "minecraft:gravel",
         "minecraft:clay",
-        "minecraft:mud"
+        "minecraft:mud",
+        "shellfish:clam_sand",
+        "shellfish:clam_clay",
+        "shellfish:clam_mud",
+        "shellfish:oyster_sand",
+        "shellfish:oyster_clay",
+        "shellfish:oyster_mud",
+        "shellfish:mussel_sand",
+        "shellfish:mussel_clay",
+        "shellfish:mussel_mud"
     ]
 }

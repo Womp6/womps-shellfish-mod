@@ -24,7 +24,7 @@ public class MossBallRenderer extends MobRenderer<MossBallEntity, MossBallModel>
     public void render(MossBallEntity entity, float entityYaw, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight)  {
 
-        if(entity.getVariant().getIndex() == 0) {
+        if(entity.getVariant().getIndex() == 1) {
             poseStack.scale(0.5f, 0.5f, 0.5f);
         } else {
             poseStack.scale(0.75f, 0.75f, 0.75f);

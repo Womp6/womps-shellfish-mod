@@ -28,7 +28,7 @@ Feel free to use this mod in modpacks on CurseForge!
     </tr>
     <tr>
       <td style="padding: 10px; text-align: left; border: none;"><strong>🌱 Plants</strong></td>
-      <td style="padding: 10px; text-align: left; border: none;">6 brand new plants to let life flourish in the aquatic side of the world.</td>
+      <td style="padding: 10px; text-align: left; border: none;">10 new plants to let the natural side of the world flourish, 6 being aquatic and 4 being on land.</td>
     </tr>
     <tr>
       <td style="padding: 10px; text-align: left; border: none;"><strong>🍖 New Food Items</strong></td>
@@ -40,11 +40,11 @@ Feel free to use this mod in modpacks on CurseForge!
     </tr>
     <tr>
       <td style="padding: 10px; text-align: left; border: none;"><strong>🌎 Worldgen</strong></td>
-      <td style="padding: 10px; text-align: left; border: none;">New worldgen across all aquatic biomes, whether an ocean or a swamp, to add some more life to your world.</td>
+      <td style="padding: 10px; text-align: left; border: none;">New worldgen across all aquatic biomes, whether an ocean or a swamp, to add some more life to your world, and a brand new lively Marsh biome.</td>
     </tr>
     <tr>
       <td style="padding: 10px; text-align: left; border: none;"><strong>🤝 Compatibility</strong></td>
-      <td style="padding: 10px; text-align: left; border: none;">Playing with modded biomes? This mod's shellfish can spawn in the biomes of Biomes O' Plenty as well!</td>
+      <td style="padding: 10px; text-align: left; border: none;">Playing with modded biomes or TerraBlender? This mod's shellfish can spawn in the biomes of Biomes O' Plenty, and the Marsh will use and be compatible with TerraBlender if available! All <strong>optional!</strong></td>
     </tr>
   </tbody>
 </table>

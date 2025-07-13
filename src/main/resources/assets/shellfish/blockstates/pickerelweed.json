@@ -1,0 +1,15 @@
+{
+    "variants": {
+      "bloomed=true": [
+        {
+          "model": "shellfish:block/pickerelweed1"
+        },
+        {
+          "model": "shellfish:block/pickerelweed2"
+        }
+      ],
+      "bloomed=false": {
+        "model": "shellfish:block/pickerelweed_leaves"
+      }
+    }
+  }

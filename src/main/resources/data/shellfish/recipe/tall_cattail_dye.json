@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "shellfish:tall_cattail"
+        }
+    ],
+    "result": {
+        "id": "minecraft:brown_dye",
+        "count": 2
+    }
+}

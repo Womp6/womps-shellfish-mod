@@ -175,6 +175,7 @@ public class ShrimpEntity extends ShellfishEntity<ShrimpEntity.Variant> implemen
             entityData = new ShrimpData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 

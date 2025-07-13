@@ -54,11 +54,6 @@ public class SeaLettuceRenderer implements BlockEntityRenderer<SeaLettuceBlockEn
         }
     }
 
-    @Override
-    public boolean shouldRenderOffScreen(SeaLettuceBlockEntity blockEntity) {
-        return true;
-    }
-
     private ResourceLocation getTexture(SeaLettuceBlockEntity lettuce) {
         return texture;
     }

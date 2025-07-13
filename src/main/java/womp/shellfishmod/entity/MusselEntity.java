@@ -90,6 +90,7 @@ public class MusselEntity extends ShellfishEntity<MusselEntity.Variant> {
             entityData = new MusselData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 

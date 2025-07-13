@@ -2,7 +2,7 @@ package womp.shellfishmod.entity.parents;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.Blocks;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.AnimationState;
@@ -36,7 +36,9 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.biome.BiomeKeys;
 import womp.shellfishmod.entity.parents.ShellfishEntity.ShellfishVariant;
+import womp.shellfishmod.registry.ShellfishWorldgen;
 import womp.shellfishmod.util.ShellfishTags;
 
 public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> extends AnimalEntity implements Bucketable, VariantHolder<T> {
@@ -59,6 +61,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     private int slowCounter = 0;    // For mobs with broken animations
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Boolean> FROM_BUCKET = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final TrackedData<Boolean> NEWBORN = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public int partnerVariantStorage = -1;
     
     public ShellfishEntity(EntityType<? extends ShellfishEntity<?>> entityType, World world) {
@@ -130,6 +133,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     @Override
     public void tick() {
         super.tick();
+        if (!this.getWorld().isClient && this.isBaby()) this.setNewborn(this.getBreedingAge() <= -12000);
 
         // ANIMATION
         if (this.getWorld().isClient()) {
@@ -150,7 +154,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     public static boolean canSpawn(EntityType<? extends ShellfishEntity<?>> type, WorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
         int i = world.getSeaLevel();
         int j = i - depth;
-        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER);
+        return pos.getY() >= j && pos.getY() < i && (world.getFluidState(pos.up()).isIn(FluidTags.WATER) || world.getFluidState(pos.down()).isIn(FluidTags.WATER)) && world.getFluidState(pos).isIn(FluidTags.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? isLightLevelValidForNaturalSpawn(world, pos) : true);
     }
 
     @Override
@@ -186,6 +190,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
         super.initDataTracker(builder);
         builder.add(VARIANT, 0);
         builder.add(FROM_BUCKET, false);
+        builder.add(NEWBORN, true);
         builder.add(EggLaying.HAS_EGG, false);
         builder.add(Hungry.IS_HUNGRY, false);
     }
@@ -230,6 +235,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
         super.writeCustomDataToNbt(nbt);
         nbt.putInt("Variant", this.getVariant().getIndex());
         nbt.putBoolean("FromBucket", this.isFromBucket());
+        nbt.putBoolean("newborn", this.isNewborn());
         if (this instanceof EggLaying egg) {
             nbt.putBoolean("HasEgg", egg.hasEgg());
             nbt.putInt("partnerVariantStorage", partnerVariantStorage);
@@ -244,6 +250,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
         super.readCustomDataFromNbt(nbt);
         this.setVariant(byId(nbt.getInt("Variant")));
         this.setFromBucket(nbt.getBoolean("FromBucket"));
+        this.setNewborn(nbt.getBoolean("newborn"));
         if (this instanceof EggLaying egg) {
             egg.setHasEgg(nbt.getBoolean("HasEgg"));
             partnerVariantStorage = nbt.getInt("partnerVariantStorage");
@@ -261,6 +268,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
             nbtCompound.putInt("Variant", this.getVariant().getIndex());
             nbtCompound.putFloat("Health", this.getHealth());
             nbtCompound.putInt("Age", this.getBreedingAge());
+            nbtCompound.putBoolean("newborn", this.isNewborn());
         });
     }
     
@@ -349,5 +357,25 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
 
     public interface ShellfishVariant extends StringIdentifiable {
         public int getIndex();
+    }
+
+    public void setNewborn(boolean value) {
+        this.dataTracker.set(NEWBORN, value);
+    }
+
+    public boolean isNewborn() {
+        return this.dataTracker.get(NEWBORN);
+    }
+
+
+    // Used in renderers
+    public void scale(MatrixStack poseStack, float scale, float babyScale) {
+        scale(poseStack, scale, babyScale, babyScale);
+    }
+
+    public void scale(MatrixStack poseStack, float scale, float babyScale, float smallBabyScale) {
+        if (this.isBaby() && this.isNewborn()) poseStack.scale(smallBabyScale, smallBabyScale, smallBabyScale);
+        else if (this.isBaby() && !this.isNewborn()) poseStack.scale(babyScale, babyScale, babyScale);
+        else poseStack.scale(scale, scale, scale);
     }
 }

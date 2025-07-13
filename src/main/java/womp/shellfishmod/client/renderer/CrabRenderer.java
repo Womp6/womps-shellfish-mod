@@ -26,12 +26,13 @@ public class CrabRenderer extends MobEntityRenderer<CrabEntity, ShellfishRenderS
     @Override
     public void render(ShellfishRenderState<CrabEntity.Variant> entity, MatrixStack poseStack,
                        VertexConsumerProvider bufferSource, int packedLight) {
-            if(entity.baby) {
-                poseStack.scale(0.4f, 0.4f, 0.4f);
-            }
-            if(!entity.baby) {
-                poseStack.scale(0.75f, 0.75f, 0.75f);
-            }
+        int variant = entity.variant.getIndex();                  
+        if (variant == 0) entity.shellfish.scale(poseStack, 1.1f, 0.85f, 0.4f);
+        else if (variant == 1) entity.shellfish.scale(poseStack, 0.6f, 0.35f);
+        else if (variant == 2) entity.shellfish.scale(poseStack, 0.85f, 0.6f, 0.4f);
+        else if (variant == 3) entity.shellfish.scale(poseStack, 1f, 0.75f, 0.4f);
+        else if (variant == 4) entity.shellfish.scale(poseStack, 0.5f, 0.3f);
+        else entity.shellfish.scale(poseStack, 0.75f, 0.4f);
 
         super.render(entity, poseStack, bufferSource, packedLight);
     }
@@ -45,6 +46,7 @@ public class CrabRenderer extends MobEntityRenderer<CrabEntity, ShellfishRenderS
     public void updateRenderState(CrabEntity crab, ShellfishRenderState<Variant> crabState, float f) {
         super.updateRenderState(crab, crabState, f);
         crabState.variant = crab.getVariant();
+        crabState.shellfish = crab;
         crabState.idleAnimationState.copyFrom(crab.idleAnimationState);
         crabState.moveAnimationState.copyFrom(crab.moveAnimationState);
     }

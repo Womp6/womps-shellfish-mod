@@ -154,6 +154,15 @@ public class ShellfishGroup {
 			content.add(ShellfishBlocks.PADDLEWEED);
 			content.add(ShellfishBlocks.EELGRASS);
 			content.add(ShellfishBlocks.SEA_LETTUCE);
+			content.add(ShellfishBlocks.CATTAIL);
+			content.add(ShellfishBlocks.TALL_CATTAIL);
+			content.add(ShellfishBlocks.PICKERELWEED);
+			content.add(ShellfishBlocks.TALL_PICKERELWEED);
+			content.add(ShellfishBlocks.WHEATGRASS);
+			content.add(ShellfishBlocks.TALL_WHEATGRASS);
+			content.add(ShellfishBlocks.WATER_GRASS);
+			content.add(ShellfishBlocks.TALL_WATER_GRASS);
+			content.add(ShellfishBlocks.DRIFTWOOD);
 			content.add(ShellfishItems.SHELLFISH_BAIT);
 			content.add(ShellfishItems.DRIED_SHELLFISH_BAIT);
 
@@ -172,10 +181,13 @@ public class ShellfishGroup {
 			//MISC
 			content.add(ShellfishBlocks.CLAM_CLAY);
 			content.add(ShellfishBlocks.CLAM_SAND);
+			content.add(ShellfishBlocks.CLAM_MUD);
 			content.add(ShellfishBlocks.OYSTER_CLAY);
 			content.add(ShellfishBlocks.OYSTER_SAND);
+			content.add(ShellfishBlocks.OYSTER_MUD);
 			content.add(ShellfishBlocks.MUSSEL_CLAY);
 			content.add(ShellfishBlocks.MUSSEL_SAND);
+			content.add(ShellfishBlocks.MUSSEL_MUD);
 			content.add(ShellfishBlocks.DEAD_CLAM_BLOCK);
 			content.add(ShellfishBlocks.DEAD_OYSTER_BLOCK);
 			content.add(ShellfishBlocks.DEAD_MUSSEL_BLOCK);

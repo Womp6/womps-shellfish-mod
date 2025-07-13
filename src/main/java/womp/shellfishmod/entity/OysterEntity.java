@@ -90,6 +90,7 @@ public class OysterEntity extends ShellfishEntity<OysterEntity.Variant> {
             entityData = new OysterData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 

@@ -1,0 +1,49 @@
+{
+  "values": {
+    "shellfish:rockweed": {
+      "chance": 0.3
+    },
+    "shellfish:water_lettuce": {
+      "chance": 0.65
+    },
+    "shellfish:eelgrass": {
+      "chance": 0.3
+    },
+    "shellfish:paddleweed": {
+      "chance": 0.3
+    },
+    "shellfish:sea_lettuce": {
+      "chance": 0.3
+    },
+    "shellfish:cattail": {
+      "chance": 0.65
+    },
+    "shellfish:tall_cattail": {
+      "chance": 0.65
+    },
+    "shellfish:pickerelweed": {
+      "chance": 0.65
+    },
+    "shellfish:tall_pickerelweed": {
+      "chance": 0.65
+    },
+    "shellfish:wheatgrass": {
+      "chance": 0.5
+    },
+    "shellfish:tall_wheatgrass": {
+      "chance": 0.65
+    },
+    "shellfish:water_grass": {
+      "chance": 0.3
+    },
+    "shellfish:tall_water_grass": {
+      "chance": 0.5
+    },
+    "shellfish:shellfish_bait": {
+      "chance": 0.3
+    },
+    "shellfish:dried_shellfish_bait": {
+      "chance": 0.3
+    }
+  }
+}

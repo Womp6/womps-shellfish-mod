@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "shellfish:trapper_hut",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "salt": 340954901,
+    "spacing": 20,
+    "separation": 6,
+    "type": "minecraft:random_spread"
+  }
+}

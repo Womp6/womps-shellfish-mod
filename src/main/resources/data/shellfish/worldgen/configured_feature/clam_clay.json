@@ -21,6 +21,15 @@
         "state": {
           "Name": "shellfish:clam_sand"
         }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "shellfish:mud"
+        },
+        "state": {
+          "Name": "shellfish:clam_mud"
+        }
       }
     ]
   }

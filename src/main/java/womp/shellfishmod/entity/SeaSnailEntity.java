@@ -35,6 +35,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeKeys;
 import womp.shellfishmod.entity.goals.ShellfishLayEggGoal;
 import womp.shellfishmod.entity.goals.ShellfishMateGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
@@ -47,6 +48,7 @@ import womp.shellfishmod.registry.ShellfishBlocks;
 import womp.shellfishmod.registry.ShellfishEntities;
 import womp.shellfishmod.registry.ShellfishItems;
 import womp.shellfishmod.registry.ShellfishSounds;
+import womp.shellfishmod.registry.ShellfishWorldgen;
 import womp.shellfishmod.util.ShellfishTags;
 
 public class SeaSnailEntity extends ShellfishEntity<Variant> implements EggLaying {
@@ -108,7 +110,7 @@ public class SeaSnailEntity extends ShellfishEntity<Variant> implements EggLayin
     public static boolean canSpawn(EntityType<SeaSnailEntity> type, ServerWorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        if(pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER)) {
+        if(pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? isLightLevelValidForNaturalSpawn(world, pos) : true)) {
             return true;
         } else if(pos.getY() >= i-6 && SeaSnailEntity.isLightLevelValidForNaturalSpawn(world, pos)) {
             return world.getBlockState(pos.down()).isIn(ShellfishTags.Blocks.SHELLFISH_SPAWNABLE_ON);
@@ -190,6 +192,7 @@ public class SeaSnailEntity extends ShellfishEntity<Variant> implements EggLayin
             entityData = new SeaSnailData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 

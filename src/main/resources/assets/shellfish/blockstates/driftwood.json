@@ -1,0 +1,80 @@
+{
+    "variants": {
+      "facing=north,on_water=false": [
+        {
+          "model": "shellfish:block/driftwood1"
+        },
+        {
+          "model": "shellfish:block/driftwood2"
+        }
+      ],
+      "facing=east,on_water=false": [
+        {
+          "model": "shellfish:block/driftwood1",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/driftwood2",
+          "y": 90
+        }
+      ],
+      "facing=south,on_water=false": [
+        {
+          "model": "shellfish:block/driftwood1",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/driftwood2",
+          "y": 180
+        }
+      ],
+      "facing=west,on_water=false": [
+        {
+          "model": "shellfish:block/driftwood1",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/driftwood2",
+          "y": 270
+        }
+      ],
+      "facing=north,on_water=true": [
+        {
+          "model": "shellfish:block/driftwood_low1"
+        },
+        {
+          "model": "shellfish:block/driftwood_low2"
+        }
+      ],
+      "facing=east,on_water=true": [
+        {
+          "model": "shellfish:block/driftwood_low1",
+          "y": 90
+        },
+        {
+          "model": "shellfish:block/driftwood_low2",
+          "y": 90
+        }
+      ],
+      "facing=south,on_water=true": [
+        {
+          "model": "shellfish:block/driftwood_low1",
+          "y": 180
+        },
+        {
+          "model": "shellfish:block/driftwood_low2",
+          "y": 180
+        }
+      ],
+      "facing=west,on_water=true": [
+        {
+          "model": "shellfish:block/driftwood_low1",
+          "y": 270
+        },
+        {
+          "model": "shellfish:block/driftwood_low2",
+          "y": 270
+        }
+      ]
+    }
+  }

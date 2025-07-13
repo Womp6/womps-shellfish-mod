@@ -39,7 +39,7 @@ public class ShellfishEntities {
 
     private static <T extends MobEntity> EntityType<T> register(String name, SpawnGroup group, EntityType.EntityFactory<T> factory,
             SpawnLocation location, SpawnRestriction.SpawnPredicate<T> predicate, float width, float height, DefaultAttributeContainer.Builder attributes) {
-        EntityType<T> mob = Registry.register(Registries.ENTITY_TYPE, Identifier.of("shellfish", name), EntityType.Builder.create(factory, group).dimensions(width, height).build());
+        EntityType<T> mob = Registry.register(Registries.ENTITY_TYPE, Identifier.of("shellfish", name), EntityType.Builder.create(factory, group).dimensions(width, height).build(null));
         FabricDefaultAttributeRegistry.register(mob, attributes);
         SpawnRestriction.register(mob, location, Type.MOTION_BLOCKING_NO_LEAVES, predicate);
         return mob;

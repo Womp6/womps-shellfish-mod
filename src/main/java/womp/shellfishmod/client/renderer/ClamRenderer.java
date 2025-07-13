@@ -26,21 +26,10 @@ public class ClamRenderer extends MobRenderer<ClamEntity, ShellfishRenderState<C
     public void render(ShellfishRenderState<ClamEntity.Variant> entity, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight) {
         int variant = entity.variant.getIndex();
-        if(entity.isBaby && variant != 3 && variant != 4) {
-            poseStack.scale(0.5f, 0.5f, 0.5f);
-        }
-        if(variant == 3 && !entity.isBaby) {
-            poseStack.scale(0.65f, 0.65f, 0.65f);
-        }
-        if(variant == 4 && !entity.isBaby) {
-            poseStack.scale(0.65f, 0.65f, 0.65f);
-        }
-        if(variant == 3 && entity.isBaby) {
-            poseStack.scale(0.35f, 0.35f, 0.35f);
-        }
-        if(variant == 4 && entity.isBaby) {
-            poseStack.scale(0.35f, 0.35f, 0.35f);
-        }
+        if (variant == 1) entity.shellfish.scale(poseStack, 1.1f, 0.8f, 0.5f);
+        else if (variant == 2) entity.shellfish.scale(poseStack, 0.85f, 0.45f);
+        else if (variant == 3 || variant == 4) entity.shellfish.scale(poseStack, 0.65f, 0.35f);
+        else entity.shellfish.scale(poseStack, 1.0f, 0.5f);
 
         super.render(entity, poseStack, bufferSource, packedLight);
     }
@@ -54,6 +43,7 @@ public class ClamRenderer extends MobRenderer<ClamEntity, ShellfishRenderState<C
     public void extractRenderState(ClamEntity clam, ShellfishRenderState<ClamEntity.Variant> clamState, float f) {
         super.extractRenderState(clam, clamState, f);
         clamState.variant = clam.getVariant();
+        clamState.shellfish = clam;
         clamState.idleAnimationState.copyFrom(clam.idleAnimationState);
         clamState.moveAnimationState.copyFrom(clam.moveAnimationState);
     }

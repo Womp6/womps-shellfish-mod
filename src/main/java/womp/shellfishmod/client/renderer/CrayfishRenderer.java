@@ -27,14 +27,15 @@ public class CrayfishRenderer extends MobRenderer<CrayfishEntity, ShellfishRende
     }
 
     @Override
-    public void render(ShellfishRenderState<CrayfishEntity.Variant> entity, PoseStack poseStack,
-                       MultiBufferSource bufferSource, int packedLight) {
-        if(entity.isBaby) {
-            poseStack.scale(0.4f, 0.4f, 0.4f);
-        }
-        if(!entity.isBaby) {
-            poseStack.scale(0.75f, 0.75f, 0.75f);
-        }
+    public void render(ShellfishRenderState<CrayfishEntity.Variant> entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        
+        int variant = entity.variant.getIndex();
+        if (variant == 11 || variant == 17 || variant == 25) entity.shellfish.scale(poseStack, 0.9f, 0.65f, 0.4f);
+        else if (variant == 18) entity.shellfish.scale(poseStack, 1.4f, 0.9f, 0.4f);
+        else if (variant == 10 || variant == 21) entity.shellfish.scale(poseStack, 0.4f, 0.2f);
+        else if (variant == 14 || variant == 19) entity.shellfish.scale(poseStack, 0.6f, 0.3f);
+        else if (variant == 23) entity.shellfish.scale(poseStack, 0.5f, 0.25f);
+        else entity.shellfish.scale(poseStack, 0.75f, 0.4f);
 
         super.render(entity, poseStack, bufferSource, packedLight);
     }
@@ -48,6 +49,7 @@ public class CrayfishRenderer extends MobRenderer<CrayfishEntity, ShellfishRende
     public void extractRenderState(CrayfishEntity crayfish, ShellfishRenderState<CrayfishEntity.Variant> crayfishState, float f) {
         super.extractRenderState(crayfish, crayfishState, f);
         crayfishState.variant = crayfish.getVariant();
+        crayfishState.shellfish = crayfish;
         crayfishState.idleAnimationState.copyFrom(crayfish.idleAnimationState);
         crayfishState.moveAnimationState.copyFrom(crayfish.moveAnimationState);
     }

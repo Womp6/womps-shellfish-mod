@@ -45,10 +45,12 @@ public class UnderwaterFeature extends Feature<ProbabilityFeatureConfiguration> 
             if (place.equals(ShellfishBlocks.SEA_LETTUCE.get())) {
                 boolean isLarge = random.nextBoolean();
                 blockState = blockState.setValue(SeaLettuceBlock.LARGE, isLarge);
-                structureWorldAccess.setBlock(blockPos2, blockState, 2);
-                BlockEntity blockEntity = structureWorldAccess.getBlockEntity(blockPos2);
-                if (blockEntity instanceof SeaLettuceBlockEntity) {
-                    ((SeaLettuceBlockEntity) blockEntity).setLarge(isLarge);
+                if (blockState.canSurvive(structureWorldAccess, blockPos2)) {
+                    structureWorldAccess.setBlock(blockPos2, blockState, 2);
+                    BlockEntity blockEntity = structureWorldAccess.getBlockEntity(blockPos2);
+                    if (blockEntity instanceof SeaLettuceBlockEntity) {
+                        ((SeaLettuceBlockEntity) blockEntity).setLarge(isLarge);
+                    }
                 }
             } else if (tallBlock == null) {
                 if (blockState.canSurvive(structureWorldAccess, blockPos2)) {

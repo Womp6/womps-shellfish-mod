@@ -24,17 +24,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.*;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import womp.shellfishmod.entity.goals.*;
 import womp.shellfishmod.entity.parents.EggLaying;
 import womp.shellfishmod.entity.parents.Hungry;
 import womp.shellfishmod.entity.parents.ShellfishEntity;
-import womp.shellfishmod.registry.ShellfishBlocks;
-import womp.shellfishmod.registry.ShellfishItems;
+import womp.shellfishmod.registry.*;
 import womp.shellfishmod.util.ShellfishTags;
-import womp.shellfishmod.registry.ShellfishEntities;
-import womp.shellfishmod.registry.ShellfishSounds;
 
 import java.util.function.IntFunction;
 
@@ -55,7 +53,7 @@ public class CrabEntity extends ShellfishEntity<CrabEntity.Variant> implements H
         this.goalSelector.addGoal(1, new ShellfishMateGoal(this, 1));
         this.goalSelector.addGoal(1, new FollowParentGoal(this, 1.1));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1d, true));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new HungryRevengeGoal(this, new Class[0]));
         this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, AbstractFish.class, false));
         this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, Squid.class, false));
         this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, ShrimpEntity.class, false));
@@ -90,9 +88,9 @@ public class CrabEntity extends ShellfishEntity<CrabEntity.Variant> implements H
     public static boolean canSpawn(EntityType<CrabEntity> type, ServerLevelAccessor world, EntitySpawnReason reason, BlockPos pos, RandomSource random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        if(pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER)) {
+        if (pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getFluidState(pos).is(FluidTags.WATER) && ((world.getBiome(pos).is(ShellfishWorldgen.MARSH) || world.getBiome(pos).is(Biomes.SWAMP) || world.getBiome(pos).is(Biomes.MANGROVE_SWAMP)) ? isBrightEnoughToSpawn(world, pos) : true)) {
             return true;
-        } else if(pos.getY() >= i-6 && CrabEntity.isBrightEnoughToSpawn(world, pos)) {
+        } else if (pos.getY() >= i-6 && CrabEntity.isBrightEnoughToSpawn(world, pos)) {
             return world.getBlockState(pos.below()).is(ShellfishTags.Blocks.SHELLFISH_SPAWNABLE_ON);
         }
         return false;
@@ -166,6 +164,7 @@ public class CrabEntity extends ShellfishEntity<CrabEntity.Variant> implements H
             entityData = new CrabData(variant);
         }
         this.setVariant(variant);
+        this.setNewborn(true);
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 

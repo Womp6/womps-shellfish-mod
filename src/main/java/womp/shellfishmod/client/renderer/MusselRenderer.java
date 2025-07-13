@@ -23,27 +23,15 @@ public class MusselRenderer extends MobRenderer<MusselEntity, ShellfishRenderSta
     }
 
     @Override
-    public void render(ShellfishRenderState<MusselEntity.Variant> livingEntity, PoseStack matrixStack,
+    public void render(ShellfishRenderState<MusselEntity.Variant> entity, PoseStack poseStack,
                        MultiBufferSource vertexConsumerProvider, int i) {
-        int variant = livingEntity.variant.getIndex();
+        int variant = entity.variant.getIndex();
+        if (variant == 1) entity.shellfish.scale(poseStack, 0.95f, 0.65f, 0.4f);
+        else if (variant == 2) entity.shellfish.scale(poseStack, 1.1f, 0.8f, 0.4f);
+        else if (variant == 3) entity.shellfish.scale(poseStack, 0.55f, 0.3f);
+        else entity.shellfish.scale(poseStack, 0.8f, 0.4f);
 
-        if(livingEntity.isBaby && variant != 3) {
-            matrixStack.scale(0.4f, 0.4f, 0.4f);
-        }
-
-        if(!livingEntity.isBaby && variant != 3) {
-            matrixStack.scale(0.8f, 0.8f, 0.8f);
-        }
-
-        if(livingEntity.isBaby && variant == 3) {
-            matrixStack.scale(0.35f, 0.35f, 0.35f);
-        }
-
-        if(variant == 3 && !livingEntity.isBaby) {
-            matrixStack.scale(0.55f, 0.55f, 0.55f);
-        }
-
-        super.render(livingEntity, matrixStack, vertexConsumerProvider, i);
+        super.render(entity, poseStack, vertexConsumerProvider, i);
     }
 
     @Override
@@ -55,6 +43,7 @@ public class MusselRenderer extends MobRenderer<MusselEntity, ShellfishRenderSta
     public void extractRenderState(MusselEntity mussel, ShellfishRenderState<MusselEntity.Variant> musselState, float f) {
         super.extractRenderState(mussel, musselState, f);
         musselState.variant = mussel.getVariant();
+        musselState.shellfish = mussel;
         musselState.idleAnimationState.copyFrom(mussel.idleAnimationState);
         musselState.moveAnimationState.copyFrom(mussel.moveAnimationState);
     }

@@ -80,8 +80,8 @@
       "shellfish:disk_mud",
       "shellfish:gravel_patch",
       "shellfish:rooted_dirt_patch",
-      "shellfish:clam_clay",
-      "shellfish:mussel_ore",
+      "shellfish:clam_ore_marsh",
+      "shellfish:mussel_ore_marsh",
       "shellfish:podzol_patch"
     ],
     [],
@@ -92,7 +92,7 @@
     [
       "minecraft:glow_lichen",
       "shellfish:trees_marsh",
-      "shellfish:beached_driftwood",
+      "shellfish:beached_driftwood_marsh",
       "shellfish:cattail_patch",
       "shellfish:pickerelweed_patch",
       "shellfish:patch_sugar_cane_marsh",
@@ -103,7 +103,7 @@
       "shellfish:patch_plain_grass",
       "shellfish:patch_marsh_grass",
       "shellfish:patch_water_grass",
-      "shellfish:eelgrass",
+      "shellfish:eelgrass_marsh",
       "shellfish:short_seagrass_marsh",
       "shellfish:tall_seagrass_marsh",
       "shellfish:marsh_flowers"

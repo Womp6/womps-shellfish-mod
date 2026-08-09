@@ -16,7 +16,7 @@ public class SwimToRandomPlaceGoal extends SwimAroundGoal {
     public SwimToRandomPlaceGoal(ShellfishEntity<?> shellfish) {
         super(shellfish, 1.0, 40);
         this.shellfish = shellfish;
-        this.world = shellfish.getWorld();
+        this.world = shellfish.getEntityWorld();
         this.random = new java.util.Random();
     }
 

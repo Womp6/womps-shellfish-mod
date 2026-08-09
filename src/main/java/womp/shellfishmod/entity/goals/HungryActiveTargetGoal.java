@@ -54,7 +54,7 @@ public class HungryActiveTargetGoal<T extends LivingEntity> extends TrackTargetG
             return false;
         }
 
-        ServerWorld world = (ServerWorld) this.mob.getWorld();
+        ServerWorld world = (ServerWorld) this.mob.getEntityWorld();
 
         if (ShellfishStateUtil.isShellfishPassive(world)) {
             return false;
@@ -69,8 +69,8 @@ public class HungryActiveTargetGoal<T extends LivingEntity> extends TrackTargetG
     }
 
     protected void findClosestTarget() {
-        ServerWorld server = (ServerWorld) this.mob.getWorld();
-        this.targetEntity = this.targetClass == PlayerEntity.class || this.targetClass == ServerPlayerEntity.class ? server.getClosestPlayer(this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ()) : server.getClosestEntity(this.mob.getWorld().getEntitiesByClass(this.targetClass, this.getSearchBox(this.getFollowRange()), livingEntity -> true), this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+        ServerWorld server = (ServerWorld) this.mob.getEntityWorld();
+        this.targetEntity = this.targetClass == PlayerEntity.class || this.targetClass == ServerPlayerEntity.class ? server.getClosestPlayer(this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ()) : server.getClosestEntity(this.mob.getEntityWorld().getEntitiesByClass(this.targetClass, this.getSearchBox(this.getFollowRange()), livingEntity -> true), this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class HungryActiveTargetGoal<T extends LivingEntity> extends TrackTargetG
     @Override
     public boolean shouldContinue() {
         if (this.mob instanceof Hungry hungry && !hungry.isHungry()) return false;
-        if (ShellfishStateUtil.isShellfishPassive((ServerWorld)this.mob.getWorld())) return false;
+        if (ShellfishStateUtil.isShellfishPassive((ServerWorld)this.mob.getEntityWorld())) return false;
         return super.shouldContinue();
     }
 }

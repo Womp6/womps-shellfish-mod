@@ -4,14 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.util.collection.Pool;
+import net.minecraft.util.collection.WeightedPool;
 import net.minecraft.world.gen.blockpredicate.BlockPredicate;
 
-public record ConditionedStatePool(BlockPredicate condition, Pool<BlockState> pool) {
+public record ConditionedStatePool(BlockPredicate condition, WeightedPool<BlockState> pool) {
     
     public static final Codec<ConditionedStatePool> CONDITIONED_STATE_POOL_CODEC =
     RecordCodecBuilder.create(instance -> instance.group(
         BlockPredicate.BASE_CODEC.fieldOf("condition").forGetter(c -> c.condition()),
-        Pool.createCodec(BlockState.CODEC).fieldOf("states").forGetter(c -> c.pool())
+        WeightedPool.createCodec(BlockState.CODEC).fieldOf("states").forGetter(c -> c.pool())
     ).apply(instance, ConditionedStatePool::new));
 }

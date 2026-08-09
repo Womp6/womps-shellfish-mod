@@ -3,11 +3,11 @@ package womp.shellfishmod.util.config;
 import java.util.function.IntFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.TranslatableOption;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.function.ValueLists;
 
 @Environment(value=EnvType.CLIENT)
-public enum ShellfishGraphicsMode implements TranslatableOption
+public enum ShellfishGraphicsMode implements StringIdentifiable
 {
     FAST(0, "shellfish_options.graphics.fast"),
     DEFAULT(1, "shellfish_options.graphics.default"),
@@ -21,18 +21,17 @@ public enum ShellfishGraphicsMode implements TranslatableOption
         this.id = id;
         this.translationKey = translationKey;
     }
-
-    @Override
+    
     public int getId() {
         return this.id;
     }
 
-    @Override
     public String getTranslationKey() {
         return this.translationKey;
     }
 
-    public String toString() {
+    @Override
+    public String asString() {
         return switch (this) {
             default -> throw new IncompatibleClassChangeError();
             case FAST -> "fast";

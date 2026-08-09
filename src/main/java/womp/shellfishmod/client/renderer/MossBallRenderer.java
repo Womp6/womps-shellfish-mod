@@ -1,8 +1,9 @@
 package womp.shellfishmod.client.renderer;
 
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import womp.shellfishmod.client.model.MossBallModel;
@@ -24,7 +25,7 @@ public class MossBallRenderer extends MobEntityRenderer<MossBallEntity, Shellfis
 
     @Override
     public void render(ShellfishRenderState<MossBallEntity.Variant> entity, MatrixStack poseStack,
-                       VertexConsumerProvider bufferSource, int packedLight)  {
+                       OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState)  {
 
         if(entity.variant.getIndex() == 1) {
             poseStack.scale(0.5f, 0.5f, 0.5f);
@@ -33,7 +34,7 @@ public class MossBallRenderer extends MobEntityRenderer<MossBallEntity, Shellfis
         }
 
 
-        super.render(entity, poseStack, bufferSource, packedLight);
+        super.render(entity, poseStack, orderedRenderCommandQueue, cameraRenderState);
     }
 
     @Override

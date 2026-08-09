@@ -172,7 +172,7 @@ public class ShellfishItems {
     }
 
     private static Item registerEgg(String name, EntityType<? extends MobEntity> type) {
-        return registerItem(name, new SpawnEggItem(type, new Item.Settings().registryKey(ShellfishUtil.createKey(name, RegistryKeys.ITEM))));
+        return registerItem(name, new SpawnEggItem(new Item.Settings().registryKey(ShellfishUtil.createKey(name, RegistryKeys.ITEM)).spawnEgg(type)));
     }
 
     private static Item registerItem(String name, Item factory) {

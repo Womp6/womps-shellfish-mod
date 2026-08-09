@@ -108,7 +108,7 @@ public abstract class AbstractTrapBlock extends BlockWithEntity implements Water
 
     @Override
     public ActionResult onUseWithItem(ItemStack item, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             NamedScreenHandlerFactory screen = ((AbstractTrapBlockEntity) world.getBlockEntity(pos));
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof AbstractTrapBlockEntity trap && hand == Hand.MAIN_HAND && getRepairItems().containsKey(item.getItem()) && trap.getDurability() < trap.getMaxDurability()) {

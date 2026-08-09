@@ -55,7 +55,7 @@ public class ShellfishPlantBlock extends PlantBlock implements FluidFillable {
         BlockState block = world.getBlockState(pos);
         FluidState fluid = world.getFluidState(pos.up());
         if (placeType.equals(PlaceType.MUD_SAND)) {
-            return (block.getBlock().equals(Blocks.SAND) | block.getBlock().equals(Blocks.MUD)) && fluid.getFluid().equals(Fluids.WATER);
+            return (block.getBlock().equals(Blocks.SAND) || block.getBlock().equals(Blocks.MUD)) && fluid.getFluid().equals(Fluids.WATER);
         } else if (placeType.equals(PlaceType.SOLID_SIDE)) {
             return floor.isSideSolidFullSquare(world, pos, Direction.UP) && !floor.isOf(Blocks.MAGMA_BLOCK);
         }

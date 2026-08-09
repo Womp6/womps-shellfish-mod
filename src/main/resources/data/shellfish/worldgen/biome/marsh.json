@@ -1,4 +1,21 @@
 {
+  "attributes": {
+    "minecraft:audio/background_music": {
+      "default": {
+        "max_delay": 24000,
+        "min_delay": 12000,
+        "sound": "minecraft:music.overworld.swamp"
+      }
+    },
+    "minecraft:gameplay/increased_fire_burnout": true,
+    "minecraft:visual/sky_color": 7907327,
+    "minecraft:visual/water_fog_color": 4874598,
+    "minecraft:visual/fog_color": 12638463,
+    "minecraft:visual/water_fog_end_distance": {
+      "argument": 0.85,
+      "modifier": "multiply"
+    }
+  },
   "carvers": [
     "minecraft:cave",
     "minecraft:cave_extra_underground",
@@ -6,30 +23,9 @@
   ],
   "downfall": 0.9,
   "effects": {
-    "fog_color": 12638463,
     "foliage_color": 6452005,
     "grass_color": 7176754,
-    "mood_sound": {
-      "block_search_extent": 8,
-      "offset": 2.0,
-      "sound": "minecraft:ambient.cave",
-      "tick_delay": 6000
-    },
-    "music": [
-      {
-        "data": {
-          "max_delay": 24000,
-          "min_delay": 12000,
-          "replace_current_music": false,
-          "sound": "minecraft:music.overworld.swamp"
-        },
-        "weight": 1
-      }
-    ],
-    "music_volume": 1.0,
-    "sky_color": 7907327,
-    "water_color": 4419200,
-    "water_fog_color": 4874598
+    "water_color": 4419200
   },
   "features": [
     [],
@@ -95,6 +91,8 @@
       "shellfish:beached_driftwood_marsh",
       "shellfish:cattail_patch",
       "shellfish:pickerelweed_patch",
+      "shellfish:patch_firefly_bush_near_water",
+      "shellfish:patch_firefly_bush",
       "shellfish:patch_sugar_cane_marsh",
       "shellfish:water_surface_patch",
       "shellfish:driftwood",

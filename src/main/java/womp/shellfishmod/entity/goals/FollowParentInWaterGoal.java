@@ -15,7 +15,7 @@ public class FollowParentInWaterGoal extends FollowParentGoal {
     public FollowParentInWaterGoal(ShellfishEntity<?> shellfish, double speed) {
         super(shellfish, speed);
         this.shellfish = shellfish;
-        this.world = this.shellfish.getWorld();
+        this.world = this.shellfish.getEntityWorld();
         this.random = new java.util.Random();
     }
 

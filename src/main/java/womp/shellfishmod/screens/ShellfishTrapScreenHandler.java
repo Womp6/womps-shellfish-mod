@@ -21,7 +21,7 @@ public class ShellfishTrapScreenHandler extends ScreenHandler {
     public final AbstractTrapBlockEntity blockEntity;
     
     public ShellfishTrapScreenHandler(int syncId, PlayerInventory inventory, TrapData pos) {
-        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(pos.pos()), new ArrayPropertyDelegate(4));
+        this(syncId, inventory, inventory.player.getEntityWorld().getBlockEntity(pos.pos()), new ArrayPropertyDelegate(4));
     }
 
     public ShellfishTrapScreenHandler(int syncId, PlayerInventory inventory2, BlockEntity blockEntity, PropertyDelegate arrayPropertyDelegate) {

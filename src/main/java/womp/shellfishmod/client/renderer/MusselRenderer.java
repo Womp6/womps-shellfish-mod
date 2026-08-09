@@ -1,8 +1,9 @@
 package womp.shellfishmod.client.renderer;
 
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRendererFactory.Context;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import womp.shellfishmod.client.model.MusselModel;
@@ -25,14 +26,14 @@ public class MusselRenderer extends MobEntityRenderer<MusselEntity, ShellfishRen
 
     @Override
     public void render(ShellfishRenderState<MusselEntity.Variant> entity, MatrixStack poseStack,
-            VertexConsumerProvider vertexConsumerProvider, int i) {
+            OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
         int variant = entity.variant.getIndex();                  
         if (variant == 1) entity.shellfish.scale(poseStack, 0.95f, 0.65f, 0.4f);
         else if (variant == 2) entity.shellfish.scale(poseStack, 1.1f, 0.8f, 0.4f);
         else if (variant == 3) entity.shellfish.scale(poseStack, 0.55f, 0.3f);
         else entity.shellfish.scale(poseStack, 0.8f, 0.4f);
 
-        super.render(entity, poseStack, vertexConsumerProvider, i);
+        super.render(entity, poseStack, orderedRenderCommandQueue, cameraRenderState);
     }
 
     @Override

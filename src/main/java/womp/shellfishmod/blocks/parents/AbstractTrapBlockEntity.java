@@ -140,7 +140,7 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
     @Override
     public void markDirty() {
         if (world != null) {
-            if (!world.isClient) {
+            if (!world.isClient()) {
                 for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)world, getPos())) {
                     ServerPlayNetworking.send(player, new BaitPacket(inventory, this.getPos()));
                 }
@@ -314,7 +314,7 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
 
     private Optional<ShellfishTrapRecipe> getCurrentRecipe() {
         ShellfishTrapRecipeInput recipe = new ShellfishTrapRecipeInput(inventory.get(BAIT_SLOT), this.getWorld().getBiome(pos).getIdAsString());
-        if (!world.isClient) {
+        if (!world.isClient()) {
             Optional<RecipeEntry<ShellfishTrapRecipe>> value = ServerRecipeManager.createCachedMatchGetter(ShellfishTrapRecipe.Type.INSTANCE).getFirstMatch(recipe, (ServerWorld)world);
             if (value.isPresent()) {
                 return Optional.of(value.get().value());

@@ -87,7 +87,7 @@ public class SeaLettuceBlock extends ShellfishPlantBlock implements BlockEntityP
 
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof SeaLettuceBlockEntity) {
                 ((SeaLettuceBlockEntity) blockEntity).setLarge(state.get(LARGE));

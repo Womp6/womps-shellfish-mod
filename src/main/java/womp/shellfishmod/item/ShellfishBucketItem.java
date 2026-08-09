@@ -4,18 +4,15 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BucketItem;
+import net.minecraft.item.EntityBucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
-import womp.shellfishmod.entity.MossBallEntity;
-import womp.shellfishmod.entity.parents.ShellfishEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.type.TooltipDisplayComponent;
@@ -32,11 +29,11 @@ import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
 
-public class ShellfishBucketItem extends BucketItem {
-    private final Supplier<EntityType<?>> entityType;
+public class ShellfishBucketItem extends EntityBucketItem {
+    private final Supplier<EntityType<? extends MobEntity>> entityType;
     private final boolean hasTooltip;
-    public ShellfishBucketItem(Supplier<EntityType<?>> entityType, Fluid fluid, Item item, boolean hasTooltip, Settings settings) {
-        super(fluid, settings);
+    public ShellfishBucketItem(Supplier<EntityType<? extends MobEntity>> entityType, Fluid fluid, Item item, boolean hasTooltip, Settings settings) {
+        super(entityType.get(), fluid, SoundEvents.ITEM_BUCKET_EMPTY_FISH, settings);
         this.entityType = entityType;
         this.hasTooltip = hasTooltip;
     }
@@ -66,9 +63,6 @@ public class ShellfishBucketItem extends BucketItem {
             NbtComponent nbtComponent = (NbtComponent)stack.getOrDefault(DataComponentTypes.BUCKET_ENTITY_DATA, NbtComponent.DEFAULT);
             bucketable.copyDataFromNbt(nbtComponent.copyNbt());
             bucketable.setFromBucket(true);
-            Random random = Random.create();
-            if (!nbtComponent.contains("Variant") && bucketable instanceof ShellfishEntity shellfish) shellfish.setVariantNumerical(random.nextBetween(0, shellfish.getMaxVariants() - 1));
-            else if (!nbtComponent.contains("Variant") && bucketable instanceof MossBallEntity mossBall) mossBall.setVariant(MossBallEntity.Variant.byId(random.nextBetween(0, 1)));
         }
 
         if (mobEntity != null) {

@@ -45,7 +45,7 @@ public class WaterLettuceBlock extends PlantBlock implements BlockEntityProvider
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
         if (world instanceof ServerWorld && entity instanceof BoatEntity) {
             world.breakBlock(new BlockPos(pos), true, entity);
         }

@@ -117,7 +117,7 @@ public class EggsBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
         if (entity.getType().equals(EntityType.FALLING_BLOCK)) {
             this.breakWithoutDrop(world, pos);
         }

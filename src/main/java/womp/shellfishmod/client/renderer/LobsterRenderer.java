@@ -1,8 +1,9 @@
 package womp.shellfishmod.client.renderer;
 
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import womp.shellfishmod.client.model.LobsterModel;
@@ -25,13 +26,13 @@ public class LobsterRenderer extends MobEntityRenderer<LobsterEntity, ShellfishR
 
     @Override
     public void render(ShellfishRenderState<LobsterEntity.Variant> entity, MatrixStack poseStack,
-                       VertexConsumerProvider bufferSource, int packedLight) {
+                       OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
         int variant = entity.variant.getIndex();                  
         if (variant == 0) entity.shellfish.scale(poseStack, 1.2f, 0.8f, 0.5f);
         else if (variant == 4) entity.shellfish.scale(poseStack, 1.3f, 0.85f, 0.5f);
         else entity.shellfish.scale(poseStack, 1f, 0.5f);
 
-        super.render(entity, poseStack, bufferSource, packedLight);
+        super.render(entity, poseStack, orderedRenderCommandQueue, cameraRenderState);
     }
 
     @Override

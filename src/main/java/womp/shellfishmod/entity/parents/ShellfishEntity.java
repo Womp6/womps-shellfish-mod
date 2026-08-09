@@ -285,7 +285,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     @Override
     public void copyDataFromNbt(NbtCompound nbt) {
         Bucketable.copyDataFromNbt(this, nbt);
-        this.setVariant(byId(nbt.getInt("Variant", 0)));
+        this.setVariant(byId(nbt.getInt("Variant", random.nextBetweenExclusive(0, getMaxVariants()))));
         if (nbt.contains("Age")) {
             this.setBreedingAge(nbt.getInt("Age", 2000));
         }

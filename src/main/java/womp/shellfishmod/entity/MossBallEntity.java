@@ -203,7 +203,7 @@ public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
     @Override
     public void copyDataFromNbt(NbtCompound nbt) {
         Bucketable.copyDataFromNbt(this, nbt);
-        this.setVariant(Variant.byId(nbt.getInt("Variant", 0)));
+        this.setVariant(Variant.byId(nbt.getInt("Variant", random.nextBetweenExclusive(0, 2))));
     }
 
     @Override

@@ -39,7 +39,7 @@ public class ShellfishConfig {
                 e.printStackTrace();
             }
         }
-        ShellfishGameOptions.getShellfishGraphicsMode().setValue(ShellfishGraphicsMode.byId(shellfishGraphics));
+        ShellfishGameOptions.getShellfishGraphicsMode().set(ShellfishGraphicsMode.byId(shellfishGraphics));
     }
 
     public static void saveConfig() {

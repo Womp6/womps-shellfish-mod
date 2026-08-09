@@ -5,25 +5,24 @@ import java.util.function.IntFunction;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
-
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Util;
-import net.minecraft.util.function.ValueLists;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import womp.shellfishmod.entity.goals.SitAroundGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
 import womp.shellfishmod.entity.parents.ShellfishEntity;
@@ -35,7 +34,7 @@ import womp.shellfishmod.registry.ShellfishSounds;
 
 public class MusselEntity extends ShellfishEntity<Variant> {
     
-    public MusselEntity(EntityType<? extends MusselEntity> entityType, World world) {
+    public MusselEntity(EntityType<? extends MusselEntity> entityType, Level world) {
         super(entityType, world);
         waterIdle = true;
         isIdleEntity = true;
@@ -45,30 +44,30 @@ public class MusselEntity extends ShellfishEntity<Variant> {
         brokenAnim = true;
     }
 
-    public static DefaultAttributeContainer.Builder createMusselAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.MAX_HEALTH, 3.0d).add(EntityAttributes.MOVEMENT_SPEED, 0.05);
+    public static AttributeSupplier.Builder createMusselAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 3.0d).add(Attributes.MOVEMENT_SPEED, 0.05);
     }
 
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(1, new SitAroundGoal(this));
-        this.goalSelector.add(1, new WanderInWaterGoal(this, 1));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new SitAroundGoal(this));
+        this.goalSelector.addGoal(1, new WanderInWaterGoal(this, 1));
     }
     
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         MusselEntity child;
-        if((child = ShellfishEntities.MUSSEL.create(world, SpawnReason.BREEDING)) != null && entity instanceof MusselEntity mate) {
+        if((child = ShellfishEntities.MUSSEL.create(world, EntitySpawnReason.BREEDING)) != null && entity instanceof MusselEntity mate) {
             child.setVariant((random.nextBoolean() ? this : mate).getVariant());
-            child.setPersistent();
+            child.setPersistenceRequired();
             return child;
         }
         return null;
     }
 
     @Override
-    public ItemStack getBucketItem() {
+    public ItemStack getBucketItemStack() {
         return new ItemStack(ShellfishItems.MUSSEL_BUCKET);
     }
 
@@ -88,9 +87,9 @@ public class MusselEntity extends ShellfishEntity<Variant> {
 
     @Override
     @Nullable
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData entityData) {
         Variant variant;
-        Random random = world.getRandom();
+        RandomSource random = world.getRandom();
         if (entityData instanceof MusselData) {
             variant = ((MusselData)entityData).variant;
         } else {
@@ -99,7 +98,7 @@ public class MusselEntity extends ShellfishEntity<Variant> {
         }
         this.setVariant(variant);
         this.setNewborn(true);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 
     public static enum Variant implements ShellfishVariant {
@@ -128,17 +127,17 @@ public class MusselEntity extends ShellfishEntity<Variant> {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.name;
         }
 
         static {
-            CODEC = StringIdentifiable.createCodec(Variant::values);
-            BY_ID = ValueLists.createIndexToValueFunction(Variant::getIndex, Variant.values(), ValueLists.OutOfBoundsHandling.CLAMP);
+            CODEC = StringRepresentable.fromEnum(Variant::values);
+            BY_ID = ByIdMap.continuous(Variant::getIndex, Variant.values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
         }
     }
 
-    static class MusselData extends PassiveEntity.PassiveData {
+    static class MusselData extends AgeableMob.AgeableMobGroupData {
         public final Variant variant;
 
         MusselData(Variant variant) {

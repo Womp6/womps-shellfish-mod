@@ -1,17 +1,16 @@
 package womp.shellfishmod.blocks;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.math.BlockPos;
 import womp.shellfishmod.blocks.parents.ShellfishPlantBlockEntity3d;
 import womp.shellfishmod.registry.ShellfishBlocks;
 
@@ -32,17 +31,17 @@ public class SeaLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
 
     public void setLarge(boolean large) {
         this.large = large;
-        markDirty();
+        setChanged();
 
-        if (world != null) {
-            BlockState state = world.getBlockState(pos);
+        if (level != null) {
+            BlockState state = level.getBlockState(worldPosition);
             if (state.getBlock() instanceof SeaLettuceBlock) {
-                world.setBlockState(pos, state.with(SeaLettuceBlock.LARGE, this.large), Block.NOTIFY_LISTENERS);
+                level.setBlock(worldPosition, state.setValue(SeaLettuceBlock.LARGE, this.large), Block.UPDATE_CLIENTS);
             }
         }
 
-        if (world != null) {
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_LISTENERS);
+        if (level != null) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
         }
     }
 
@@ -51,34 +50,34 @@ public class SeaLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
     }
 
     @Override
-    public void readData(ReadView tag) {
-        super.readData(tag);
-        this.large = tag.getBoolean("large", false);
-        this.animationStartTime = tag.getLong("AnimationStartTime", 0);
+    public void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        this.large = tag.getBooleanOr("large", false);
+        this.animationStartTime = tag.getLongOr("AnimationStartTime", 0);
 
-        if (world != null) {
-            BlockState state = world.getBlockState(pos);
+        if (level != null) {
+            BlockState state = level.getBlockState(worldPosition);
             if (state.getBlock() instanceof SeaLettuceBlock) {
-                world.setBlockState(pos, state.with(SeaLettuceBlock.LARGE, this.large), Block.NOTIFY_LISTENERS);
+                level.setBlock(worldPosition, state.setValue(SeaLettuceBlock.LARGE, this.large), Block.UPDATE_CLIENTS);
             }
         }
     }
 
     @Override
-    public void writeData(WriteView tag) {
-        super.writeData(tag);
+    public void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("large", this.large);
         tag.putLong("AnimationStartTime", animationStartTime);
     }
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 }

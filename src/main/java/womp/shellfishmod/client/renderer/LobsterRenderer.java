@@ -1,37 +1,38 @@
 package womp.shellfishmod.client.renderer;
 
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import womp.shellfishmod.client.model.LobsterModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.LobsterEntity;
 import womp.shellfishmod.entity.LobsterEntity.Variant;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.resources.Identifier;
 import womp.shellfishmod.client.ShellfishClient;
 
-public class LobsterRenderer extends MobEntityRenderer<LobsterEntity, ShellfishRenderState<LobsterEntity.Variant>, LobsterModel> {
+public class LobsterRenderer extends MobRenderer<LobsterEntity, ShellfishRenderState<LobsterEntity.Variant>, LobsterModel> {
     
-    public LobsterRenderer(EntityRendererFactory.Context renderManager) {
-        super(renderManager, new LobsterModel(renderManager.getPart(ShellfishClient.LOBSTER_MODEL)), 0.4f);
+    public LobsterRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new LobsterModel(renderManager.bakeLayer(ShellfishClient.LOBSTER_MODEL)), 0.4f);
     }
 
     @Override
-    public Identifier getTexture(ShellfishRenderState<LobsterEntity.Variant> animatable) {
+    public Identifier getTextureLocation(ShellfishRenderState<LobsterEntity.Variant> animatable) {
         int variant = animatable.variant.getIndex();
-        return Identifier.of("shellfish", "textures/entity/lobster/lobster_" + variant + ".png");
+        return Identifier.fromNamespaceAndPath("shellfish", "textures/entity/lobster/lobster_" + variant + ".png");
     }
 
     @Override
-    public void render(ShellfishRenderState<LobsterEntity.Variant> entity, MatrixStack poseStack,
-                       VertexConsumerProvider bufferSource, int packedLight) {
+    public void submit(ShellfishRenderState<LobsterEntity.Variant> entity, PoseStack poseStack,
+                       SubmitNodeCollector orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
         int variant = entity.variant.getIndex();                  
         if (variant == 0) entity.shellfish.scale(poseStack, 1.2f, 0.8f, 0.5f);
         else if (variant == 4) entity.shellfish.scale(poseStack, 1.3f, 0.85f, 0.5f);
         else entity.shellfish.scale(poseStack, 1f, 0.5f);
 
-        super.render(entity, poseStack, bufferSource, packedLight);
+        super.submit(entity, poseStack, orderedRenderCommandQueue, cameraRenderState);
     }
 
     @Override
@@ -40,8 +41,8 @@ public class LobsterRenderer extends MobEntityRenderer<LobsterEntity, ShellfishR
     }
 
     @Override
-    public void updateRenderState(LobsterEntity lobster, ShellfishRenderState<Variant> lobsterState, float f) {
-        super.updateRenderState(lobster, lobsterState, f);
+    public void extractRenderState(LobsterEntity lobster, ShellfishRenderState<Variant> lobsterState, float f) {
+        super.extractRenderState(lobster, lobsterState, f);
         lobsterState.variant = lobster.getVariant();
         lobsterState.shellfish = lobster;
         lobsterState.idleAnimationState.copyFrom(lobster.idleAnimationState);

@@ -1,0 +1,11 @@
+{
+  "gives": {
+    "id": "minecraft:emerald"
+  },
+  "max_uses": 16.0,
+  "reputation_discount": 0.08,
+  "wants": {
+    "id": "shellfish:pearl"
+  },
+  "xp": 2.0
+}

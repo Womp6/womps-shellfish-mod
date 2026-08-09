@@ -1,9 +1,9 @@
 package womp.shellfishmod.blocks;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BarrelBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import womp.shellfishmod.registry.ShellfishBlocks;
 
 public class ShellfishBarrelBlockEntity extends BarrelBlockEntity {
@@ -18,7 +18,7 @@ public class ShellfishBarrelBlockEntity extends BarrelBlockEntity {
     }
 
     @Override
-    public boolean supports(BlockState state) {
-        return state.isOf(ShellfishBlocks.BARREL_NO_POI) || super.supports(state);
+    public boolean isValidBlockState(BlockState state) {
+        return state.is(ShellfishBlocks.BARREL_NO_POI) || super.isValidBlockState(state);
     }
 }

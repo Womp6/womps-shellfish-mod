@@ -1,11 +1,11 @@
 package womp.shellfishmod.blocks.traps;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.BiomeTags;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 import womp.shellfishmod.blocks.parents.AbstractTrapBlockEntity;
 import womp.shellfishmod.registry.ShellfishBlocks;
 
@@ -36,10 +36,10 @@ public class ShellfishTrapBlockEntity extends AbstractTrapBlockEntity {
             count = 5;
             return Items.PRISMARINE_SHARD;
         } else {
-            if (this.getWorld().getBiome(this.getPos()).isIn(BiomeTags.IS_OCEAN) || this.getWorld().getBiome(this.getPos()).isIn(BiomeTags.IS_DEEP_OCEAN)) {
+            if (this.getLevel().getBiome(this.getBlockPos()).is(BiomeTags.IS_OCEAN) || this.getLevel().getBiome(this.getBlockPos()).is(BiomeTags.IS_DEEP_OCEAN)) {
                 count = 1;
                 return Items.COPPER_INGOT;
-            } else if (this.getWorld().getBiome(this.getPos()).isIn(BiomeTags.IS_RIVER)) {
+            } else if (this.getLevel().getBiome(this.getBlockPos()).is(BiomeTags.IS_RIVER)) {
                 count = 4;
                 return Items.GOLD_NUGGET;
             } else {
@@ -50,8 +50,8 @@ public class ShellfishTrapBlockEntity extends AbstractTrapBlockEntity {
     }
 
     @Override
-    public Text getContainerName() {
-        return Text.translatable("container.shellfish_trap");
+    public Component getDefaultName() {
+        return Component.translatable("container.shellfish_trap");
     }
 
     @Override

@@ -2,16 +2,14 @@ package womp.shellfishmod.feature;
 
 import java.util.List;
 import java.util.Optional;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
 import womp.shellfishmod.registry.ShellfishFeatures;
 
 public class ConditionalBlockStateProvider extends BlockStateProvider {
@@ -28,14 +26,14 @@ public class ConditionalBlockStateProvider extends BlockStateProvider {
     }
 
     @Override
-    protected BlockStateProviderType<?> getType() {
+    protected BlockStateProviderType<?> type() {
         return ShellfishFeatures.CONDITIONAL_STATE_PROVIDER;
     }
 
-    public Optional<BlockState> get(StructureWorldAccess world, BlockPos pos, Random random) {
+    public Optional<BlockState> get(WorldGenLevel world, BlockPos pos, RandomSource random) {
         for (ConditionedStatePool entry : entries) {
             if (entry.condition().test(world, pos)) {
-                return Optional.of(entry.pool().getOrEmpty(random)
+                return Optional.of(entry.pool().getRandom(random)
                     .orElseThrow(() -> new IllegalStateException("Empty state pool for condition")));
             }
         }
@@ -43,7 +41,7 @@ public class ConditionalBlockStateProvider extends BlockStateProvider {
     }
 
     @Override
-    public BlockState get(Random random, BlockPos pos) {
+    public BlockState getState(WorldGenLevel level, RandomSource random, BlockPos pos) {
         throw new UnsupportedOperationException("Use get(world, pos, random) instead");
     }
 }

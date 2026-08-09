@@ -1,7 +1,7 @@
 package womp.shellfishmod.client.states;
 
-import net.minecraft.client.render.entity.state.LivingEntityRenderState;
-import net.minecraft.entity.AnimationState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.world.entity.AnimationState;
 import womp.shellfishmod.entity.parents.ShellfishEntity;
 
 public class ShellfishRenderState<T extends Enum<T>> extends LivingEntityRenderState {

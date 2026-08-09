@@ -1,50 +1,58 @@
 package womp.shellfishmod.client.renderer;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.phys.Vec3;
 import womp.shellfishmod.blocks.parents.AbstractTrapBlockEntity;
+import womp.shellfishmod.client.states.ShellfishTrapBlockEntityRenderState;
 import womp.shellfishmod.util.config.ShellfishConfig;
 
-public class ShellfishTrapRenderer<T extends AbstractTrapBlockEntity> implements BlockEntityRenderer<T>{
+public class ShellfishTrapRenderer<T extends AbstractTrapBlockEntity> implements BlockEntityRenderer<T, ShellfishTrapBlockEntityRenderState>{
 
-    public ShellfishTrapRenderer(BlockEntityRendererFactory.Context context) {}
+    private final ItemModelResolver itemModelManager;
+
+    public ShellfishTrapRenderer(BlockEntityRendererProvider.Context context) {
+        this.itemModelManager = context.itemModelResolver();
+    }
 
     @Override
-    public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
-            int light, int overlay, Vec3d vec) {
+    public void submit(ShellfishTrapBlockEntityRenderState blockEntity, PoseStack matrices, SubmitNodeCollector queue,
+            CameraRenderState cameraState) {
         
         if (ShellfishConfig.getShellfishGraphics() >= 1) {
-            ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-            ItemStack itemStack = blockEntity.renderBait();
-            matrices.push();
-            long worldTime = blockEntity.getWorld().getTime();
-            float bobbingOffset = 0.02f * (float) Math.sin((worldTime + tickDelta) / 8.0);
+            matrices.pushPose();
+            float bobbingOffset = 0.02f * (float) Math.sin((blockEntity.worldTime + blockEntity.tickDelta) / 8.0);
             matrices.translate(0.5f, 0.5f + bobbingOffset, 0.5f);
             matrices.scale(0.6f, 0.6f, 0.6f);
-            float angle = (worldTime + tickDelta) % 360 * 2f;
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(angle));
+            float angle = (blockEntity.worldTime + blockEntity.tickDelta) % 360 * 2f;
+            matrices.mulPose(Axis.YP.rotationDegrees(angle));
 
-            itemRenderer.renderItem(itemStack, ItemDisplayContext.FIXED, getLightLevel(blockEntity.getWorld(), blockEntity.getPos()), OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, blockEntity.getWorld(), 1);
-            matrices.pop();
+            blockEntity.renderBait.submit(matrices, queue, blockEntity.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+            matrices.popPose();
         }
     }
-    
-    private int getLightLevel(World world, BlockPos pos) {
-        int bLight = world.getLightLevel(LightType.BLOCK, pos);
-        int sLight = world.getLightLevel(LightType.SKY, pos);
-        return LightmapTextureManager.pack(bLight, sLight);
+
+    @Override
+    public ShellfishTrapBlockEntityRenderState createRenderState() {
+        return new ShellfishTrapBlockEntityRenderState();
+    }
+
+    @Override
+    public void extractRenderState(T blockEntity, ShellfishTrapBlockEntityRenderState state, float tickProgress, Vec3 cameraPos,
+            CrumblingOverlay crumblingOverlay) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+        state.tickDelta = tickProgress;
+        state.renderBait = new ItemStackRenderState();
+        itemModelManager.updateForTopItem(state.renderBait, blockEntity.renderBait(), ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 1);
+        state.worldTime = blockEntity.getLevel().getGameTime();
     }
 }

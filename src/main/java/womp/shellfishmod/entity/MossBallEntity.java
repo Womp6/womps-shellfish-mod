@@ -5,121 +5,120 @@ import java.util.function.IntFunction;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
-
-import net.minecraft.block.Blocks;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.Bucketable;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.WaterCreatureEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Util;
-import net.minecraft.util.function.ValueLists;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Bucketable;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.fish.WaterAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import womp.shellfishmod.entity.goals.SitAroundGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
 import womp.shellfishmod.registry.ShellfishItems;
 import womp.shellfishmod.registry.ShellfishWorldgen;
 
-public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
+public class MossBallEntity extends WaterAnimal implements Bucketable {
     
-    private static final TrackedData<Boolean> FROM_BUCKET = DataTracker.registerData(MossBallEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Integer> VARIANT = DataTracker.registerData(MossBallEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(MossBallEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(MossBallEntity.class, EntityDataSerializers.INT);
 
-    public MossBallEntity(EntityType<? extends MossBallEntity> entityType, World world) {
+    public MossBallEntity(EntityType<? extends MossBallEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    public static DefaultAttributeContainer.Builder createMossBallAttributes() {
-        return WaterCreatureEntity.createMobAttributes().add(EntityAttributes.MAX_HEALTH, 1.0d).add(EntityAttributes.MOVEMENT_SPEED, 0.01);
+    public static AttributeSupplier.Builder createMossBallAttributes() {
+        return WaterAnimal.createMobAttributes().add(Attributes.MAX_HEALTH, 1.0d).add(Attributes.MOVEMENT_SPEED, 0.01);
     }
 
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(1, new SitAroundGoal(this));
-        this.goalSelector.add(2, new WanderInWaterGoal(this, 1));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new SitAroundGoal(this));
+        this.goalSelector.addGoal(2, new WanderInWaterGoal(this, 1));
     }
 
-    public static boolean canSpawn(EntityType<MossBallEntity> type, ServerWorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
+    public static boolean canSpawn(EntityType<MossBallEntity> type, ServerLevelAccessor world, EntitySpawnReason reason, BlockPos pos, RandomSource random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? world.getLightLevel(pos, 0) > 8 : true);
+        return pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER) && ((world.getBiome(pos).is(ShellfishWorldgen.MARSH) || world.getBiome(pos).is(Biomes.SWAMP) || world.getBiome(pos).is(Biomes.MANGROVE_SWAMP)) ? world.getMaxLocalRawBrightness(pos, 0) > 8 : true);
     }
 
     @Override
-    public boolean isFromBucket() {
-        return this.dataTracker.get(FROM_BUCKET);
+    public boolean fromBucket() {
+        return this.entityData.get(FROM_BUCKET);
     }
 
     @Override
-    public int getLimitPerChunk() {
+    public int getMaxSpawnClusterSize() {
         return 8;
     }
 
     @Override
     public void setFromBucket(boolean fromBucket) {
-        this.dataTracker.set(FROM_BUCKET, fromBucket);
+        this.entityData.set(FROM_BUCKET, fromBucket);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(FROM_BUCKET, false);
-        builder.add(VARIANT, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(FROM_BUCKET, false);
+        builder.define(VARIANT, 0);
     }
 
     @Override
-    public void writeCustomData(WriteView nbt) {
-        super.writeCustomData(nbt);
-        nbt.putBoolean("FromBucket", this.isFromBucket());
+    public void addAdditionalSaveData(ValueOutput nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putBoolean("FromBucket", this.fromBucket());
         nbt.putInt("Variant", this.getVariant().id);
     }
 
     @Override
-    public void readCustomData(ReadView nbt) {
-        super.readCustomData(nbt);
-        this.setFromBucket(nbt.getBoolean("FromBucket", false));
-        this.setVariant(Variant.byId(nbt.getInt("Variant", 0)));
+    public void readAdditionalSaveData(ValueInput nbt) {
+        super.readAdditionalSaveData(nbt);
+        this.setFromBucket(nbt.getBooleanOr("FromBucket", false));
+        this.setVariant(Variant.byId(nbt.getIntOr("Variant", 0)));
     }
     
     public Variant getVariant() {
-        return Variant.byId(this.dataTracker.get(VARIANT));
+        return Variant.byId(this.entityData.get(VARIANT));
     }
 
     public void setVariant(Variant variant) {
-        this.dataTracker.set(VARIANT, variant.id);
+        this.entityData.set(VARIANT, variant.id);
     }
 
     @Override
     @Nullable
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData entityData) {
         Variant variant;
-        Random random = world.getRandom();
+        RandomSource random = world.getRandom();
         if (entityData instanceof MossBallData) {
             variant = ((MossBallData)entityData).variant;
         } else {
@@ -127,14 +126,14 @@ public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
             entityData = new MossBallData(variant);
         }
         this.setVariant(variant);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void copyDataToStack(ItemStack bucket) {
-        Bucketable.copyDataToStack(this, bucket);
-        NbtComponent.set(DataComponentTypes.BUCKET_ENTITY_DATA, bucket, nbtCompound -> {
+    public void saveToBucketTag(ItemStack bucket) {
+        Bucketable.saveDefaultDataToBucketTag(this, bucket);
+        CustomData.update(DataComponents.BUCKET_ENTITY_DATA, bucket, nbtCompound -> {
         nbtCompound.putFloat("Health", this.getHealth());
         nbtCompound.putInt("Variant", this.getVariant().id);
         });
@@ -153,65 +152,65 @@ public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
     }
 
     @Override
-    public ItemStack getBucketItem() {
+    public ItemStack getBucketItemStack() {
         return new ItemStack(ShellfishItems.MOSS_BALL_BUCKET);
     }
     
     @Override
-    public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        return Bucketable.tryBucket(player, hand, this).orElse(super.interactMob(player, hand));
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
     }
 
     @Override
-    public boolean cannotDespawn() {
-        return super.cannotDespawn() || this.isFromBucket();
+    public boolean requiresCustomPersistence() {
+        return super.requiresCustomPersistence() || this.fromBucket();
     }
 
     @Override
-    public int getMaxAir() {
+    public int getMaxAirSupply() {
         return 64000;
     }
 
     @SuppressWarnings("deprecation")
     protected void tickAir(int air) {
-        if (this.isAlive() && !this.isTouchingWaterOrRain()) {
-            this.setAir(air - 1);
-            if (this.getAir() == -20) {
-                this.setAir(0);
-                this.serverDamage(getDamageSources().dryOut(), 2.0f);
+        if (this.isAlive() && !this.isInWaterOrRain()) {
+            this.setAirSupply(air - 1);
+            if (this.getAirSupply() == -20) {
+                this.setAirSupply(0);
+                this.hurt(damageSources().dryOut(), 2.0f);
             }
         } else {
-            this.setAir(this.getMaxAir());
+            this.setAirSupply(this.getMaxAirSupply());
         }
     }
 
     @Override
     public void baseTick() {
-        int i = this.getAir();
+        int i = this.getAirSupply();
         super.baseTick();
-        if (!this.isAiDisabled()) {
+        if (!this.isNoAi()) {
             this.tickAir(i);
         }
     }
 
     @Override
-    public SoundEvent getBucketFillSound() {
-        return SoundEvents.ITEM_BUCKET_FILL_FISH;
+    public SoundEvent getPickupSound() {
+        return SoundEvents.BUCKET_FILL_FISH;
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void copyDataFromNbt(NbtCompound nbt) {
-        Bucketable.copyDataFromNbt(this, nbt);
-        this.setVariant(Variant.byId(nbt.getInt("Variant", 0)));
+    public void loadFromBucketTag(CompoundTag nbt) {
+        Bucketable.loadDefaultDataFromBucketTag(this, nbt);
+        this.setVariant(Variant.byId(nbt.getIntOr("Variant", random.nextInt(0, 2))));
     }
 
     @Override
-    public int getExperienceToDrop(ServerWorld world) {
+    public int getBaseExperienceReward(ServerLevel world) {
         return 0;
     }
 
-    public static enum Variant implements StringIdentifiable {
+    public static enum Variant implements StringRepresentable {
         LARGE(0, "large"),
         SMALL(1, "small");
 
@@ -234,17 +233,17 @@ public class MossBallEntity extends WaterCreatureEntity implements Bucketable {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.name;
         }
 
         static {
-            CODEC = StringIdentifiable.createCodec(Variant::values);
-            BY_ID = ValueLists.createIndexToValueFunction(Variant::getIndex, Variant.values(), ValueLists.OutOfBoundsHandling.CLAMP);
+            CODEC = StringRepresentable.fromEnum(Variant::values);
+            BY_ID = ByIdMap.continuous(Variant::getIndex, Variant.values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
         }
     }
 
-    static class MossBallData extends PassiveEntity.PassiveData {
+    static class MossBallData extends AgeableMob.AgeableMobGroupData {
         public final Variant variant;
 
         MossBallData(Variant variant) {

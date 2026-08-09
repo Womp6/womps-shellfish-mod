@@ -1,25 +1,27 @@
 package womp.shellfishmod.client.model;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
 import java.util.Map;
-
+import net.minecraft.client.animation.AnimationChannel;
+import net.minecraft.client.animation.AnimationDefinition;
+import net.minecraft.client.animation.Keyframe;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.Identifier;
 import org.joml.Vector3f;
-
-import net.minecraft.client.model.Dilation;
-import net.minecraft.client.model.ModelData;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.model.ModelPartBuilder;
-import net.minecraft.client.model.ModelPartData;
-import net.minecraft.client.model.ModelTransform;
-import net.minecraft.client.model.TexturedModelData;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.animation.AnimationDefinition;
-import net.minecraft.client.render.entity.animation.Keyframe;
-import net.minecraft.client.render.entity.animation.Transformation;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3d;
-import womp.shellfishmod.blocks.SeaLettuceBlockEntity;
+import org.joml.Vector3fc;
 import womp.shellfishmod.blocks.animations.BlockAnimations;
+import womp.shellfishmod.client.states.SeaLettuceBlockEntityRenderState;
 import womp.shellfishmod.util.config.ShellfishConfig;
 
 public class SeaLettuceModel {
@@ -40,116 +42,116 @@ public class SeaLettuceModel {
 		this.animation = BlockAnimations.NATURAL;
     }
 	
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData sea_lettuce = modelPartData.addChild("sea_lettuce", ModelPartBuilder.create().uv(2, 16).cuboid(-0.5F, -0.2F, -0.5F, 1.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(0, 15).cuboid(-1.0F, -0.1F, -1.0F, 2.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 24.0F, 0.0F));
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition modelPartData = modelData.getRoot();
+		PartDefinition sea_lettuce = modelPartData.addOrReplaceChild("sea_lettuce", CubeListBuilder.create().texOffs(2, 16).addBox(-0.5F, -0.2F, -0.5F, 1.0F, 0.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 15).addBox(-1.0F, -0.1F, -1.0F, 2.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-		ModelPartData leaf1 = sea_lettuce.addChild("leaf1", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf1 = sea_lettuce.addOrReplaceChild("leaf1", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf1.addChild("leaf1_r1", ModelPartBuilder.create().uv(12, 14).cuboid(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.2182F));
+		leaf1.addOrReplaceChild("leaf1_r1", CubeListBuilder.create().texOffs(12, 14).addBox(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.2182F));
 
-		ModelPartData leaf2 = sea_lettuce.addChild("leaf2", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf2 = sea_lettuce.addOrReplaceChild("leaf2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf2.addChild("leaf2_r1", ModelPartBuilder.create().uv(6, 13).cuboid(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.2182F));
+		leaf2.addOrReplaceChild("leaf2_r1", CubeListBuilder.create().texOffs(6, 13).addBox(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.2182F));
 
-		ModelPartData leaf3 = sea_lettuce.addChild("leaf3", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf3 = sea_lettuce.addOrReplaceChild("leaf3", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf3.addChild("leaf3_r1", ModelPartBuilder.create().uv(4, 6).cuboid(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2182F, 0.0F, 0.0F));
+		leaf3.addOrReplaceChild("leaf3_r1", CubeListBuilder.create().texOffs(4, 6).addBox(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2182F, 0.0F, 0.0F));
 
-		ModelPartData leaf4 = sea_lettuce.addChild("leaf4", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf4 = sea_lettuce.addOrReplaceChild("leaf4", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf4.addChild("leaf4_r1", ModelPartBuilder.create().uv(0, 6).cuboid(-1.0F, 0.0F, -3.0F, 2.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.2182F, 0.0F, 0.0F));
+		leaf4.addOrReplaceChild("leaf4_r1", CubeListBuilder.create().texOffs(0, 6).addBox(-1.0F, 0.0F, -3.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2182F, 0.0F, 0.0F));
 
-		ModelPartData leaf5 = sea_lettuce.addChild("leaf5", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf5 = sea_lettuce.addOrReplaceChild("leaf5", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf5.addChild("leaf1_r2", ModelPartBuilder.create().uv(0, 13).cuboid(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.3655F, 0.7119F, 0.5299F));
+		leaf5.addOrReplaceChild("leaf1_r2", CubeListBuilder.create().texOffs(0, 13).addBox(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3655F, 0.7119F, 0.5299F));
 
-		ModelPartData leaf6 = sea_lettuce.addChild("leaf6", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf6 = sea_lettuce.addOrReplaceChild("leaf6", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf6.addChild("leaf2_r2", ModelPartBuilder.create().uv(12, 12).cuboid(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.3655F, -0.7119F, -0.5299F));
+		leaf6.addOrReplaceChild("leaf2_r2", CubeListBuilder.create().texOffs(12, 12).addBox(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3655F, -0.7119F, -0.5299F));
 
-		ModelPartData leaf7 = sea_lettuce.addChild("leaf7", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf7 = sea_lettuce.addOrReplaceChild("leaf7", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf7.addChild("leaf3_r2", ModelPartBuilder.create().uv(12, 10).cuboid(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.3655F, 0.7119F, -0.5299F));
+		leaf7.addOrReplaceChild("leaf3_r2", CubeListBuilder.create().texOffs(12, 10).addBox(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.3655F, 0.7119F, -0.5299F));
 
-		ModelPartData leaf8 = sea_lettuce.addChild("leaf8", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf8 = sea_lettuce.addOrReplaceChild("leaf8", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf8.addChild("leaf4_r2", ModelPartBuilder.create().uv(12, 8).cuboid(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.3655F, -0.7119F, 0.5299F));
+		leaf8.addOrReplaceChild("leaf4_r2", CubeListBuilder.create().texOffs(12, 8).addBox(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.3655F, -0.7119F, 0.5299F));
 
-		ModelPartData leaf9 = sea_lettuce.addChild("leaf9", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf9 = sea_lettuce.addOrReplaceChild("leaf9", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf9.addChild("leaf1_r3", ModelPartBuilder.create().uv(4, 3).cuboid(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.5236F, 0.0F, 0.0F));
+		leaf9.addOrReplaceChild("leaf1_r3", CubeListBuilder.create().texOffs(4, 3).addBox(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.5236F, 0.0F, 0.0F));
 
-		ModelPartData leaf10 = sea_lettuce.addChild("leaf10", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf10 = sea_lettuce.addOrReplaceChild("leaf10", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf10.addChild("leaf2_r3", ModelPartBuilder.create().uv(4, 0).cuboid(-1.0F, 0.0F, -3.0F, 2.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.5236F, 0.0F, 0.0F));
+		leaf10.addOrReplaceChild("leaf2_r3", CubeListBuilder.create().texOffs(4, 0).addBox(-1.0F, 0.0F, -3.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.5236F, 0.0F, 0.0F));
 
-		ModelPartData leaf11 = sea_lettuce.addChild("leaf11", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf11 = sea_lettuce.addOrReplaceChild("leaf11", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf11.addChild("leaf3_r3", ModelPartBuilder.create().uv(6, 11).cuboid(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.5236F));
+		leaf11.addOrReplaceChild("leaf3_r3", CubeListBuilder.create().texOffs(6, 11).addBox(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.5236F));
 
-		ModelPartData leaf12 = sea_lettuce.addChild("leaf12", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf12 = sea_lettuce.addOrReplaceChild("leaf12", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf12.addChild("leaf4_r3", ModelPartBuilder.create().uv(0, 11).cuboid(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.5236F));
+		leaf12.addOrReplaceChild("leaf4_r3", CubeListBuilder.create().texOffs(0, 11).addBox(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.5236F));
 
-		ModelPartData leaf13 = sea_lettuce.addChild("leaf13", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf13 = sea_lettuce.addOrReplaceChild("leaf13", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf13.addChild("leaf1_r4", ModelPartBuilder.create().uv(9, 6).cuboid(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.5713F, -0.5724F, 0.8706F));
+		leaf13.addOrReplaceChild("leaf1_r4", CubeListBuilder.create().texOffs(9, 6).addBox(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.5713F, -0.5724F, 0.8706F));
 
-		ModelPartData leaf14 = sea_lettuce.addChild("leaf14", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf14 = sea_lettuce.addOrReplaceChild("leaf14", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf14.addChild("leaf2_r4", ModelPartBuilder.create().uv(6, 9).cuboid(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.5713F, 0.5724F, -0.8706F));
+		leaf14.addOrReplaceChild("leaf2_r4", CubeListBuilder.create().texOffs(6, 9).addBox(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.5713F, 0.5724F, -0.8706F));
 
-		ModelPartData leaf15 = sea_lettuce.addChild("leaf15", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf15 = sea_lettuce.addOrReplaceChild("leaf15", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf15.addChild("leaf3_r4", ModelPartBuilder.create().uv(9, 4).cuboid(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.5713F, -0.5724F, -0.8706F));
+		leaf15.addOrReplaceChild("leaf3_r4", CubeListBuilder.create().texOffs(9, 4).addBox(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.5713F, -0.5724F, -0.8706F));
 
-		ModelPartData leaf16 = sea_lettuce.addChild("leaf16", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf16 = sea_lettuce.addOrReplaceChild("leaf16", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf16.addChild("leaf4_r4", ModelPartBuilder.create().uv(9, 2).cuboid(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.5713F, 0.5724F, 0.8706F));
+		leaf16.addOrReplaceChild("leaf4_r4", CubeListBuilder.create().texOffs(9, 2).addBox(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.5713F, 0.5724F, 0.8706F));
 
-		ModelPartData leaf17 = sea_lettuce.addChild("leaf17", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf17 = sea_lettuce.addOrReplaceChild("leaf17", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf17.addChild("leaf1_r5", ModelPartBuilder.create().uv(9, 0).cuboid(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8727F));
+		leaf17.addOrReplaceChild("leaf1_r5", CubeListBuilder.create().texOffs(9, 0).addBox(-3.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8727F));
 
-		ModelPartData leaf18 = sea_lettuce.addChild("leaf18", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf18 = sea_lettuce.addOrReplaceChild("leaf18", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf18.addChild("leaf2_r5", ModelPartBuilder.create().uv(0, 9).cuboid(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.8727F));
+		leaf18.addOrReplaceChild("leaf2_r5", CubeListBuilder.create().texOffs(0, 9).addBox(0.0F, 0.0F, -1.0F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.8727F));
 
-		ModelPartData leaf19 = sea_lettuce.addChild("leaf19", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf19 = sea_lettuce.addOrReplaceChild("leaf19", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf19.addChild("leaf3_r5", ModelPartBuilder.create().uv(0, 3).cuboid(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.8727F, 0.0F, 0.0F));
+		leaf19.addOrReplaceChild("leaf3_r5", CubeListBuilder.create().texOffs(0, 3).addBox(-1.0F, 0.0F, 0.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.8727F, 0.0F, 0.0F));
 
-		ModelPartData leaf20 = sea_lettuce.addChild("leaf20", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leaf20 = sea_lettuce.addOrReplaceChild("leaf20", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leaf20.addChild("leaf4_r5", ModelPartBuilder.create().uv(0, 0).cuboid(-1.0F, 0.0F, -3.0F, 2.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.8727F, 0.0F, 0.0F));
-		return TexturedModelData.of(modelData, 32, 32);
+		leaf20.addOrReplaceChild("leaf4_r5", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, 0.0F, -3.0F, 2.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.8727F, 0.0F, 0.0F));
+		return LayerDefinition.create(modelData, 32, 32);
 	}
 
-	public void applyBoneTransformation(String boneName, Vector3f rotation, MatrixStack matrices) {
+	public void applyBoneTransformation(String boneName, Vector3fc rotation, PoseStack matrices) {
         ModelPart bonePart = this.sea_lettuce.getChild(boneName);
         if (bonePart != null && rotation != null) {
-			bonePart.pitch = rotation.x();
-        	bonePart.yaw = rotation.y();
-        	bonePart.roll = rotation.z();
+			bonePart.xRot = rotation.x();
+        	bonePart.yRot = rotation.y();
+        	bonePart.zRot = rotation.z();
         }
     }
 
-	private void applyAnimationToModel(float animationTime, MatrixStack matrices) {
-        for (Map.Entry<String, List<Transformation>> entry : this.animation.boneAnimations().entrySet()) {
+	private void applyAnimationToModel(float animationTime, PoseStack matrices) {
+        for (Map.Entry<String, List<AnimationChannel>> entry : this.animation.boneAnimations().entrySet()) {
             String boneName = entry.getKey();
-            List<Transformation> transformations = entry.getValue();
-            Transformation transformation = getCurrentTransformation(animationTime, transformations);
+            List<AnimationChannel> transformations = entry.getValue();
+            AnimationChannel transformation = getCurrentTransformation(animationTime, transformations);
             if (transformation != null) {
                 applyTransformationToModel(boneName, transformation, matrices);
             }
         }
     }
 
-    private Transformation getCurrentTransformation(float animationTime, List<Transformation> transformations) {
-        for (Transformation transformation : transformations) {
+    private AnimationChannel getCurrentTransformation(float animationTime, List<AnimationChannel> transformations) {
+        for (AnimationChannel transformation : transformations) {
             Keyframe[] keyframes = transformation.keyframes();
             for (int i = 0; i < keyframes.length - 1; i++) {
                 Keyframe current = keyframes[i];
@@ -163,44 +165,44 @@ public class SeaLettuceModel {
         return null;
     }
 
-    private Transformation interpolateTransformation(Keyframe start, Keyframe end, float t) {
-        Vector3f startRotation = start.target();
-        Vector3f endRotation = end.target();
+    private AnimationChannel interpolateTransformation(Keyframe start, Keyframe end, float t) {
+        Vector3fc startRotation = start.postTarget();
+        Vector3fc endRotation = end.postTarget();
         Vector3f interpolatedRotation = new Vector3f(
                 startRotation.x() + t * (endRotation.x() - startRotation.x()),
                 startRotation.y() + t * (endRotation.y() - startRotation.y()),
                 startRotation.z() + t * (endRotation.z() - startRotation.z())
         );
-        return new Transformation(Transformation.Targets.ROTATE, new Keyframe(0f, interpolatedRotation, Transformation.Interpolations.LINEAR));
+        return new AnimationChannel(AnimationChannel.Targets.ROTATION, new Keyframe(0f, interpolatedRotation, AnimationChannel.Interpolations.LINEAR));
     }
 
-    public void applyTransformationToModel(String boneName, Transformation transformation, MatrixStack matrices) {
+    public void applyTransformationToModel(String boneName, AnimationChannel transformation, PoseStack matrices) {
         ModelPart bonePart = sea_lettuce.getChild(boneName);
         if (bonePart != null) {
-            Vector3f rotation = transformation.keyframes()[0].target();
+            Vector3fc rotation = transformation.keyframes()[0].postTarget();
             applyBoneTransformation(boneName, rotation, matrices);
         }
     }
 
-	public void render(SeaLettuceBlockEntity blockEntity, MatrixStack matrices, VertexConsumer var2, int var3, int var4, Vec3d vec) {
+	public void render(SeaLettuceBlockEntityRenderState blockEntity, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState, Identifier texture) {
 		resetTransformations();
 
 		if(ShellfishConfig.getShellfishGraphics() == 2) {
 			long currentTime = System.currentTimeMillis();
-			float animationTime = ((currentTime - blockEntity.getAnimationStartTime()) / 1000.0f) % this.animation.lengthInSeconds();
+			float animationTime = ((currentTime - blockEntity.animationStartTime) / 1000.0f) % this.animation.lengthInSeconds();
         	applyAnimationToModel(animationTime, matrices);
 		}
-
-        sea_lettuce.render(matrices, var2, var3, var4);
+		
+		queue.submitModelPart(sea_lettuce, matrices, RenderTypes.endCrystalBeam(texture), blockEntity.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, blockEntity.breakProgress);
     }
 
 	public void resetTransformations() {
 		for (String boneName : boneNames) {
 			ModelPart bonePart = this.sea_lettuce.getChild(boneName);
 			if (bonePart != null) {
-				bonePart.pitch = 0.0F;
-				bonePart.yaw = 0.0F;
-				bonePart.roll = 0.0F;
+				bonePart.xRot = 0.0F;
+				bonePart.yRot = 0.0F;
+				bonePart.zRot = 0.0F;
 			}
 		}
 	}

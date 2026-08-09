@@ -6,28 +6,27 @@ import java.util.function.IntFunction;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
-
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Util;
-import net.minecraft.util.function.ValueLists;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import womp.shellfishmod.entity.goals.SitAroundGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
 import womp.shellfishmod.entity.goals.WanderToWaterGoal;
@@ -40,42 +39,42 @@ import womp.shellfishmod.registry.ShellfishSounds;
 
 public class SeaUrchinEntity extends ShellfishEntity<Variant> {
 
-    public SeaUrchinEntity(EntityType<? extends SeaUrchinEntity> entityType, World world) {
+    public SeaUrchinEntity(EntityType<? extends SeaUrchinEntity> entityType, Level world) {
         super(entityType, world);
         this.waterWalking = false;
         airBreathing = false;
         brokenAnim = true;
     }
 
-    public static DefaultAttributeContainer.Builder createSeaUrchinAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.MAX_HEALTH, 2.0d).add(EntityAttributes.MOVEMENT_SPEED, 0.07);
+    public static AttributeSupplier.Builder createSeaUrchinAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 2.0d).add(Attributes.MOVEMENT_SPEED, 0.07);
     }
 
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(3, new WanderInWaterGoal(this, 1));
-        this.goalSelector.add(4, new WanderToWaterGoal(this, 1));
-        this.goalSelector.add(5, new SitAroundGoal(this));
-        this.goalSelector.add(6, new WanderAroundGoal(this, 1));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(3, new WanderInWaterGoal(this, 1));
+        this.goalSelector.addGoal(4, new WanderToWaterGoal(this, 1));
+        this.goalSelector.addGoal(5, new SitAroundGoal(this));
+        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 1));
     }
     
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         SeaUrchinEntity child;
-        if((child = ShellfishEntities.SEA_URCHIN.create(world, SpawnReason.BREEDING)) != null && entity instanceof SeaUrchinEntity mate) {
+        if((child = ShellfishEntities.SEA_URCHIN.create(world, EntitySpawnReason.BREEDING)) != null && entity instanceof SeaUrchinEntity mate) {
             child.setVariant((random.nextBoolean() ? this : mate).getVariant());
-            child.setPersistent();
+            child.setPersistenceRequired();
             return child;
         }
         return null;
     }
 
-    public void travel(Vec3d movementInput) {
-        if (this.isTouchingWater() && this.canMoveVoluntarily()) {
-            this.updateVelocity(0.045f, movementInput);
-            this.move(MovementType.SELF, this.getVelocity());
-            this.setVelocity(this.getVelocity().multiply(.1, .825, .1).add(0, -0.01d, 0));
+    public void travel(Vec3 movementInput) {
+        if (this.isInWater() && this.canSimulateMovement()) {
+            this.moveRelative(0.045f, movementInput);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().multiply(.1, .825, .1).add(0, -0.01d, 0));
         } else {
             super.travel(movementInput);
         }
@@ -83,7 +82,7 @@ public class SeaUrchinEntity extends ShellfishEntity<Variant> {
     }
 
     @Override
-    public ItemStack getBucketItem() {
+    public ItemStack getBucketItemStack() {
         return new ItemStack(ShellfishItems.SEA_URCHIN_BUCKET);
     }
 
@@ -100,15 +99,15 @@ public class SeaUrchinEntity extends ShellfishEntity<Variant> {
     }
 
     @Override
-    public int getMaxAir() {
+    public int getMaxAirSupply() {
         return 4000;
     }
 
     @Override
     @Nullable
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData entityData) {
         Variant variant;
-        Random random = world.getRandom();
+        RandomSource random = world.getRandom();
         if (entityData instanceof SeaUrchinData) {
             variant = ((SeaUrchinData)entityData).variant;
         } else {
@@ -117,7 +116,7 @@ public class SeaUrchinEntity extends ShellfishEntity<Variant> {
         }
         this.setVariant(variant);
         this.setNewborn(true);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 
     public static enum Variant implements ShellfishVariant {
@@ -146,17 +145,17 @@ public class SeaUrchinEntity extends ShellfishEntity<Variant> {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.name;
         }
 
         static {
-            CODEC = StringIdentifiable.createCodec(Variant::values);
-            BY_ID = ValueLists.createIndexToValueFunction(Variant::getIndex, Variant.values(), ValueLists.OutOfBoundsHandling.CLAMP);
+            CODEC = StringRepresentable.fromEnum(Variant::values);
+            BY_ID = ByIdMap.continuous(Variant::getIndex, Variant.values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
         }
     }
 
-    static class SeaUrchinData extends PassiveEntity.PassiveData {
+    static class SeaUrchinData extends AgeableMob.AgeableMobGroupData {
         public final Variant variant;
 
         SeaUrchinData(Variant variant) {

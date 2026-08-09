@@ -5,37 +5,36 @@ import java.util.function.IntFunction;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
-
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.ai.goal.LookAroundGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.FishEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.SquidEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Util;
-import net.minecraft.util.function.ValueLists;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FollowParentGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.animal.fish.AbstractFish;
+import net.minecraft.world.entity.animal.squid.Squid;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biomes;
 import womp.shellfishmod.entity.goals.HungryActiveTargetGoal;
 import womp.shellfishmod.entity.goals.HungryRevengeGoal;
 import womp.shellfishmod.entity.goals.ShellfishLayEggGoal;
@@ -56,90 +55,90 @@ import womp.shellfishmod.util.ShellfishTags;
 
 public class CrabEntity extends ShellfishEntity<Variant> implements Hungry, EggLaying {
 
-    public CrabEntity(EntityType<? extends CrabEntity> entityType, World world) {
+    public CrabEntity(EntityType<? extends CrabEntity> entityType, Level world) {
         super(entityType, world);
         hostileSound = ShellfishSounds.CRAB_ATTACK;
     }
 
-    public static DefaultAttributeContainer.Builder createCrabAttributes() {
-        return HostileEntity.createMobAttributes().add(EntityAttributes.MAX_HEALTH, 5.0d).add(EntityAttributes.ATTACK_DAMAGE, 1.0d).add(EntityAttributes.MOVEMENT_SPEED, 0.15);
+    public static AttributeSupplier.Builder createCrabAttributes() {
+        return Monster.createMobAttributes().add(Attributes.MAX_HEALTH, 5.0d).add(Attributes.ATTACK_DAMAGE, 1.0d).add(Attributes.MOVEMENT_SPEED, 0.15);
     }
 
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(0, new ShellfishLayEggGoal(this, 1, ShellfishSounds.CRAB_LAYS_EGGS, ShellfishBlocks.CRAB_EGGS_BLOCK));
-        this.goalSelector.add(1, new ShellfishMateGoal(this, 1));
-        this.goalSelector.add(1, new FollowParentGoal(this, 1.1));
-        this.goalSelector.add(2, new MeleeAttackGoal(this, 1d, true));
-        this.targetSelector.add(2, new HungryRevengeGoal(this, new Class[0]));
-        this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, FishEntity.class, false));
-        this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, SquidEntity.class, false));
-        this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, ShrimpEntity.class, false));
-        this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, SeaSnailEntity.class, false));
-        this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, SeaUrchinEntity.class, false));
-        this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, ClamEntity.class, false));
-        this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, OysterEntity.class, false));
-        this.targetSelector.add(2, new HungryActiveTargetGoal<>(this, MusselEntity.class, false));
-        this.goalSelector.add(3, new WanderInWaterGoal(this, 1));
-        this.goalSelector.add(5, new WanderToWaterGoal(this, 1));
-        this.goalSelector.add(7, new WanderAroundGoal(this, 1));
-        this.goalSelector.add(8, new LookAroundGoal(this));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new ShellfishLayEggGoal(this, 1, ShellfishSounds.CRAB_LAYS_EGGS, ShellfishBlocks.CRAB_EGGS_BLOCK));
+        this.goalSelector.addGoal(1, new ShellfishMateGoal(this, 1));
+        this.goalSelector.addGoal(1, new FollowParentGoal(this, 1.1));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1d, true));
+        this.targetSelector.addGoal(2, new HungryRevengeGoal(this, new Class[0]));
+        this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, AbstractFish.class, false));
+        this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, Squid.class, false));
+        this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, ShrimpEntity.class, false));
+        this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, SeaSnailEntity.class, false));
+        this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, SeaUrchinEntity.class, false));
+        this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, ClamEntity.class, false));
+        this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, OysterEntity.class, false));
+        this.targetSelector.addGoal(2, new HungryActiveTargetGoal<>(this, MusselEntity.class, false));
+        this.goalSelector.addGoal(3, new WanderInWaterGoal(this, 1));
+        this.goalSelector.addGoal(5, new WanderToWaterGoal(this, 1));
+        this.goalSelector.addGoal(7, new RandomStrollGoal(this, 1));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
 
      @Override
-    public boolean isBreedingItem(ItemStack item) {
-        return item.isIn(ShellfishTags.Items.CRAB_FOOD);
+    public boolean isFood(ItemStack item) {
+        return item.is(ShellfishTags.Items.CRAB_FOOD);
     }
     
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         CrabEntity child;
-        if((child = ShellfishEntities.CRAB.create(world, SpawnReason.BREEDING)) != null && entity instanceof CrabEntity mate) {
+        if((child = ShellfishEntities.CRAB.create(world, EntitySpawnReason.BREEDING)) != null && entity instanceof CrabEntity mate) {
             child.setVariant((random.nextBoolean() ? this : mate).getVariant());
-            child.setPersistent();
+            child.setPersistenceRequired();
             return child;
         }
         return null;
     }
 
-    public static boolean canSpawn(EntityType<CrabEntity> type, ServerWorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
+    public static boolean canSpawn(EntityType<CrabEntity> type, ServerLevelAccessor world, EntitySpawnReason reason, BlockPos pos, RandomSource random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        if (pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getFluidState(pos).isIn(FluidTags.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? isLightLevelValidForNaturalSpawn(world, pos) : true)) {
+        if (pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getFluidState(pos).is(FluidTags.WATER) && ((world.getBiome(pos).is(ShellfishWorldgen.MARSH) || world.getBiome(pos).is(Biomes.SWAMP) || world.getBiome(pos).is(Biomes.MANGROVE_SWAMP)) ? isBrightEnoughToSpawn(world, pos) : true)) {
             return true;
-        } else if (pos.getY() >= i-6 && CrabEntity.isLightLevelValidForNaturalSpawn(world, pos)) {
-            return world.getBlockState(pos.down()).isIn(ShellfishTags.Blocks.SHELLFISH_SPAWNABLE_ON);
+        } else if (pos.getY() >= i-6 && CrabEntity.isBrightEnoughToSpawn(world, pos)) {
+            return world.getBlockState(pos.below()).is(ShellfishTags.Blocks.SHELLFISH_SPAWNABLE_ON);
         }
         return false;
     }
 
      @Override
-    protected void eat(PlayerEntity player, Hand hand, ItemStack stack) {
-        if (stack.isOf(Items.TROPICAL_FISH_BUCKET)) {
-            player.setStackInHand(hand, new ItemStack(Items.WATER_BUCKET));
-        } else if (stack.isOf(Items.COD_BUCKET)) {
-            player.setStackInHand(hand, new ItemStack(Items.WATER_BUCKET));
-        } else if (stack.isOf(Items.SALMON_BUCKET)) {
-            player.setStackInHand(hand, new ItemStack(Items.WATER_BUCKET));
-        } else if (stack.isOf(ShellfishItems.SHRIMP_BUCKET)) {
-            player.setStackInHand(hand, new ItemStack(Items.WATER_BUCKET));
-        } else if (stack.isOf(ShellfishItems.SEA_SNAIL_BUCKET)) {
-            player.setStackInHand(hand, new ItemStack(Items.WATER_BUCKET));
-        } else if (stack.isOf(ShellfishItems.SEA_URCHIN_BUCKET)) {
-            player.setStackInHand(hand, new ItemStack(Items.WATER_BUCKET));
+    protected void usePlayerItem(Player player, InteractionHand hand, ItemStack stack) {
+        if (stack.is(Items.TROPICAL_FISH_BUCKET)) {
+            player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
+        } else if (stack.is(Items.COD_BUCKET)) {
+            player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
+        } else if (stack.is(Items.SALMON_BUCKET)) {
+            player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
+        } else if (stack.is(ShellfishItems.SHRIMP_BUCKET)) {
+            player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
+        } else if (stack.is(ShellfishItems.SEA_SNAIL_BUCKET)) {
+            player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
+        } else if (stack.is(ShellfishItems.SEA_URCHIN_BUCKET)) {
+            player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
         } else {
-            super.eat(player, hand, stack);
+            super.usePlayerItem(player, hand, stack);
         }
     }
 
     @Override
-    public int getLimitPerChunk() {
+    public int getMaxSpawnClusterSize() {
         return 4;
     }
 
     @Override
-    public ItemStack getBucketItem() {
+    public ItemStack getBucketItemStack() {
         return new ItemStack(ShellfishItems.CRAB_BUCKET);
     }
 
@@ -167,9 +166,9 @@ public class CrabEntity extends ShellfishEntity<Variant> implements Hungry, EggL
 
     @Override
     @Nullable
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData entityData) {
         Variant variant;
-        Random random = world.getRandom();
+        RandomSource random = world.getRandom();
         if (entityData instanceof CrabData) {
             variant = ((CrabData)entityData).variant;
         } else {
@@ -178,7 +177,7 @@ public class CrabEntity extends ShellfishEntity<Variant> implements Hungry, EggL
         }
         this.setVariant(variant);
         this.setNewborn(true);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 
     public static enum Variant implements ShellfishVariant {
@@ -207,17 +206,17 @@ public class CrabEntity extends ShellfishEntity<Variant> implements Hungry, EggL
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.name;
         }
 
         static {
-            CODEC = StringIdentifiable.createCodec(Variant::values);
-            BY_ID = ValueLists.createIndexToValueFunction(Variant::getIndex, Variant.values(), ValueLists.OutOfBoundsHandling.CLAMP);
+            CODEC = StringRepresentable.fromEnum(Variant::values);
+            BY_ID = ByIdMap.continuous(Variant::getIndex, Variant.values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
         }
     }
 
-    static class CrabData extends PassiveEntity.PassiveData {
+    static class CrabData extends AgeableMob.AgeableMobGroupData {
         public final Variant variant;
 
         CrabData(Variant variant) {

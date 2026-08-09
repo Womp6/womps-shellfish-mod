@@ -1,23 +1,21 @@
 package womp.shellfishmod.entity.goals;
 
 import java.util.EnumSet;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import womp.shellfishmod.entity.SeaSnailEntity;
 
 public class WanderInWaterGoal extends Goal {
     
     public static final int DEFAULT_CHANCE = 120;
-    protected final PathAwareEntity mob;
+    protected final PathfinderMob mob;
     protected double targetX;
     protected double targetY;
     protected double targetZ;
@@ -25,33 +23,33 @@ public class WanderInWaterGoal extends Goal {
     protected int chance;
     protected boolean ignoringChance;
     private final boolean canDespawn;
-    private final World world;
+    private final Level world;
 
-    public WanderInWaterGoal(PathAwareEntity mob, double speed) {
+    public WanderInWaterGoal(PathfinderMob mob, double speed) {
         this(mob, speed, 120);
     }
 
-    public WanderInWaterGoal(PathAwareEntity mob, double speed, int chance) {
+    public WanderInWaterGoal(PathfinderMob mob, double speed, int chance) {
         this(mob, speed, chance, true);
     }
 
-    public WanderInWaterGoal(PathAwareEntity entity, double speed, int chance, boolean canDespawn) {
+    public WanderInWaterGoal(PathfinderMob entity, double speed, int chance, boolean canDespawn) {
         this.mob = entity;
         this.speed = speed;
         this.chance = chance;
         this.canDespawn = canDespawn;
-        this.world = mob.getWorld();
-        this.setControls(EnumSet.of(Goal.Control.MOVE));
+        this.world = mob.level();
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
 
     @Override
-    public boolean canStart() {
-        Vec3d vec3d;
+    public boolean canUse() {
+        Vec3 vec3d;
         if (!this.ignoringChance) {
-            if (this.canDespawn && this.mob.getDespawnCounter() >= 100) {
+            if (this.canDespawn && this.mob.getNoActionTime() >= 100) {
                 return false;
             }
-            if (this.mob.getRandom().nextInt(WanderAroundGoal.toGoalTicks(this.chance)) != 0) {
+            if (this.mob.getRandom().nextInt(RandomStrollGoal.reducedTickDelay(this.chance)) != 0) {
                 return false;
             }
         }
@@ -62,24 +60,24 @@ public class WanderInWaterGoal extends Goal {
         this.targetY = vec3d.y;
         this.targetZ = vec3d.z;
         this.ignoringChance = false;
-        return this.mob.isTouchingWater() && this.mob.getFluidHeight(FluidTags.WATER) > this.mob.getSwimHeight() || this.mob.isInLava();
+        return this.mob.isInWater() && this.mob.getFluidHeight(FluidTags.WATER) > this.mob.getFluidJumpThreshold() || this.mob.isInLava();
     }
 
     @Nullable
-    protected Vec3d getWanderTarget() {
-        net.minecraft.util.math.random.Random random = this.mob.getRandom();
-            BlockPos blockPos = this.mob.getBlockPos();
+    protected Vec3 getWanderTarget() {
+        net.minecraft.util.RandomSource random = this.mob.getRandom();
+            BlockPos blockPos = this.mob.blockPosition();
             for (int i = 0; i < 10; ++i) {
-                BlockPos blockPos2 = blockPos.add(random.nextInt(6) - 3, 2 - random.nextInt(4), random.nextInt(6) - 3);
-                if (!this.world.getBlockState(blockPos2).isOf(Blocks.WATER)) continue;
-                return Vec3d.ofBottomCenter(blockPos2);
+                BlockPos blockPos2 = blockPos.offset(random.nextInt(6) - 3, 2 - random.nextInt(4), random.nextInt(6) - 3);
+                if (!this.world.getBlockState(blockPos2).is(Blocks.WATER)) continue;
+                return Vec3.atBottomCenterOf(blockPos2);
             }
             return null;
     }
 
     @Override
-    public boolean shouldContinue() {
-        return !this.mob.getNavigation().isIdle();
+    public boolean canContinueToUse() {
+        return !this.mob.getNavigation().isDone();
     }
 
     @Override
@@ -87,7 +85,7 @@ public class WanderInWaterGoal extends Goal {
         if (this.mob instanceof SeaSnailEntity snail) {
             snail.setCanHide(false);
         }
-        this.mob.getNavigation().startMovingTo(this.targetX, this.targetY, this.targetZ, this.speed);
+        this.mob.getNavigation().moveTo(this.targetX, this.targetY, this.targetZ, this.speed);
     }
 
     @Override

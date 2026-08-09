@@ -1,73 +1,73 @@
 package womp.shellfishmod.feature;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.ProbabilityConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.util.FeatureContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
 import womp.shellfishmod.blocks.SeaLettuceBlock;
 import womp.shellfishmod.blocks.SeaLettuceBlockEntity;
 import womp.shellfishmod.blocks.TallRockWeedBlock;
 import womp.shellfishmod.registry.ShellfishBlocks;
 
-public class UnderwaterFeature extends Feature<ProbabilityConfig> {
+public class UnderwaterFeature extends Feature<ProbabilityFeatureConfiguration> {
 
     private final Block place, tallBlock;
 
     public UnderwaterFeature(Block block, Block tallBlock) {
-        super(ProbabilityConfig.CODEC);
+        super(ProbabilityFeatureConfiguration.CODEC);
         this.place = block;
         this.tallBlock = tallBlock;
     }
 
     @Override
-    public boolean generate(FeatureContext<ProbabilityConfig> context) {
+    public boolean place(FeaturePlaceContext<ProbabilityFeatureConfiguration> context) {
         boolean bl = false;
-        Random random = context.getRandom();
-        StructureWorldAccess structureWorldAccess = context.getWorld();
-        BlockPos blockPos = context.getOrigin();
-        ProbabilityConfig probabilityConfig = context.getConfig();
+        RandomSource random = context.random();
+        WorldGenLevel structureWorldAccess = context.level();
+        BlockPos blockPos = context.origin();
+        ProbabilityFeatureConfiguration probabilityConfig = context.config();
         int i = random.nextInt(8) - random.nextInt(8);
         int j = random.nextInt(8) - random.nextInt(8);
-        int k = structureWorldAccess.getTopY(Heightmap.Type.OCEAN_FLOOR, blockPos.getX() + i, blockPos.getZ() + j);
+        int k = structureWorldAccess.getHeight(Heightmap.Types.OCEAN_FLOOR, blockPos.getX() + i, blockPos.getZ() + j);
         BlockPos blockPos2 = new BlockPos(blockPos.getX() + i, k, blockPos.getZ() + j);
-        if (structureWorldAccess.getBlockState(blockPos2).isOf(Blocks.WATER)) {
-            BlockState blockState = place.getDefaultState();
+        if (structureWorldAccess.getBlockState(blockPos2).is(Blocks.WATER)) {
+            BlockState blockState = place.defaultBlockState();
             if (place.equals(ShellfishBlocks.SEA_LETTUCE)) {
                 Boolean isLarge = random.nextBoolean();
-                blockState = blockState.with(SeaLettuceBlock.LARGE, isLarge);
-                if (blockState.canPlaceAt(structureWorldAccess, blockPos2)) {   
-                    structureWorldAccess.setBlockState(blockPos2, blockState, Block.NOTIFY_LISTENERS);
+                blockState = blockState.setValue(SeaLettuceBlock.LARGE, isLarge);
+                if (blockState.canSurvive(structureWorldAccess, blockPos2)) {   
+                    structureWorldAccess.setBlock(blockPos2, blockState, Block.UPDATE_CLIENTS);
                     BlockEntity blockEntity = structureWorldAccess.getBlockEntity(blockPos2);
                     if (blockEntity instanceof SeaLettuceBlockEntity) {
                         ((SeaLettuceBlockEntity) blockEntity).setLarge(isLarge);
                     }
                 }
             } else if (tallBlock == null) {
-                if (blockState.canPlaceAt(structureWorldAccess, blockPos2)) {
-                    structureWorldAccess.setBlockState(blockPos2, blockState, Block.NOTIFY_LISTENERS);
+                if (blockState.canSurvive(structureWorldAccess, blockPos2)) {
+                    structureWorldAccess.setBlock(blockPos2, blockState, Block.UPDATE_CLIENTS);
                     bl = true;
                 }
             } else {
                 boolean bl2 = random.nextDouble() < (double)probabilityConfig.probability;
-                blockState = bl2 ? tallBlock.getDefaultState() : place.getDefaultState();
-                if (blockState.canPlaceAt(structureWorldAccess, blockPos2)) {
+                blockState = bl2 ? tallBlock.defaultBlockState() : place.defaultBlockState();
+                if (blockState.canSurvive(structureWorldAccess, blockPos2)) {
                     if (bl2 && tallBlock instanceof TallRockWeedBlock) {
-                        BlockState blockState22 = (BlockState)blockState.with(TallRockWeedBlock.HALF, DoubleBlockHalf.UPPER);
-                        BlockPos blockPos3 = blockPos2.up();
-                        if (structureWorldAccess.getBlockState(blockPos3).isOf(Blocks.WATER)) {
-                            structureWorldAccess.setBlockState(blockPos2, blockState, Block.NOTIFY_LISTENERS);
-                            structureWorldAccess.setBlockState(blockPos3, blockState22, Block.NOTIFY_LISTENERS);
+                        BlockState blockState22 = (BlockState)blockState.setValue(TallRockWeedBlock.HALF, DoubleBlockHalf.UPPER);
+                        BlockPos blockPos3 = blockPos2.above();
+                        if (structureWorldAccess.getBlockState(blockPos3).is(Blocks.WATER)) {
+                            structureWorldAccess.setBlock(blockPos2, blockState, Block.UPDATE_CLIENTS);
+                            structureWorldAccess.setBlock(blockPos3, blockState22, Block.UPDATE_CLIENTS);
                         }
                     } else {
-                        structureWorldAccess.setBlockState(blockPos2, blockState, Block.NOTIFY_LISTENERS);
+                        structureWorldAccess.setBlock(blockPos2, blockState, Block.UPDATE_CLIENTS);
                     }
                     bl = true;
                 }

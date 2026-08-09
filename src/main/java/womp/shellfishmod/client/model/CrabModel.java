@@ -1,14 +1,14 @@
 package womp.shellfishmod.client.model;
 
-import net.minecraft.client.model.Dilation;
-import net.minecraft.client.model.ModelData;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.model.ModelPartBuilder;
-import net.minecraft.client.model.ModelPartData;
-import net.minecraft.client.model.ModelTransform;
-import net.minecraft.client.model.TexturedModelData;
-import net.minecraft.client.render.entity.animation.Animation;
-import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.CrabEntity;
 import womp.shellfishmod.entity.animations.MoreShellfishAnimations;
@@ -16,87 +16,87 @@ import womp.shellfishmod.entity.animations.MoreShellfishAnimations;
 // The new model (1.2+) was revised with help from underapreciatedpigeon
 public class CrabModel extends EntityModel<ShellfishRenderState<CrabEntity.Variant>> {
 
-	private final Animation moveAnimation;
-	private final Animation idleAnimation;
+	private final KeyframeAnimation moveAnimation;
+	private final KeyframeAnimation idleAnimation;
 
 	public CrabModel(ModelPart root) {
 		super(root);
-		this.moveAnimation = MoreShellfishAnimations.CRAB_WALK.createAnimation(root);
-		this.idleAnimation = MoreShellfishAnimations.CRAB_IDLE.createAnimation(root);
+		this.moveAnimation = MoreShellfishAnimations.CRAB_WALK.bake(root);
+		this.idleAnimation = MoreShellfishAnimations.CRAB_IDLE.bake(root);
 	}
 
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData crab = modelPartData.addChild("crab", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 24.0F, 0.0F));
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition modelPartData = modelData.getRoot();
+		PartDefinition crab = modelPartData.addOrReplaceChild("crab", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-		ModelPartData body = crab.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(-3.0F, -2.75F, -2.5F, 6.0F, 2.0F, 5.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition body = crab.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -2.75F, -2.5F, 6.0F, 2.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData eyes = body.addChild("eyes", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition eyes = body.addOrReplaceChild("eyes", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData eye = eyes.addChild("eye", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition eye = eyes.addOrReplaceChild("eye", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		eye.addChild("eye3_r1", ModelPartBuilder.create().uv(26, 0).cuboid(0.25F, -4.75F, -2.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(18, 0).cuboid(0.25F, -3.75F, -2.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.5F, 0.0F, 0.25F, 0.0F, 0.0F, 0.0873F));
+		eye.addOrReplaceChild("eye3_r1", CubeListBuilder.create().texOffs(26, 0).addBox(0.25F, -4.75F, -2.25F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(18, 0).addBox(0.25F, -3.75F, -2.25F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, 0.0F, 0.25F, 0.0F, 0.0F, 0.0873F));
 
-		ModelPartData eye2 = eyes.addChild("eye2", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition eye2 = eyes.addOrReplaceChild("eye2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		eye2.addChild("eye2_r1", ModelPartBuilder.create().uv(22, 0).mirrored().cuboid(-1.25F, -3.75F, -2.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)).mirrored(false)
-		.uv(24, 4).mirrored().cuboid(-1.25F, -4.75F, -2.25F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(-0.5F, 0.0F, 0.25F, 0.0F, 0.0F, -0.0873F));
+		eye2.addOrReplaceChild("eye2_r1", CubeListBuilder.create().texOffs(22, 0).mirror().addBox(-1.25F, -3.75F, -2.25F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false)
+		.texOffs(24, 4).mirror().addBox(-1.25F, -4.75F, -2.25F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-0.5F, 0.0F, 0.25F, 0.0F, 0.0F, -0.0873F));
 
-		ModelPartData claws = body.addChild("claws", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition claws = body.addOrReplaceChild("claws", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData claw1 = claws.addChild("claw1", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -0.0436F, 0.0F));
+		PartDefinition claw1 = claws.addOrReplaceChild("claw1", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.0436F, 0.0F));
 
-		claw1.addChild("claw4_r1", ModelPartBuilder.create().uv(12, 23).cuboid(3.5F, -1.58F, -6.05F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F))
-		.uv(1, 27).cuboid(3.5F, -1.58F, -4.05F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
-		.uv(4, 27).cuboid(4.5F, -1.58F, -6.05F, 2.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -0.5F, 0.25F, 0.0623F, 0.3312F, 0.0208F));
+		claw1.addOrReplaceChild("claw4_r1", CubeListBuilder.create().texOffs(12, 23).addBox(3.5F, -1.58F, -6.05F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
+		.texOffs(1, 27).addBox(3.5F, -1.58F, -4.05F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(4, 27).addBox(4.5F, -1.58F, -6.05F, 2.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, -0.5F, 0.25F, 0.0623F, 0.3312F, 0.0208F));
 
-		claw1.addChild("claw1_r1", ModelPartBuilder.create().uv(19, 9).cuboid(3.82F, -1.2F, -5.4F, 1.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-2.25F, -0.5F, -1.75F, 0.0775F, -0.3494F, 0.0151F));
+		claw1.addOrReplaceChild("claw1_r1", CubeListBuilder.create().texOffs(19, 9).addBox(3.82F, -1.2F, -5.4F, 1.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-2.25F, -0.5F, -1.75F, 0.0775F, -0.3494F, 0.0151F));
 
-		ModelPartData claw2 = claws.addChild("claw2", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0436F, 0.0F));
+		PartDefinition claw2 = claws.addOrReplaceChild("claw2", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0436F, 0.0F));
 
-		claw2.addChild("claw4_r2", ModelPartBuilder.create().uv(22, 20).mirrored().cuboid(-3.5F, -1.58F, -6.05F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)).mirrored(false)
-		.uv(22, 24).mirrored().cuboid(-4.5F, -1.58F, -4.05F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F)).mirrored(false)
-		.uv(19, 27).mirrored().cuboid(-6.5F, -1.58F, -6.05F, 2.0F, 1.0F, 3.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.5F, -0.5F, 0.25F, 0.0623F, -0.3312F, -0.0208F));
+		claw2.addOrReplaceChild("claw4_r2", CubeListBuilder.create().texOffs(22, 20).mirror().addBox(-3.5F, -1.58F, -6.05F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false)
+		.texOffs(22, 24).mirror().addBox(-4.5F, -1.58F, -4.05F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false)
+		.texOffs(19, 27).mirror().addBox(-6.5F, -1.58F, -6.05F, 2.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.5F, -0.5F, 0.25F, 0.0623F, -0.3312F, -0.0208F));
 
-		claw2.addChild("claw1_r2", ModelPartBuilder.create().uv(19, 14).mirrored().cuboid(-4.82F, -1.2F, -5.4F, 1.0F, 0.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(2.25F, -0.5F, -1.75F, 0.0775F, 0.3494F, -0.0151F));
+		claw2.addOrReplaceChild("claw1_r2", CubeListBuilder.create().texOffs(19, 14).mirror().addBox(-4.82F, -1.2F, -5.4F, 1.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(2.25F, -0.5F, -1.75F, 0.0775F, 0.3494F, -0.0151F));
 
-		ModelPartData leg = crab.addChild("leg", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leg = crab.addOrReplaceChild("leg", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData leg1 = leg.addChild("leg1", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 4.0F));
+		PartDefinition leg1 = leg.addOrReplaceChild("leg1", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 4.0F));
 
-		leg1.addChild("leg_r1", ModelPartBuilder.create().uv(0, 8).cuboid(2.05F, -1.65F, 1.45F, 3.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -4.0F, 0.0F, 0.0F, 0.3054F));
+		leg1.addOrReplaceChild("leg_r1", CubeListBuilder.create().texOffs(0, 8).addBox(2.05F, -1.65F, 1.45F, 3.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -4.0F, 0.0F, 0.0F, 0.3054F));
 
-		ModelPartData leg2 = leg.addChild("leg2", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 2.0F));
+		PartDefinition leg2 = leg.addOrReplaceChild("leg2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 2.0F));
 
-		leg2.addChild("leg2_r1", ModelPartBuilder.create().uv(0, 11).cuboid(2.05F, -1.65F, -0.425F, 3.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, -2.0F, 0.0F, 0.0F, 0.3054F));
+		leg2.addOrReplaceChild("leg2_r1", CubeListBuilder.create().texOffs(0, 11).addBox(2.05F, -1.65F, -0.425F, 3.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -2.0F, 0.0F, 0.0F, 0.3054F));
 
-		ModelPartData leg3 = leg.addChild("leg3", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leg3 = leg.addOrReplaceChild("leg3", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leg3.addChild("leg3_r1", ModelPartBuilder.create().uv(0, 14).cuboid(2.05F, -1.65F, -2.3F, 3.0F, 0.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3054F));
+		leg3.addOrReplaceChild("leg3_r1", CubeListBuilder.create().texOffs(0, 14).addBox(2.05F, -1.65F, -2.3F, 3.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3054F));
 
-		ModelPartData leg4 = leg.addChild("leg4", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 4.0F));
+		PartDefinition leg4 = leg.addOrReplaceChild("leg4", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 4.0F));
 
-		leg4.addChild("leg4_r1", ModelPartBuilder.create().uv(0, 17).mirrored().cuboid(-5.05F, -1.65F, 1.45F, 3.0F, 0.0F, 1.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.0F, 0.0F, -4.0F, 0.0F, 0.0F, -0.3054F));
+		leg4.addOrReplaceChild("leg4_r1", CubeListBuilder.create().texOffs(0, 17).mirror().addBox(-5.05F, -1.65F, 1.45F, 3.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.0F, 0.0F, -4.0F, 0.0F, 0.0F, -0.3054F));
 
-		ModelPartData leg5 = leg.addChild("leg5", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 2.0F));
+		PartDefinition leg5 = leg.addOrReplaceChild("leg5", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 2.0F));
 
-		leg5.addChild("leg5_r1", ModelPartBuilder.create().uv(0, 20).mirrored().cuboid(-5.05F, -1.65F, -0.425F, 3.0F, 0.0F, 1.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.0F, 0.0F, -2.0F, 0.0F, 0.0F, -0.3054F));
+		leg5.addOrReplaceChild("leg5_r1", CubeListBuilder.create().texOffs(0, 20).mirror().addBox(-5.05F, -1.65F, -0.425F, 3.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.0F, 0.0F, -2.0F, 0.0F, 0.0F, -0.3054F));
 
-		ModelPartData leg6 = leg.addChild("leg6", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition leg6 = leg.addOrReplaceChild("leg6", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		leg6.addChild("leg6_r1", ModelPartBuilder.create().uv(0, 23).mirrored().cuboid(-5.05F, -1.65F, -2.3F, 3.0F, 0.0F, 1.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.3054F));
-		return TexturedModelData.of(modelData, 32, 32);
+		leg6.addOrReplaceChild("leg6_r1", CubeListBuilder.create().texOffs(0, 23).mirror().addBox(-5.05F, -1.65F, -2.3F, 3.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.3054F));
+		return LayerDefinition.create(modelData, 32, 32);
 	}
 
 	@Override
-	public void setAngles(ShellfishRenderState<CrabEntity.Variant> entity) {
-		super.setAngles(entity);
-		if (!entity.touchingWater) {
-			this.moveAnimation.applyWalking(entity.limbSwingAnimationProgress, entity.limbSwingAmplitude, 12, 15f);
+	public void setupAnim(ShellfishRenderState<CrabEntity.Variant> entity) {
+		super.setupAnim(entity);
+		if (!entity.isInWater) {
+			this.moveAnimation.applyWalk(entity.walkAnimationPos, entity.walkAnimationSpeed, 12, 15f);
 		}
-		this.moveAnimation.apply(entity.moveAnimationState, entity.age, 2f);
-		this.idleAnimation.apply(entity.idleAnimationState, entity.age, 1f);
+		this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 2f);
+		this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
 	}
 }

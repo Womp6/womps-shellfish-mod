@@ -1,89 +1,89 @@
 package womp.shellfishmod.blocks.parents;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class DeadBlock extends Block {
 
     private final VoxelShape shape;
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private final boolean solid;
     
-    public DeadBlock(Settings settings, VoxelShape shape, boolean solid) {
+    public DeadBlock(Properties settings, VoxelShape shape, boolean solid) {
         super(settings);
         this.shape = shape;
         this.solid = solid;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.WATERLOGGED);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BlockStateProperties.WATERLOGGED);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return shape;
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        if (fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8) {
-            return super.getPlacementState(ctx);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
+        if (fluidState.is(FluidTags.WATER) && fluidState.getAmount() == 8) {
+            return super.getStateForPlacement(ctx);
         }
         return null;
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView view, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-        if (state.get(WATERLOGGED)) {
-            view.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess view, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (state.getValue(WATERLOGGED)) {
+            view.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
-        if (!state.canPlaceAt(world, pos)) {
-            return Blocks.AIR.getDefaultState();
+        if (!state.canSurvive(world, pos)) {
+            return Blocks.AIR.defaultBlockState();
         }
  
-        return super.getStateForNeighborUpdate(state, world, view, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, world, view, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        BlockPos blockPos = pos.down();
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        BlockPos blockPos = pos.below();
         BlockState blockState = world.getBlockState(blockPos);
         return this.canPutOnTop(world, blockPos, blockState);
     }
 
-    private boolean canPutOnTop(BlockView world, BlockPos pos, BlockState floor) {
-        return floor.isSideSolidFullSquare(world, pos, Direction.UP);
+    private boolean canPutOnTop(BlockGetter world, BlockPos pos, BlockState floor) {
+        return floor.isFaceSturdy(world, pos, Direction.UP);
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
-        if (!solid && type == NavigationType.AIR && !this.collidable) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
+        if (!solid && type == PathComputationType.AIR && !this.hasCollision) {
             return true;
         }
-        return super.canPathfindThrough(state, type);
+        return super.isPathfindable(state, type);
     }
 }

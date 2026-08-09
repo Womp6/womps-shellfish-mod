@@ -3,28 +3,28 @@ package womp.shellfishmod.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 
 public class PassiveShellfishCommand {
     
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess, Commands.CommandSelection registrationEnvironment) {
 
-        dispatcher.register(CommandManager.literal("passiveshellfish").then(CommandManager.argument("value", BoolArgumentType.bool())
+        dispatcher.register(Commands.literal("passiveshellfish").then(Commands.argument("value", BoolArgumentType.bool())
         .executes(context -> setBoolean(context, BoolArgumentType.getBool(context, "value")))));
     }
 
-    private static int setBoolean(CommandContext<ServerCommandSource> context, boolean value) {
-        ServerCommandSource source = context.getSource();
-        ServerWorld world = source.getWorld();
+    private static int setBoolean(CommandContext<CommandSourceStack> context, boolean value) {
+        CommandSourceStack source = context.getSource();
+        ServerLevel world = source.getLevel();
 
-        PassiveShellfishState passiveShellfishState = world.getPersistentStateManager().getOrCreate(PassiveShellfishState.TYPE);
+        PassiveShellfishState passiveShellfishState = world.getDataStorage().computeIfAbsent(PassiveShellfishState.TYPE);
 
         passiveShellfishState.setValue(value);
-        context.getSource().sendFeedback(() -> Text.translatable(value ? "shellfish.passive.true" : "shellfish.passive.false"), true);
+        context.getSource().sendSuccess(() -> Component.translatable(value ? "shellfish.passive.true" : "shellfish.passive.false"), true);
 
         return 1;
     }

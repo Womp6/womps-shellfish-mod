@@ -1,44 +1,43 @@
 package womp.shellfishmod.blocks;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
 import womp.shellfishmod.blocks.parents.ShellfishLandPlantBlock;
 
 public class WaterFlowerBlock extends ShellfishLandPlantBlock {
 
-    public static final BooleanProperty BLOOMED = BooleanProperty.of("bloomed");
+    public static final BooleanProperty BLOOMED = BooleanProperty.create("bloomed");
 
-    public WaterFlowerBlock(Settings settings, Block tallPlantBlock) {
+    public WaterFlowerBlock(Properties settings, Block tallPlantBlock) {
         super(settings, false, tallPlantBlock);
-        this.setDefaultState(getDefaultState().with(BLOOMED, false));
+        this.registerDefaultState(defaultBlockState().setValue(BLOOMED, false));
     }
 
     @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(BLOOMED);
     }
     
     @Override
-    public @Nullable BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState state = super.getPlacementState(ctx);
-        return state == null ? null : state.with(BLOOMED, false);
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockState state = super.getStateForPlacement(ctx);
+        return state == null ? null : state.setValue(BLOOMED, false);
     }
 
     @Override
-    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        if (!state.get(BLOOMED)) {
-            world.setBlockState(pos, state.with(BLOOMED, true));
+    public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state) {
+        if (!state.getValue(BLOOMED)) {
+            world.setBlockAndUpdate(pos, state.setValue(BLOOMED, true));
         } else {
-            super.grow(world, random, pos, state);
+            super.performBonemeal(world, random, pos, state);
         }
     }
 }

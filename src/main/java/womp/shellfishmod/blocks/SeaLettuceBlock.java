@@ -1,84 +1,83 @@
 package womp.shellfishmod.blocks;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Fertilizable;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import womp.shellfishmod.blocks.parents.ShellfishPlantBlock;
 import womp.shellfishmod.util.config.ShellfishConfig;
 
-public class SeaLettuceBlock extends ShellfishPlantBlock implements BlockEntityProvider, Fertilizable {
+public class SeaLettuceBlock extends ShellfishPlantBlock implements EntityBlock, BonemealableBlock {
 
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(5.0, 0.0, 5.0, 11.0, 3.0, 11.0);
-    protected static final VoxelShape SHAPE_2D = Block.createCuboidShape(3.0, 0.0, 3.0, 13.0, 12.0, 13.0);
-    protected static final VoxelShape LARGE_SHAPE = Block.createCuboidShape(3.0, 0, 3.0, 13.0, 5.0, 13.0);
-    protected static final VoxelShape LARGE_SHAPE_2D = Block.createCuboidShape(2.0, 0.0, 2.0, 14.0, 15.0, 14.0);
+    protected static final VoxelShape SHAPE = Block.box(5.0, 0.0, 5.0, 11.0, 3.0, 11.0);
+    protected static final VoxelShape SHAPE_2D = Block.box(3.0, 0.0, 3.0, 13.0, 12.0, 13.0);
+    protected static final VoxelShape LARGE_SHAPE = Block.box(3.0, 0, 3.0, 13.0, 5.0, 13.0);
+    protected static final VoxelShape LARGE_SHAPE_2D = Block.box(2.0, 0.0, 2.0, 14.0, 15.0, 14.0);
 
-    public static final BooleanProperty LARGE = BooleanProperty.of("large");
-    public static final BooleanProperty SHOW_3D = BooleanProperty.of("is3d");
+    public static final BooleanProperty LARGE = BooleanProperty.create("large");
+    public static final BooleanProperty SHOW_3D = BooleanProperty.create("is3d");
 
-    public SeaLettuceBlock(AbstractBlock.Settings settings) {
-        super(settings, SHAPE, PlaceType.SOLID_SIDE, createCodec(SeaLettuceBlock::new));
-        this.setDefaultState(this.stateManager.getDefaultState().with(LARGE, false).with(SHOW_3D, true));
+    public SeaLettuceBlock(BlockBehaviour.Properties settings) {
+        super(settings, SHAPE, PlaceType.SOLID_SIDE, simpleCodec(SeaLettuceBlock::new));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LARGE, false).setValue(SHOW_3D, true));
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(LARGE);
         builder.add(SHOW_3D);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return ShellfishConfig.getShellfishGraphics() == 2 ? state.get(LARGE) ? LARGE_SHAPE : SHAPE : state.get(LARGE) ? LARGE_SHAPE_2D : SHAPE_2D;
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return ShellfishConfig.getShellfishGraphics() == 2 ? state.getValue(LARGE) ? LARGE_SHAPE : SHAPE : state.getValue(LARGE) ? LARGE_SHAPE_2D : SHAPE_2D;
     }
 
     @Override
     @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        if (fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8) {
-            return super.getPlacementState(ctx).with(LARGE, false);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
+        if (fluidState.is(FluidTags.WATER) && fluidState.getAmount() == 8) {
+            return super.getStateForPlacement(ctx).setValue(LARGE, false);
         }
         return null;
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos var1, BlockState var2) {
+    public BlockEntity newBlockEntity(BlockPos var1, BlockState var2) {
         return new SeaLettuceBlockEntity(var1, var2);
     } 
 
     @Override
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-        return !state.get(LARGE);
+    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+        return !state.getValue(LARGE);
     }
 
     @Override
-    public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return !state.get(LARGE);
+    public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state) {
+        return !state.getValue(LARGE);
     }
 
     @Override
-    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        world.setBlockState(pos, state.with(LARGE, true), Block.NOTIFY_LISTENERS);
+    public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state) {
+        world.setBlock(pos, state.setValue(LARGE, true), Block.UPDATE_CLIENTS);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof SeaLettuceBlockEntity) {
             ((SeaLettuceBlockEntity) blockEntity).setLarge(true);
@@ -86,11 +85,11 @@ public class SeaLettuceBlock extends ShellfishPlantBlock implements BlockEntityP
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (!world.isClient) {
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+        if (!world.isClientSide()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof SeaLettuceBlockEntity) {
-                ((SeaLettuceBlockEntity) blockEntity).setLarge(state.get(LARGE));
+                ((SeaLettuceBlockEntity) blockEntity).setLarge(state.getValue(LARGE));
             }
         }
     }

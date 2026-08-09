@@ -1,31 +1,48 @@
 package womp.shellfishmod.client.renderer;
 
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory.Context;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import womp.shellfishmod.client.model.SeaSnailModel;
+import womp.shellfishmod.client.model.snail.*;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.SeaSnailEntity;
 import womp.shellfishmod.entity.SeaSnailEntity.Variant;
+
+import java.util.HashMap;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.resources.Identifier;
 import womp.shellfishmod.client.ShellfishClient;
 
-public class SeaSnailRenderer extends MobEntityRenderer<SeaSnailEntity, ShellfishRenderState<SeaSnailEntity.Variant>, SeaSnailModel> {
+public class SeaSnailRenderer extends MobRenderer<SeaSnailEntity, ShellfishRenderState<SeaSnailEntity.Variant>, SeaSnailModel> {
+
+    private final HashMap<Integer, SeaSnailModel> modelMap;
 
     public SeaSnailRenderer(Context context) {
-        super(context, new SeaSnailModel(context.getPart(ShellfishClient.SEA_SNAIL_MODEL)), 0.25f);
+        super(context, new SeaSnailModelV1(context.bakeLayer(ShellfishClient.SEA_SNAIL_MODEL1)), 0.25f);
+        modelMap = createModelMap(context);
+    }
+
+    private HashMap<Integer, SeaSnailModel> createModelMap(Context context) {
+        HashMap<Integer, SeaSnailModel> map = new HashMap<>();
+        map.put(0, new SeaSnailModelV1(context.bakeLayer(ShellfishClient.SEA_SNAIL_MODEL1)));
+        map.put(1, new SeaSnailModelV2(context.bakeLayer(ShellfishClient.SEA_SNAIL_MODEL2)));
+        map.put(2, new SeaSnailModelV3(context.bakeLayer(ShellfishClient.SEA_SNAIL_MODEL3)));
+        map.put(3, new SeaSnailModelV4(context.bakeLayer(ShellfishClient.SEA_SNAIL_MODEL4)));
+        map.put(4, new SeaSnailModelV5(context.bakeLayer(ShellfishClient.SEA_SNAIL_MODEL5)));
+        return map;
     }
 
     @Override
-    public Identifier getTexture(ShellfishRenderState<SeaSnailEntity.Variant> animatable) {
+    public Identifier getTextureLocation(ShellfishRenderState<SeaSnailEntity.Variant> animatable) {
         int variant = animatable.variant.getIndex();
-        return Identifier.of("shellfish", "textures/entity/snail/snail_" + variant + ".png");
+        return Identifier.fromNamespaceAndPath("shellfish", "textures/entity/snail/snail_" + variant + ".png");
     }
 
     @Override
-    public void render(ShellfishRenderState<SeaSnailEntity.Variant> entity, MatrixStack poseStack,
-                       VertexConsumerProvider bufferSource, int packedLight) {
+    public void submit(ShellfishRenderState<SeaSnailEntity.Variant> entity, PoseStack poseStack,
+                       SubmitNodeCollector orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
         int variant = entity.variant.getIndex();                  
         if (variant == 0) entity.shellfish.scale(poseStack, 0.7f, 0.35f);
         else if (variant == 2) entity.shellfish.scale(poseStack, 1.8f, 1.0f, 0.5f);
@@ -33,44 +50,8 @@ public class SeaSnailRenderer extends MobEntityRenderer<SeaSnailEntity, Shellfis
         else if (variant == 4) entity.shellfish.scale(poseStack, 1.3f, 0.9f, 0.5f);
         else entity.shellfish.scale(poseStack, 1.0f, 0.5f);
         
-        SeaSnailModel seaSnailModel = (SeaSnailModel)this.getModel();
-        if (variant == 0) {
-            seaSnailModel.shell1.visible = true;
-            seaSnailModel.shell2.visible = false;
-            seaSnailModel.shell3.visible = false;
-            seaSnailModel.shell4.visible = false;
-            seaSnailModel.shell5.visible = false;
-            seaSnailModel.sea_snail.visible = true;
-        } else if (variant == 1) {
-            seaSnailModel.shell1.visible = false;
-            seaSnailModel.shell2.visible = true;
-            seaSnailModel.shell3.visible = false;
-            seaSnailModel.shell4.visible = false;
-            seaSnailModel.shell5.visible = false;
-            seaSnailModel.sea_snail.visible = true;
-        } else if (variant == 2) {
-            seaSnailModel.shell1.visible = false;
-            seaSnailModel.shell2.visible = false;
-            seaSnailModel.shell3.visible = true;
-            seaSnailModel.shell4.visible = false;
-            seaSnailModel.shell5.visible = false;
-            seaSnailModel.sea_snail.visible = true;
-        } else if (variant == 3) {
-            seaSnailModel.shell1.visible = false;
-            seaSnailModel.shell2.visible = false;
-            seaSnailModel.shell3.visible = false;
-            seaSnailModel.shell4.visible = true;
-            seaSnailModel.shell5.visible = false;
-            seaSnailModel.sea_snail.visible = true;
-        } else if (variant == 4) {
-            seaSnailModel.shell1.visible = false;
-            seaSnailModel.shell2.visible = false;
-            seaSnailModel.shell3.visible = false;
-            seaSnailModel.shell4.visible = false;
-            seaSnailModel.shell5.visible = true;
-            seaSnailModel.sea_snail.visible = true;
-        }
-        super.render(entity, poseStack, bufferSource, packedLight);
+        if (entity.variant != null) this.model = modelMap.get(variant);
+        super.submit(entity, poseStack, orderedRenderCommandQueue, cameraRenderState);
     }
 
     @Override
@@ -79,8 +60,8 @@ public class SeaSnailRenderer extends MobEntityRenderer<SeaSnailEntity, Shellfis
     }
 
     @Override
-    public void updateRenderState(SeaSnailEntity snail, ShellfishRenderState<Variant> snailState, float f) {
-        super.updateRenderState(snail, snailState, f);
+    public void extractRenderState(SeaSnailEntity snail, ShellfishRenderState<Variant> snailState, float f) {
+        super.extractRenderState(snail, snailState, f);
         snailState.variant = snail.getVariant();
         snailState.shellfish = snail;
         snailState.idleAnimationState.copyFrom(snail.idleAnimationState);

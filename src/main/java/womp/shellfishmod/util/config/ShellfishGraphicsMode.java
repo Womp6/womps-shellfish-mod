@@ -3,11 +3,11 @@ package womp.shellfishmod.util.config;
 import java.util.function.IntFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.TranslatableOption;
-import net.minecraft.util.function.ValueLists;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.StringRepresentable;
 
 @Environment(value=EnvType.CLIENT)
-public enum ShellfishGraphicsMode implements TranslatableOption
+public enum ShellfishGraphicsMode implements StringRepresentable
 {
     FAST(0, "shellfish_options.graphics.fast"),
     DEFAULT(1, "shellfish_options.graphics.default"),
@@ -21,18 +21,17 @@ public enum ShellfishGraphicsMode implements TranslatableOption
         this.id = id;
         this.translationKey = translationKey;
     }
-
-    @Override
+    
     public int getId() {
         return this.id;
     }
 
-    @Override
     public String getTranslationKey() {
         return this.translationKey;
     }
 
-    public String toString() {
+    @Override
+    public String getSerializedName() {
         return switch (this) {
             default -> throw new IncompatibleClassChangeError();
             case FAST -> "fast";
@@ -46,6 +45,6 @@ public enum ShellfishGraphicsMode implements TranslatableOption
     }
 
     static {
-        BY_ID = ValueLists.createIndexToValueFunction(ShellfishGraphicsMode::getId, ShellfishGraphicsMode.values(), ValueLists.OutOfBoundsHandling.WRAP);
+        BY_ID = ByIdMap.continuous(ShellfishGraphicsMode::getId, ShellfishGraphicsMode.values(), ByIdMap.OutOfBoundsStrategy.WRAP);
     }
 }

@@ -1,13 +1,13 @@
 package womp.shellfishmod.command;
 
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.PersistentStateManager;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.SavedDataStorage;
 
 public class ShellfishStateUtil {
     
-    public static boolean isShellfishPassive(ServerWorld world) {
-        PersistentStateManager stateManager = world.getPersistentStateManager();
-        PassiveShellfishState passiveShellfishState = stateManager.getOrCreate(
+    public static boolean isShellfishPassive(ServerLevel world) {
+        SavedDataStorage stateManager = world.getDataStorage();
+        PassiveShellfishState passiveShellfishState = stateManager.computeIfAbsent(
             PassiveShellfishState.TYPE
         );
         return passiveShellfishState.getValue();

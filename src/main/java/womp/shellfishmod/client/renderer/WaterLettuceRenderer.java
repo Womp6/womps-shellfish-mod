@@ -1,59 +1,58 @@
 package womp.shellfishmod.client.renderer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer.CrumblingOverlay;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import womp.shellfishmod.blocks.WaterLettuceBlockEntity;
 import womp.shellfishmod.client.model.WaterLettuceModel;
+import womp.shellfishmod.client.states.WaterLettuceBlockEntityRenderState;
 import womp.shellfishmod.registry.ShellfishWorldgen;
 import womp.shellfishmod.util.config.ShellfishConfig;
 
 @Environment(EnvType.CLIENT)
-public class WaterLettuceRenderer implements BlockEntityRenderer<WaterLettuceBlockEntity> {
+public class WaterLettuceRenderer implements BlockEntityRenderer<WaterLettuceBlockEntity, WaterLettuceBlockEntityRenderState> {
 
     private final WaterLettuceModel lettuceModel;
-    private final Identifier darkTexture = Identifier.of("shellfish", "textures/block/water_lettuce_dark.png");
-    private final Identifier marshTexture = Identifier.of("shellfish", "textures/block/water_lettuce_marsh.png");
-    private final Identifier defaultTexture = Identifier.of("shellfish", "textures/block/water_lettuce.png");
+    private final Identifier darkTexture = Identifier.fromNamespaceAndPath("shellfish", "textures/block/water_lettuce_dark.png");
+    private final Identifier marshTexture = Identifier.fromNamespaceAndPath("shellfish", "textures/block/water_lettuce_marsh.png");
+    private final Identifier defaultTexture = Identifier.fromNamespaceAndPath("shellfish", "textures/block/water_lettuce.png");
 
-    protected static final VoxelShape SHAPE = ShellfishConfig.getShellfishGraphics() == 2 ? Block.createCuboidShape(2.5, -1.0, 2.5, 13.5, 0.5, 13.5) : Block.createCuboidShape(1.0, 0.0, 1.0, 15.0, 1.5, 15.0);
+    protected static final VoxelShape SHAPE = ShellfishConfig.getShellfishGraphics() == 2 ? Block.box(2.5, -1.0, 2.5, 13.5, 0.5, 13.5) : Block.box(1.0, 0.0, 1.0, 15.0, 1.5, 15.0);
 
-    public WaterLettuceRenderer(BlockEntityRendererFactory.Context context) {
-        this.lettuceModel = new WaterLettuceModel(WaterLettuceModel.getTexturedModelData().createModel());
+    public WaterLettuceRenderer(BlockEntityRendererProvider.Context context) {
+        this.lettuceModel = new WaterLettuceModel(WaterLettuceModel.getTexturedModelData().bakeRoot());
     }
 
     @Override
-    public void render(WaterLettuceBlockEntity blockEntity, float tickProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
-        
-        blockEntity.set3d(ShellfishConfig.getShellfishGraphics() >= 1);
-        blockEntity.setSwamp(isBiome(BiomeKeys.SWAMP, blockEntity));
-        blockEntity.setMarsh(isBiome(ShellfishWorldgen.MARSH, blockEntity));
+    public void submit(WaterLettuceBlockEntityRenderState blockEntity, PoseStack matrices, SubmitNodeCollector queue,
+            CameraRenderState cameraState) {
 
         if (ShellfishConfig.getShellfishGraphics() >= 1) {
-            matrices.push();
+            matrices.pushPose();
             matrices.translate(0.5f, 1.38f, 0.5f);
             matrices.scale(1f, 1f, 1f);
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0F));
-            lettuceModel.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(blockEntity))), light, overlay, cameraPos);
+            matrices.mulPose(Axis.XP.rotationDegrees(180.0F));
+            lettuceModel.render(blockEntity, matrices, queue, cameraState);
 
-            matrices.pop();
+            matrices.popPose();
         }
     }
 
     private Identifier getTexture(WaterLettuceBlockEntity lettuce) {
-        if (isBiome(BiomeKeys.SWAMP, lettuce)) {
+        if (isBiome(Biomes.SWAMP, lettuce)) {
             return darkTexture;
         } else if (isBiome(ShellfishWorldgen.MARSH, lettuce)) {
             return marshTexture;
@@ -61,11 +60,26 @@ public class WaterLettuceRenderer implements BlockEntityRenderer<WaterLettuceBlo
         return defaultTexture;
     }
 
-    private boolean isBiome(RegistryKey<Biome> biome, WaterLettuceBlockEntity blockEntity) {
-        if (blockEntity.getWorld().getBiome(blockEntity.getPos()).matchesKey(biome)) {
+    private boolean isBiome(ResourceKey<Biome> biome, WaterLettuceBlockEntity blockEntity) {
+        if (blockEntity.getLevel().getBiome(blockEntity.getBlockPos()).is(biome)) {
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public WaterLettuceBlockEntityRenderState createRenderState() {
+        return new WaterLettuceBlockEntityRenderState();
+    }
+
+    @Override
+    public void extractRenderState(WaterLettuceBlockEntity blockEntity, WaterLettuceBlockEntityRenderState state,
+            float tickProgress, Vec3 cameraPos, CrumblingOverlay crumblingOverlay) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+        blockEntity.set3d(ShellfishConfig.getShellfishGraphics() >= 1);
+        blockEntity.setSwamp(isBiome(Biomes.SWAMP, blockEntity));
+        blockEntity.setMarsh(isBiome(ShellfishWorldgen.MARSH, blockEntity));
+        state.texture = getTexture(blockEntity);
     }
 }

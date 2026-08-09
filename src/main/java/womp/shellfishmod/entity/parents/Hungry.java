@@ -1,12 +1,12 @@
 package womp.shellfishmod.entity.parents;
 
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 
 public interface Hungry {
 
-    TrackedData<Boolean> IS_HUNGRY = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    EntityDataAccessor<Boolean> IS_HUNGRY = SynchedEntityData.defineId(ShellfishEntity.class, EntityDataSerializers.BOOLEAN);
 
     ShellfishEntity<?> getEntity();
 
@@ -14,10 +14,10 @@ public interface Hungry {
         return 6000;
     }
     default void setHungry(boolean value) {
-        getEntity().getDataTracker().set(IS_HUNGRY, value);
+        getEntity().getEntityData().set(IS_HUNGRY, value);
     }
     default boolean isHungry() {
-        return getEntity().getDataTracker().get(IS_HUNGRY);
+        return getEntity().getEntityData().get(IS_HUNGRY);
     }
     
     default int tick(int counter) {

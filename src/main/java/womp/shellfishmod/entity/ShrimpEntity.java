@@ -5,42 +5,41 @@ import java.util.function.IntFunction;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
-
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.control.MoveControl;
-import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.ai.goal.LookAroundGoal;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.ai.pathing.AmphibiousSwimNavigation;
-import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.ai.pathing.Path;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Util;
-import net.minecraft.util.function.ValueLists;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.FollowParentGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.Vec3;
 import womp.shellfishmod.entity.goals.FollowParentInWaterGoal;
 import womp.shellfishmod.entity.goals.ShellfishLayEggGoal;
 import womp.shellfishmod.entity.goals.ShellfishMateGoal;
@@ -60,59 +59,59 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
 
     public final AnimationState swimAnimationState = new AnimationState();
 
-    public ShrimpEntity(EntityType<? extends ShrimpEntity> entityType, World world) {
+    public ShrimpEntity(EntityType<? extends ShrimpEntity> entityType, Level world) {
         super(entityType, world);
         this.moveControl = new ShrimpMoveControl(this);
         depth = 20;
         airBreathing = false;
     }
 
-    public static DefaultAttributeContainer.Builder createShrimpAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.MAX_HEALTH, 4.0d);
+    public static AttributeSupplier.Builder createShrimpAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 4.0d);
     }
 
     @Override
-    protected EntityNavigation createNavigation(World world) {
-        return new AmphibiousSwimNavigation(this, world);
+    protected PathNavigation createNavigation(Level world) {
+        return new AmphibiousPathNavigation(this, world);
     }
 
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(0, new ShrimpWaterLayEggGoal(this, 1));
-        this.goalSelector.add(0, new ShellfishLayEggGoal(this, 0.2, ShellfishSounds.SHRIMP_LAYS_EGGS, ShellfishBlocks.SHRIMP_EGGS_BLOCK));
-        this.goalSelector.add(1, new ShrimpWaterMateGoal(this, 1));
-        this.goalSelector.add(1, new FollowParentInWaterGoal(this, 1.1));
-        this.goalSelector.add(2, new ShellfishMateGoal(this, 0.2));
-        this.goalSelector.add(2, new FollowParentGoal(this, 0.3));
-        this.goalSelector.add(3, new SwimToRandomPlaceGoal(this));
-        this.goalSelector.add(5, new WanderToWaterGoal(this, 0.2));
-        this.goalSelector.add(7, new WanderAroundGoal(this, 0.2));
-        this.goalSelector.add(9, new LookAroundGoal(this));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new ShrimpWaterLayEggGoal(this, 1));
+        this.goalSelector.addGoal(0, new ShellfishLayEggGoal(this, 0.2, ShellfishSounds.SHRIMP_LAYS_EGGS, ShellfishBlocks.SHRIMP_EGGS_BLOCK));
+        this.goalSelector.addGoal(1, new ShrimpWaterMateGoal(this, 1));
+        this.goalSelector.addGoal(1, new FollowParentInWaterGoal(this, 1.1));
+        this.goalSelector.addGoal(2, new ShellfishMateGoal(this, 0.2));
+        this.goalSelector.addGoal(2, new FollowParentGoal(this, 0.3));
+        this.goalSelector.addGoal(3, new SwimToRandomPlaceGoal(this));
+        this.goalSelector.addGoal(5, new WanderToWaterGoal(this, 0.2));
+        this.goalSelector.addGoal(7, new RandomStrollGoal(this, 0.2));
+        this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
     }
 
     @Override
-    public boolean isBreedingItem(ItemStack item) {
-        return item.isIn(ShellfishTags.Items.SHRIMP_FOOD);
+    public boolean isFood(ItemStack item) {
+        return item.is(ShellfishTags.Items.SHRIMP_FOOD);
     }
 
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         ShrimpEntity child;
-        if((child = ShellfishEntities.SHRIMP.create(world, SpawnReason.BREEDING)) != null && entity instanceof ShrimpEntity mate) {
+        if((child = ShellfishEntities.SHRIMP.create(world, EntitySpawnReason.BREEDING)) != null && entity instanceof ShrimpEntity mate) {
             child.setVariant((random.nextBoolean() ? this : mate).getVariant());
-            child.setPersistent();
+            child.setPersistenceRequired();
             return child;
         }
         return null;
     }
     
     @Override
-    protected void eat(PlayerEntity player, Hand hand, ItemStack stack) {
-        if (stack.isOf(ShellfishItems.MOSS_BALL_BUCKET)) {
-            player.setStackInHand(hand, new ItemStack(Items.WATER_BUCKET));
+    protected void usePlayerItem(Player player, InteractionHand hand, ItemStack stack) {
+        if (stack.is(ShellfishItems.MOSS_BALL_BUCKET)) {
+            player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
         } else {
-            super.eat(player, hand, stack);
+            super.usePlayerItem(player, hand, stack);
         }
     }
 
@@ -121,22 +120,22 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
        
         if (isIdle()) {
             this.swimAnimationState.stop();
-            this.idleAnimationState.startIfNotRunning(this.age);
+            this.idleAnimationState.startIfStopped(this.tickCount);
         } else this.idleAnimationState.stop();
 
         if (isWalking()) {
-            this.swimAnimationState.startIfNotRunning(this.age);
+            this.swimAnimationState.startIfStopped(this.tickCount);
         } else this.swimAnimationState.stop();
     }
 
     @Override
-    public void travel(Vec3d movementInput) {
-        if (this.canMoveVoluntarily() && this.isTouchingWater()) {
-            this.updateVelocity(0.01f, movementInput);
-            this.move(MovementType.SELF, this.getVelocity());
-            this.setVelocity(this.getVelocity().multiply(0.9));
+    public void travel(Vec3 movementInput) {
+        if (this.canSimulateMovement() && this.isInWater()) {
+            this.moveRelative(0.01f, movementInput);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
             if (this.getTarget() == null) {
-                this.setVelocity(this.getVelocity().add(0.0, -0.005, 0.0));
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.005, 0.0));
             }
         } else {
             super.travel(movementInput);
@@ -144,12 +143,12 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
     }
 
     @Override
-    public int getLimitPerChunk() {
+    public int getMaxSpawnClusterSize() {
         return 7;
     }
 
     @Override
-    public ItemStack getBucketItem() {
+    public ItemStack getBucketItemStack() {
         return new ItemStack(ShellfishItems.SHRIMP_BUCKET);
     }
 
@@ -166,7 +165,7 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
     }
 
     @Override
-    public int getMaxAir() {
+    public int getMaxAirSupply() {
         return 4000;
     }
 
@@ -177,9 +176,9 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
 
     @Override
     @Nullable
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData entityData) {
        Variant variant;
-        Random random = world.getRandom();
+        RandomSource random = world.getRandom();
         if (entityData instanceof ShrimpData) {
             variant = ((ShrimpData)entityData).variant;
         } else {
@@ -188,12 +187,12 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
         }
         this.setVariant(variant);
         this.setNewborn(true);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 
 
     static class ShrimpMoveControl
-    extends MoveControl {
+    extends MoveControl<ShrimpEntity> {
         private final ShrimpEntity shrimp;
 
         ShrimpMoveControl(ShrimpEntity owner) {
@@ -203,27 +202,27 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
 
         @Override
         public void tick() {
-            if (this.shrimp.isTouchingWater()) {
-                if (this.shrimp.isSubmergedIn(FluidTags.WATER)) {
-                    this.shrimp.setVelocity(this.shrimp.getVelocity().add(0.0, 0.001, 0.0));
+            if (this.shrimp.isInWater()) {
+                if (this.shrimp.isEyeInFluid(FluidTags.WATER)) {
+                    this.shrimp.setDeltaMovement(this.shrimp.getDeltaMovement().add(0.0, 0.001, 0.0));
                 }
-                if (this.state != MoveControl.State.MOVE_TO || this.shrimp.getNavigation().isIdle()) {
-                    this.shrimp.setMovementSpeed(0.0f);
+                if (this.operation != MoveControl.Operation.MOVE_TO || this.shrimp.getNavigation().isDone()) {
+                    this.shrimp.setSpeed(0.0f);
                     return;
                 }
-                float f = (float)(this.speed * this.shrimp.getAttributeValue(EntityAttributes.MOVEMENT_SPEED));
-                this.shrimp.setMovementSpeed(MathHelper.lerp(0.125f, this.shrimp.getMovementSpeed(), f));
-                double d = this.targetX - this.shrimp.getX();
-                double e = this.targetY - this.shrimp.getY();
-                double g = this.targetZ - this.shrimp.getZ();
+                float f = (float)(this.speedModifier * this.shrimp.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                this.shrimp.setSpeed(Mth.lerp(0.125f, this.shrimp.getSpeed(), f));
+                double d = this.wantedX - this.shrimp.getX();
+                double e = this.wantedY - this.shrimp.getY();
+                double g = this.wantedZ - this.shrimp.getZ();
                 if (e != 0.0) {
                     double h = Math.sqrt(d * d + e * e + g * g);
-                    this.shrimp.setVelocity(this.shrimp.getVelocity().add(0.0, (double)this.shrimp.getMovementSpeed() * (e / h) * 0.1, 0.0));
+                    this.shrimp.setDeltaMovement(this.shrimp.getDeltaMovement().add(0.0, (double)this.shrimp.getSpeed() * (e / h) * 0.1, 0.0));
                 }
                 if (d != 0.0 || g != 0.0) {
-                    float i = (float)(MathHelper.atan2(g, d) * 57.2957763671875) - 90.0f;
-                    this.shrimp.setYaw(this.wrapDegrees(this.shrimp.getYaw(), i, 90.0f));
-                    this.shrimp.bodyYaw = this.shrimp.getYaw();
+                    float i = (float)(Mth.atan2(g, d) * 57.2957763671875) - 90.0f;
+                    this.shrimp.setYRot(this.rotlerp(this.shrimp.getYRot(), i, 90.0f));
+                    this.shrimp.yBodyRot = this.shrimp.getYRot();
                 }
             } else {
                 super.tick();
@@ -232,86 +231,86 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
     }
 
     static class ShrimpWaterMateGoal extends ShellfishMateGoal {
-        private final World world;
+        private final Level world;
         private final java.util.Random random;
 
         ShrimpWaterMateGoal(EggLaying shrimp, double speed) {
             super(shrimp, speed);
-            this.world = shellfish.getEntity().getWorld();
+            this.world = shellfish.getEntity().level();
             this.random = new java.util.Random();
         }
         
         @Override
-        public boolean canStart() {
-            if (!this.shellfish.getEntity().isSubmergedIn(FluidTags.WATER)) {
+        public boolean canUse() {
+            if (!this.shellfish.getEntity().isEyeInFluid(FluidTags.WATER)) {
                 return false;
             }
             
-            BlockPos targetPos = this.shellfish.getEntity().getBlockPos().add(
+            BlockPos targetPos = this.shellfish.getEntity().blockPosition().offset(
                 this.random.nextInt(10) - 5,
                 this.random.nextInt(3) - 1,
                 this.random.nextInt(10) - 5
             );
 
-            if (!this.world.getBlockState(targetPos).getFluidState().isIn(FluidTags.WATER)) {
+            if (!this.world.getBlockState(targetPos).getFluidState().is(FluidTags.WATER)) {
                 return false;
             }
         
-            Path path = this.shellfish.getEntity().getNavigation().findPathTo(targetPos, 1);
+            Path path = this.shellfish.getEntity().getNavigation().createPath(targetPos, 1);
             if (path == null) {
                 return false;
             }
         
-            for (int i = 0; i < path.getLength(); i++) {
+            for (int i = 0; i < path.getNodeCount(); i++) {
                 BlockPos pathPos = path.getNodePos(i);
-                if (!this.world.getBlockState(pathPos).getFluidState().isIn(FluidTags.WATER)) {
+                if (!this.world.getBlockState(pathPos).getFluidState().is(FluidTags.WATER)) {
                     return false;
                 }
             }
             
-            return super.canStart();
+            return super.canUse();
         }
     }
 
     static class ShrimpWaterLayEggGoal extends ShellfishLayEggGoal {
-        private final World world;
+        private final Level world;
         private final java.util.Random random;
 
         ShrimpWaterLayEggGoal(EggLaying shrimp, double speed) {
             super(shrimp, speed, ShellfishSounds.SHRIMP_LAYS_EGGS, ShellfishBlocks.SHRIMP_EGGS_BLOCK);
-            this.world = this.shellfish.getEntity().getWorld();
+            this.world = this.shellfish.getEntity().level();
             this.random = new java.util.Random();
         }
         
         @Override
-        public boolean canStart() {
-            if (!this.shellfish.getEntity().isSubmergedIn(FluidTags.WATER)) {
+        public boolean canUse() {
+            if (!this.shellfish.getEntity().isEyeInFluid(FluidTags.WATER)) {
                 return false;
             }
             
-            BlockPos targetPos = this.shellfish.getEntity().getBlockPos().add(
+            BlockPos targetPos = this.shellfish.getEntity().blockPosition().offset(
                 this.random.nextInt(10) - 5,
                 this.random.nextInt(3) - 1,
                 this.random.nextInt(10) - 5
             );
 
-            if (!this.world.getBlockState(targetPos).getFluidState().isIn(FluidTags.WATER)) {
+            if (!this.world.getBlockState(targetPos).getFluidState().is(FluidTags.WATER)) {
                 return false;
             }
         
-            Path path = this.shellfish.getEntity().getNavigation().findPathTo(targetPos, 1);
+            Path path = this.shellfish.getEntity().getNavigation().createPath(targetPos, 1);
             if (path == null) {
                 return false;
             }
         
-            for (int i = 0; i < path.getLength(); i++) {
+            for (int i = 0; i < path.getNodeCount(); i++) {
                 BlockPos pathPos = path.getNodePos(i);
-                if (!this.world.getBlockState(pathPos).getFluidState().isIn(FluidTags.WATER)) {
+                if (!this.world.getBlockState(pathPos).getFluidState().is(FluidTags.WATER)) {
                     return false;
                 }
             }
             
-            return super.canStart();
+            return super.canUse();
         }
     }
 
@@ -341,17 +340,17 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.name;
         }
 
         static {
-            CODEC = StringIdentifiable.createCodec(Variant::values);
-            BY_ID = ValueLists.createIndexToValueFunction(Variant::getIndex, Variant.values(), ValueLists.OutOfBoundsHandling.CLAMP);
+            CODEC = StringRepresentable.fromEnum(Variant::values);
+            BY_ID = ByIdMap.continuous(Variant::getIndex, Variant.values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
         }
     }
 
-    static class ShrimpData extends PassiveEntity.PassiveData {
+    static class ShrimpData extends AgeableMob.AgeableMobGroupData {
         public final Variant variant;
 
         ShrimpData(Variant variant) {
@@ -366,7 +365,7 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
     }
 }

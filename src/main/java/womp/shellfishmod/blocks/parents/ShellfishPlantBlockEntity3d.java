@@ -1,9 +1,9 @@
 package womp.shellfishmod.blocks.parents;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import womp.shellfishmod.blocks.SeaLettuceBlock;
 import womp.shellfishmod.blocks.WaterLettuceBlock;
 
@@ -22,12 +22,12 @@ public class ShellfishPlantBlockEntity3d extends BlockEntity {
     public void set3d(boolean is3d) {
         this.is3d = is3d;
 
-        if (world != null) {
-            BlockState state = world.getBlockState(pos);
+        if (level != null) {
+            BlockState state = level.getBlockState(worldPosition);
             if (state.getBlock() instanceof SeaLettuceBlock) {
-                world.setBlockState(pos, state.with(SeaLettuceBlock.SHOW_3D, this.is3d));
+                level.setBlockAndUpdate(worldPosition, state.setValue(SeaLettuceBlock.SHOW_3D, this.is3d));
             } else if (state.getBlock() instanceof WaterLettuceBlock) {
-                world.setBlockState(pos, state.with(WaterLettuceBlock.SHOW_3D, this.is3d));
+                level.setBlockAndUpdate(worldPosition, state.setValue(WaterLettuceBlock.SHOW_3D, this.is3d));
             }
         }
     }

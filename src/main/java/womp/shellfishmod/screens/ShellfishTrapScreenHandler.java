@@ -1,34 +1,34 @@
 package womp.shellfishmod.screens;
 
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import womp.shellfishmod.blocks.parents.AbstractTrapBlockEntity;
 import womp.shellfishmod.registry.ShellfishScreens;
 
 // This file was creating using help from Kaupenjoe
-public class ShellfishTrapScreenHandler extends ScreenHandler {
+public class ShellfishTrapScreenHandler extends AbstractContainerMenu {
 
-    private final Inventory inventory;
-    private final PropertyDelegate delegate;
+    private final Container inventory;
+    private final ContainerData delegate;
     public final AbstractTrapBlockEntity blockEntity;
     
-    public ShellfishTrapScreenHandler(int syncId, PlayerInventory inventory, TrapData pos) {
-        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(pos.pos()), new ArrayPropertyDelegate(4));
+    public ShellfishTrapScreenHandler(int syncId, Inventory inventory, TrapData pos) {
+        this(syncId, inventory, inventory.player.level().getBlockEntity(pos.pos()), new SimpleContainerData(4));
     }
 
-    public ShellfishTrapScreenHandler(int syncId, PlayerInventory inventory2, BlockEntity blockEntity, PropertyDelegate arrayPropertyDelegate) {
+    public ShellfishTrapScreenHandler(int syncId, Inventory inventory2, BlockEntity blockEntity, ContainerData arrayPropertyDelegate) {
         super(ShellfishScreens.SHELLFISH_TRAP_SCREEN_HANDLER, syncId);
         
-        checkSize(((Inventory)blockEntity), 19);
-        this.inventory = (Inventory)blockEntity;
+        checkContainerSize(((Container)blockEntity), 19);
+        this.inventory = (Container)blockEntity;
         this.delegate = arrayPropertyDelegate;
         this.blockEntity = (AbstractTrapBlockEntity)blockEntity;
 
@@ -45,7 +45,7 @@ public class ShellfishTrapScreenHandler extends ScreenHandler {
         addPlayerInventory(inventory2);
         addPlayerHotbar(inventory2);
 
-        addProperties(arrayPropertyDelegate);
+        addDataSlots(arrayPropertyDelegate);
     }
 
     public boolean isTrapping() {
@@ -77,40 +77,40 @@ public class ShellfishTrapScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int invSlot) {
+    public ItemStack quickMoveStack(Player player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = (Slot)this.slots.get(invSlot);
-        if (slot != null && slot.hasStack()) {
-            ItemStack originalStack = slot.getStack();
+        if (slot != null && slot.hasItem()) {
+            ItemStack originalStack = slot.getItem();
             newStack = originalStack.copy();
             if (invSlot > 0 && invSlot < 19) {
-                if (!this.insertItem(originalStack, 19, 55, true)) {
+                if (!this.moveItemStackTo(originalStack, 19, 55, true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onQuickTransfer(originalStack, newStack);
-            } else if (invSlot == 0 ? !this.insertItem(originalStack, 19, 55, false) : !this.insertItem(originalStack, 0, 1, false)) {
+                slot.onQuickCraft(originalStack, newStack);
+            } else if (invSlot == 0 ? !this.moveItemStackTo(originalStack, 19, 55, false) : !this.moveItemStackTo(originalStack, 0, 1, false)) {
                 return ItemStack.EMPTY;
             }
             if (originalStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                slot.setByPlayer(ItemStack.EMPTY);
             } else {
-                slot.markDirty();
+                slot.setChanged();
             }
             if (originalStack.getCount() == newStack.getCount()) {
                 return ItemStack.EMPTY;
             }
-            slot.onTakeItem(player, originalStack);
+            slot.onTake(player, originalStack);
         }
         
         return newStack;
     }
 
     @Override
-    public boolean canUse(PlayerEntity var1) {
-        return this.inventory.canPlayerUse(var1);
+    public boolean stillValid(Player var1) {
+        return this.inventory.stillValid(var1);
     }
 
-    private void addPlayerInventory(PlayerInventory playerInventory) {
+    private void addPlayerInventory(Inventory playerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
                 this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
@@ -118,18 +118,18 @@ public class ShellfishTrapScreenHandler extends ScreenHandler {
         }
     }
 
-    private void addPlayerHotbar(PlayerInventory playerInventory) {
+    private void addPlayerHotbar(Inventory playerInventory) {
         for (int i = 0; i < 9; ++i) {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
     }
 
     @Override
-    public void onClosed(PlayerEntity player) {
-        super.onClosed(player);
+    public void removed(Player player) {
+        super.removed(player);
         if (blockEntity instanceof AbstractTrapBlockEntity trap) {
             if (trap.getDurability() == 0) {
-                player.sendMessage(Text.translatable(trap.getRepairKey()), true);
+                player.sendOverlayMessage(Component.translatable(trap.getRepairKey()));
             }
         }
     }

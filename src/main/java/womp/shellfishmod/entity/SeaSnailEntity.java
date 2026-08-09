@@ -6,37 +6,36 @@ import java.util.function.IntFunction;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.Codec;
-
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.EscapeDangerGoal;
-import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Util;
-import net.minecraft.util.function.ValueLists;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FollowParentGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import womp.shellfishmod.entity.goals.ShellfishLayEggGoal;
 import womp.shellfishmod.entity.goals.ShellfishMateGoal;
 import womp.shellfishmod.entity.goals.WanderInWaterGoal;
@@ -57,75 +56,75 @@ public class SeaSnailEntity extends ShellfishEntity<Variant> implements EggLayin
     private boolean canHide = true;
     private int counter = 5;
 
-    public SeaSnailEntity(EntityType<? extends SeaSnailEntity> entityType, World world) {
+    public SeaSnailEntity(EntityType<? extends SeaSnailEntity> entityType, Level world) {
         super(entityType, world);
         waterWalking = false;
         tSpeed = 0.05f;
     }
 
-    public static DefaultAttributeContainer.Builder createSeaSnailAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.MAX_HEALTH, 5.0d).add(EntityAttributes.MOVEMENT_SPEED, 0.1);
+    public static AttributeSupplier.Builder createSeaSnailAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 5.0d).add(Attributes.MOVEMENT_SPEED, 0.1);
     }
 
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(0, new ShellfishLayEggGoal(this, 1, ShellfishSounds.SEA_SNAIL_LAYS_EGGS, ShellfishBlocks.SEA_SNAIL_EGGS_BLOCK));
-        this.goalSelector.add(0, new EscapeDangerGoal(this, 1.2));
-        this.goalSelector.add(1, new ShellfishMateGoal(this, 1));
-        this.goalSelector.add(1, new FollowParentGoal(this, 1.1));
-        this.goalSelector.add(3, new WanderInWaterGoal(this, 1));
-        this.goalSelector.add(5, new WanderToWaterGoal(this, 1));
-        this.goalSelector.add(7, new NoHideWanderOnLandGoal(this, 0.9));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new ShellfishLayEggGoal(this, 1, ShellfishSounds.SEA_SNAIL_LAYS_EGGS, ShellfishBlocks.SEA_SNAIL_EGGS_BLOCK));
+        this.goalSelector.addGoal(0, new PanicGoal(this, 1.2));
+        this.goalSelector.addGoal(1, new ShellfishMateGoal(this, 1));
+        this.goalSelector.addGoal(1, new FollowParentGoal(this, 1.1));
+        this.goalSelector.addGoal(3, new WanderInWaterGoal(this, 1));
+        this.goalSelector.addGoal(5, new WanderToWaterGoal(this, 1));
+        this.goalSelector.addGoal(7, new NoHideWanderOnLandGoal(this, 0.9));
     }
 
     @Override
-    public boolean isBreedingItem(ItemStack item) {
-        return item.isIn(ShellfishTags.Items.SEA_SNAIL_FOOD);
+    public boolean isFood(ItemStack item) {
+        return item.is(ShellfishTags.Items.SEA_SNAIL_FOOD);
     }
     
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         SeaSnailEntity child;
-        if((child = ShellfishEntities.SEA_SNAIL.create(world, SpawnReason.BREEDING)) != null && entity instanceof SeaSnailEntity mate) {
+        if((child = ShellfishEntities.SEA_SNAIL.create(world, EntitySpawnReason.BREEDING)) != null && entity instanceof SeaSnailEntity mate) {
             child.setVariant((random.nextBoolean() ? this : mate).getVariant());
-            child.setPersistent();
+            child.setPersistenceRequired();
             return child;
         }
         return null;
     }
 
     public boolean isSnailIdle() {
-        return this.lastX == this.getX() && this.lastY == this.getY() && this.lastZ == this.getZ();
+        return this.xo == this.getX() && this.yo == this.getY() && this.zo == this.getZ();
     }
 
     @Override
-    protected void eat(PlayerEntity player, Hand hand, ItemStack stack) {
-        if (stack.isOf(ShellfishItems.MOSS_BALL_BUCKET)) {
-            player.setStackInHand(hand, new ItemStack(Items.WATER_BUCKET));
+    protected void usePlayerItem(Player player, InteractionHand hand, ItemStack stack) {
+        if (stack.is(ShellfishItems.MOSS_BALL_BUCKET)) {
+            player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
         } else {
-            super.eat(player, hand, stack);
+            super.usePlayerItem(player, hand, stack);
         }
     }
 
-    public static boolean canSpawn(EntityType<SeaSnailEntity> type, ServerWorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
+    public static boolean canSpawn(EntityType<SeaSnailEntity> type, ServerLevelAccessor world, EntitySpawnReason reason, BlockPos pos, RandomSource random) {
         int i = world.getSeaLevel();
         int j = i - 26;
-        if(pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.down()).isIn(FluidTags.WATER) && world.getBlockState(pos.up()).isOf(Blocks.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? isLightLevelValidForNaturalSpawn(world, pos) : true)) {
+        if(pos.getY() >= j && pos.getY() <= i && world.getFluidState(pos.below()).is(FluidTags.WATER) && world.getBlockState(pos.above()).is(Blocks.WATER) && ((world.getBiome(pos).is(ShellfishWorldgen.MARSH) || world.getBiome(pos).is(Biomes.SWAMP) || world.getBiome(pos).is(Biomes.MANGROVE_SWAMP)) ? isBrightEnoughToSpawn(world, pos) : true)) {
             return true;
-        } else if(pos.getY() >= i-6 && SeaSnailEntity.isLightLevelValidForNaturalSpawn(world, pos)) {
-            return world.getBlockState(pos.down()).isIn(ShellfishTags.Blocks.SHELLFISH_SPAWNABLE_ON);
+        } else if(pos.getY() >= i-6 && SeaSnailEntity.isBrightEnoughToSpawn(world, pos)) {
+            return world.getBlockState(pos.below()).is(ShellfishTags.Blocks.SHELLFISH_SPAWNABLE_ON);
         }
         return false;
     }
 
     @Override
-    public int getLimitPerChunk() {
+    public int getMaxSpawnClusterSize() {
         return 4;
     }
 
     @Override
-    public ItemStack getBucketItem() {
+    public ItemStack getBucketItemStack() {
         return new ItemStack(ShellfishItems.SEA_SNAIL_BUCKET);
     }
 
@@ -155,25 +154,25 @@ public class SeaSnailEntity extends ShellfishEntity<Variant> implements EggLayin
     }
 
     @Override
-    public void writeCustomData(WriteView nbt) {
-        super.writeCustomData(nbt);
+    public void addAdditionalSaveData(ValueOutput nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putBoolean("canHide", canHide);
     }
 
     @Override
-    public void readCustomData(ReadView nbt) {
-        super.readCustomData(nbt);
-        canHide = nbt.getBoolean("canHide", true);
+    public void readAdditionalSaveData(ValueInput nbt) {
+        super.readAdditionalSaveData(nbt);
+        canHide = nbt.getBooleanOr("canHide", true);
     }
 
     @Override
     public void setupAnimationStates() {
         if (canHide && isSnailIdle() && counter >= 3) {
-            this.idleAnimationState.startIfNotRunning(this.age);
+            this.idleAnimationState.startIfStopped(this.tickCount);
         } else this.idleAnimationState.stop();
 
         if (this.isWalking()) {
-            this.moveAnimationState.startIfNotRunning(this.age);
+            this.moveAnimationState.startIfStopped(this.tickCount);
             counter = 0;
         } else if (counter >= 2) {
             this.moveAnimationState.stop();
@@ -183,9 +182,9 @@ public class SeaSnailEntity extends ShellfishEntity<Variant> implements EggLayin
 
     @Override
     @Nullable
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData entityData) {
         Variant variant;
-        Random random = world.getRandom();
+        RandomSource random = world.getRandom();
         if (entityData instanceof SeaSnailData) {
             variant = ((SeaSnailData)entityData).variant;
         } else {
@@ -194,10 +193,10 @@ public class SeaSnailEntity extends ShellfishEntity<Variant> implements EggLayin
         }
         this.setVariant(variant);
         this.setNewborn(true);
-        return super.initialize(world, difficulty, spawnReason, entityData);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData);
     }
 
-    static class NoHideWanderOnLandGoal extends WanderAroundGoal {
+    static class NoHideWanderOnLandGoal extends RandomStrollGoal {
         
         public NoHideWanderOnLandGoal(SeaSnailEntity mob, double speed) {
             super(mob, speed);
@@ -246,17 +245,17 @@ public class SeaSnailEntity extends ShellfishEntity<Variant> implements EggLayin
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return this.name;
         }
 
         static {
-            CODEC = StringIdentifiable.createCodec(Variant::values);
-            BY_ID = ValueLists.createIndexToValueFunction(Variant::getIndex, Variant.values(), ValueLists.OutOfBoundsHandling.CLAMP);
+            CODEC = StringRepresentable.fromEnum(Variant::values);
+            BY_ID = ByIdMap.continuous(Variant::getIndex, Variant.values(), ByIdMap.OutOfBoundsStrategy.CLAMP);
         }
     }
 
-    static class SeaSnailData extends PassiveEntity.PassiveData {
+    static class SeaSnailData extends AgeableMob.AgeableMobGroupData {
         public final Variant variant;
 
         SeaSnailData(Variant variant) {

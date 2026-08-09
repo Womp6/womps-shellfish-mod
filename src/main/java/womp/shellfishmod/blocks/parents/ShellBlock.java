@@ -1,25 +1,25 @@
 package womp.shellfishmod.blocks.parents;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ShellBlock extends DeadBlock {
     
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public ShellBlock(Settings settings, VoxelShape shape) {
+    public ShellBlock(Properties settings, VoxelShape shape) {
         super(settings, shape, true);
-        setDefaultState(this.stateManager.getDefaultState()
-        .with(WATERLOGGED, false));
+        registerDefaultState(this.stateDefinition.any()
+        .setValue(WATERLOGGED, false));
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return (BlockState)this.getDefaultState()
-            .with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return (BlockState)this.defaultBlockState()
+            .setValue(WATERLOGGED, ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER);
     }
 }

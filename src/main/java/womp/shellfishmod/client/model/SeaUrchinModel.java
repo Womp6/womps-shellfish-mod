@@ -1,111 +1,111 @@
 package womp.shellfishmod.client.model;
 
-import net.minecraft.client.model.Dilation;
-import net.minecraft.client.model.ModelData;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.model.ModelPartBuilder;
-import net.minecraft.client.model.ModelPartData;
-import net.minecraft.client.model.ModelTransform;
-import net.minecraft.client.model.TexturedModelData;
-import net.minecraft.client.render.entity.animation.Animation;
-import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.SeaUrchinEntity;
 import womp.shellfishmod.entity.animations.ShellfishAnimations;
 
 public class SeaUrchinModel extends EntityModel<ShellfishRenderState<SeaUrchinEntity.Variant>> {
 
-	private final Animation moveAnimation;
-	private final Animation idleAnimation;
+	private final KeyframeAnimation moveAnimation;
+	private final KeyframeAnimation idleAnimation;
 
 	public SeaUrchinModel(ModelPart root) {
 		super(root);
-		this.moveAnimation = ShellfishAnimations.SEA_URCHIN_WALK.createAnimation(root);
-		this.idleAnimation = ShellfishAnimations.SEA_URCHIN_IDLE.createAnimation(root);
+		this.moveAnimation = ShellfishAnimations.SEA_URCHIN_WALK.bake(root);
+		this.idleAnimation = ShellfishAnimations.SEA_URCHIN_IDLE.bake(root);
 	}
 
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData sea_urchin = modelPartData.addChild("sea_urchin", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 24.0F, 0.0F));
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition modelPartData = modelData.getRoot();
+		PartDefinition sea_urchin = modelPartData.addOrReplaceChild("sea_urchin", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-		ModelPartData sea_urchin1 = sea_urchin.addChild("sea_urchin1", ModelPartBuilder.create().uv(0, 0).cuboid(-1.5F, -2.0F, -1.5F, 3.0F, 2.0F, 3.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition sea_urchin1 = sea_urchin.addOrReplaceChild("sea_urchin1", CubeListBuilder.create().texOffs(0, 0).addBox(-1.5F, -2.0F, -1.5F, 3.0F, 2.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData spikes = sea_urchin1.addChild("spikes", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition spikes = sea_urchin1.addOrReplaceChild("spikes", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData spikegroup1 = spikes.addChild("spikegroup1", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition spikegroup1 = spikes.addOrReplaceChild("spikegroup1", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		spikegroup1.addChild("spike4_r1", ModelPartBuilder.create().uv(0, 7).cuboid(0.0F, -1.0F, -2.75F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
+		spikegroup1.addOrReplaceChild("spike4_r1", CubeListBuilder.create().texOffs(0, 7).addBox(0.0F, -1.0F, -2.75F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
 
-		spikegroup1.addChild("spike3_r1", ModelPartBuilder.create().uv(4, 7).cuboid(0.0F, -0.25F, -3.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.2217F, 0.0F, 0.0F));
+		spikegroup1.addOrReplaceChild("spike3_r1", CubeListBuilder.create().texOffs(4, 7).addBox(0.0F, -0.25F, -3.5F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -1.2217F, 0.0F, 0.0F));
 
-		spikegroup1.addChild("spike2_r1", ModelPartBuilder.create().uv(0, 8).cuboid(0.0F, -0.25F, 1.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.2217F, 0.0F, 0.0F));
+		spikegroup1.addOrReplaceChild("spike2_r1", CubeListBuilder.create().texOffs(0, 8).addBox(0.0F, -0.25F, 1.5F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.2217F, 0.0F, 0.0F));
 
-		spikegroup1.addChild("spike1_r1", ModelPartBuilder.create().uv(8, 3).cuboid(0.0F, -1.0F, 0.75F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
+		spikegroup1.addOrReplaceChild("spike1_r1", CubeListBuilder.create().texOffs(8, 3).addBox(0.0F, -1.0F, 0.75F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
 
-		ModelPartData spikegroup2 = spikes.addChild("spikegroup2", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition spikegroup2 = spikes.addOrReplaceChild("spikegroup2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		spikegroup2.addChild("spike4_r2", ModelPartBuilder.create().uv(0, 4).cuboid(0.0F, -1.5F, -3.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.2182F, 0.7854F, 0.0F));
+		spikegroup2.addOrReplaceChild("spike4_r2", CubeListBuilder.create().texOffs(0, 4).addBox(0.0F, -1.5F, -3.5F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2182F, 0.7854F, 0.0F));
 
-		spikegroup2.addChild("spike3_r2", ModelPartBuilder.create().uv(0, 3).cuboid(0.0F, -1.5F, 1.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2182F, -0.7854F, 0.0F));
+		spikegroup2.addOrReplaceChild("spike3_r2", CubeListBuilder.create().texOffs(0, 3).addBox(0.0F, -1.5F, 1.5F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2182F, -0.7854F, 0.0F));
 
-		spikegroup2.addChild("spike2_r2", ModelPartBuilder.create().uv(0, 6).cuboid(0.0F, -1.5F, -3.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.2182F, -0.7854F, 0.0F));
+		spikegroup2.addOrReplaceChild("spike2_r2", CubeListBuilder.create().texOffs(0, 6).addBox(0.0F, -1.5F, -3.5F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2182F, -0.7854F, 0.0F));
 
-		spikegroup2.addChild("spike1_r2", ModelPartBuilder.create().uv(4, 6).cuboid(0.0F, -1.5F, 1.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2182F, 0.7854F, 0.0F));
+		spikegroup2.addOrReplaceChild("spike1_r2", CubeListBuilder.create().texOffs(4, 6).addBox(0.0F, -1.5F, 1.5F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2182F, 0.7854F, 0.0F));
 
-		ModelPartData spikegroup3 = spikes.addChild("spikegroup3", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition spikegroup3 = spikes.addOrReplaceChild("spikegroup3", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData spikegroupiii = spikegroup3.addChild("spikegroupiii", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+		PartDefinition spikegroupiii = spikegroup3.addOrReplaceChild("spikegroupiii", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
 
-		spikegroupiii.addChild("spike4_r3", ModelPartBuilder.create().uv(4, 3).cuboid(0.0F, -1.0F, -2.75F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
+		spikegroupiii.addOrReplaceChild("spike4_r3", CubeListBuilder.create().texOffs(4, 3).addBox(0.0F, -1.0F, -2.75F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
 
-		spikegroupiii.addChild("spike3_r3", ModelPartBuilder.create().uv(4, 4).cuboid(0.0F, -0.25F, -3.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.2217F, 0.0F, 0.0F));
+		spikegroupiii.addOrReplaceChild("spike3_r3", CubeListBuilder.create().texOffs(4, 4).addBox(0.0F, -0.25F, -3.5F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -1.2217F, 0.0F, 0.0F));
 
-		spikegroupiii.addChild("spike2_r3", ModelPartBuilder.create().uv(0, 5).cuboid(0.0F, -0.25F, 1.5F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 1.2217F, 0.0F, 0.0F));
+		spikegroupiii.addOrReplaceChild("spike2_r3", CubeListBuilder.create().texOffs(0, 5).addBox(0.0F, -0.25F, 1.5F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 1.2217F, 0.0F, 0.0F));
 
-		spikegroupiii.addChild("spike1_r3", ModelPartBuilder.create().uv(4, 5).cuboid(0.0F, -1.0F, 0.75F, 0.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
+		spikegroupiii.addOrReplaceChild("spike1_r3", CubeListBuilder.create().texOffs(4, 5).addBox(0.0F, -1.0F, 0.75F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
 
-		ModelPartData spikegroup4 = spikes.addChild("spikegroup4", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition spikegroup4 = spikes.addOrReplaceChild("spikegroup4", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData spike1 = spikegroup4.addChild("spike1", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition spike1 = spikegroup4.addOrReplaceChild("spike1", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData legit2 = spike1.addChild("legit2", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition legit2 = spike1.addOrReplaceChild("legit2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		legit2.addChild("spike1_r4", ModelPartBuilder.create().uv(8, 5).cuboid(0.0F, -0.75F, 2.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.75F, -1.0F, -1.2217F, 0.0F, 0.0F));
+		legit2.addOrReplaceChild("spike1_r4", CubeListBuilder.create().texOffs(8, 5).addBox(0.0F, -0.75F, 2.5F, 0.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -3.75F, -1.0F, -1.2217F, 0.0F, 0.0F));
 
-		spike1.addChild("fakeinvis2", ModelPartBuilder.create().uv(0, 16).cuboid(0.25F, -0.75F, -0.5F, 0.0F, 0.0F, 0.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		spike1.addOrReplaceChild("fakeinvis2", CubeListBuilder.create().texOffs(0, 16).addBox(0.25F, -0.75F, -0.5F, 0.0F, 0.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData spike2 = spikegroup4.addChild("spike2", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition spike2 = spikegroup4.addOrReplaceChild("spike2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData legit = spike2.addChild("legit", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition legit = spike2.addOrReplaceChild("legit", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		legit.addChild("spike2_r4", ModelPartBuilder.create().uv(8, 6).cuboid(0.0F, -0.75F, -3.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.75F, 1.0F, 1.2217F, 0.0F, 0.0F));
+		legit.addOrReplaceChild("spike2_r4", CubeListBuilder.create().texOffs(8, 6).addBox(0.0F, -0.75F, -3.5F, 0.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -3.75F, 1.0F, 1.2217F, 0.0F, 0.0F));
 
-		spike2.addChild("fakeinvis", ModelPartBuilder.create().uv(0, 16).cuboid(0.25F, -0.75F, -0.5F, 0.0F, 0.0F, 0.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		spike2.addOrReplaceChild("fakeinvis", CubeListBuilder.create().texOffs(0, 16).addBox(0.25F, -0.75F, -0.5F, 0.0F, 0.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData spike3 = spikegroup4.addChild("spike3", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition spike3 = spikegroup4.addOrReplaceChild("spike3", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData legitone = spike3.addChild("legitone", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+		PartDefinition legitone = spike3.addOrReplaceChild("legitone", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
-		legitone.addChild("spike3_r4", ModelPartBuilder.create().uv(0, 1).cuboid(0.0F, -0.75F, 2.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.75F, -1.0F, -1.2217F, 0.0F, 0.0F));
+		legitone.addOrReplaceChild("spike3_r4", CubeListBuilder.create().texOffs(0, 1).addBox(0.0F, -0.75F, 2.5F, 0.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -3.75F, -1.0F, -1.2217F, 0.0F, 0.0F));
 
-		spike3.addChild("fakeinvisone", ModelPartBuilder.create().uv(0, 16).cuboid(0.25F, -0.75F, -0.5F, 0.0F, 0.0F, 0.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		spike3.addOrReplaceChild("fakeinvisone", CubeListBuilder.create().texOffs(0, 16).addBox(0.25F, -0.75F, -0.5F, 0.0F, 0.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData spike4 = spikegroup4.addChild("spike4", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition spike4 = spikegroup4.addOrReplaceChild("spike4", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		ModelPartData legitone2 = spike4.addChild("legitone2", ModelPartBuilder.create(), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+		PartDefinition legitone2 = spike4.addOrReplaceChild("legitone2", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
-		legitone2.addChild("spike4_r4", ModelPartBuilder.create().uv(0, 0).cuboid(0.0F, -0.75F, -3.5F, 0.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -3.75F, 1.0F, 1.2217F, 0.0F, 0.0F));
+		legitone2.addOrReplaceChild("spike4_r4", CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, -0.75F, -3.5F, 0.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -3.75F, 1.0F, 1.2217F, 0.0F, 0.0F));
 
-		spike4.addChild("fakeinvisone2", ModelPartBuilder.create().uv(0, 16).cuboid(0.25F, -0.75F, -0.5F, 0.0F, 0.0F, 0.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		spike4.addOrReplaceChild("fakeinvisone2", CubeListBuilder.create().texOffs(0, 16).addBox(0.25F, -0.75F, -0.5F, 0.0F, 0.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		return TexturedModelData.of(modelData, 16, 16);
+		return LayerDefinition.create(modelData, 16, 16);
 	}
 
 	@Override
-	public void setAngles(ShellfishRenderState<SeaUrchinEntity.Variant> entity) {
-		super.setAngles(entity);
-		this.moveAnimation.apply(entity.moveAnimationState, entity.age, 1f);
-		this.idleAnimation.apply(entity.idleAnimationState, entity.age, 1f);
+	public void setupAnim(ShellfishRenderState<SeaUrchinEntity.Variant> entity) {
+		super.setupAnim(entity);
+		this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 1f);
+		this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
 	}
 }

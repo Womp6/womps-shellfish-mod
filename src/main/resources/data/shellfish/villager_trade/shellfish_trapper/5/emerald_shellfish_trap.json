@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "shellfish:shellfish_trap"
+  },
+  "max_uses": 8.0,
+  "reputation_discount": 0.08,
+  "wants": {
+    "count": 5,
+    "id": "minecraft:emerald"
+  },
+  "xp": 30.0
+}

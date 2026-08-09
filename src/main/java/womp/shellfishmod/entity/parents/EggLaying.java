@@ -1,21 +1,21 @@
 package womp.shellfishmod.entity.parents;
 
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 
 public interface EggLaying {
 
-    TrackedData<Boolean> HAS_EGG = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(ShellfishEntity.class, EntityDataSerializers.BOOLEAN);
 
     ShellfishEntity<?> getEntity();
 
     default boolean hasEgg() {
-        return getEntity().getDataTracker().get(HAS_EGG);
+        return getEntity().getEntityData().get(HAS_EGG);
     }
 
     default void setHasEgg(boolean value) {
-        getEntity().getDataTracker().set(HAS_EGG, value);
+        getEntity().getEntityData().set(HAS_EGG, value);
     }
 
     default int getPartnerVariant() {

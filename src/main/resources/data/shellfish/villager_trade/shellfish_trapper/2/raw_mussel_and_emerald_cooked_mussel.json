@@ -1,0 +1,16 @@
+{
+  "additional_wants": {
+    "id": "minecraft:emerald"
+  },
+  "gives": {
+    "count": 8,
+    "id": "shellfish:cooked_mussel"
+  },
+  "max_uses": 8.0,
+  "reputation_discount": 0.03,
+  "wants": {
+    "count": 8.0,
+    "id": "shellfish:raw_mussel"
+  },
+  "xp": 5.0
+}

@@ -1,26 +1,25 @@
 package womp.shellfishmod.entity.goals;
 
 import java.util.EnumSet;
-
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 public class SitAroundGoal extends Goal {
-    private final MobEntity mob;
+    private final Mob mob;
     private int sitTime;
 
-    public SitAroundGoal(MobEntity mob) {
+    public SitAroundGoal(Mob mob) {
         this.mob = mob;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         return this.mob.getRandom().nextFloat() < 0.02f;
     }
 
     @Override
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         return this.sitTime >= 0;
     }
 
@@ -30,7 +29,7 @@ public class SitAroundGoal extends Goal {
     }
 
     @Override
-    public boolean shouldRunEveryTick() {
+    public boolean requiresUpdateEveryTick() {
         return true;
     }
 }

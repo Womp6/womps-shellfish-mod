@@ -1,30 +1,28 @@
 package womp.shellfishmod.blocks.traps;
 
 import java.util.HashMap;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import com.mojang.serialization.MapCodec;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.BlockPos;
 import womp.shellfishmod.blocks.parents.AbstractTrapBlock;
 import womp.shellfishmod.blocks.parents.AbstractTrapBlockEntity;
 import womp.shellfishmod.registry.ShellfishBlocks;
 
 public class ShellfishTrapBlock extends AbstractTrapBlock {
 
-    public static final MapCodec<ShellfishTrapBlock> CODEC = createCodec(ShellfishTrapBlock::new);
+    public static final MapCodec<ShellfishTrapBlock> CODEC = simpleCodec(ShellfishTrapBlock::new);
 
-    public ShellfishTrapBlock(Settings settings) {
+    public ShellfishTrapBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos var1, BlockState var2) {
+    public BlockEntity newBlockEntity(BlockPos var1, BlockState var2) {
         return new ShellfishTrapBlockEntity(var1, var2);
     }
 
@@ -46,7 +44,7 @@ public class ShellfishTrapBlock extends AbstractTrapBlock {
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 }

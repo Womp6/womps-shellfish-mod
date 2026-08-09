@@ -1,16 +1,18 @@
 package womp.shellfishmod.client.model;
 
-import net.minecraft.client.model.Dilation;
-import net.minecraft.client.model.ModelData;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.model.ModelPartBuilder;
-import net.minecraft.client.model.ModelPartData;
-import net.minecraft.client.model.ModelTransform;
-import net.minecraft.client.model.TexturedModelData;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3d;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import womp.shellfishmod.client.states.WaterLettuceBlockEntityRenderState;
 
 public class WaterLettuceModel {
 	
@@ -19,54 +21,50 @@ public class WaterLettuceModel {
 	public WaterLettuceModel(ModelPart root) {
 		this.lettuce = root.getChild("lettuce");
 	}
-    public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData lettuce = modelPartData.addChild("lettuce", ModelPartBuilder.create().uv(0, 16).cuboid(-1.5F, -1.25F, -1.5F, 3.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 24.25F, 0.0F));
+    public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition modelPartData = modelData.getRoot();
+		PartDefinition lettuce = modelPartData.addOrReplaceChild("lettuce", CubeListBuilder.create().texOffs(0, 16).addBox(-1.5F, -1.25F, -1.5F, 3.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.25F, 0.0F));
 
-		lettuce.addChild("topsmall4_r1", ModelPartBuilder.create().uv(6, 20).cuboid(-1.0F, -0.875F, 0.625F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(6, 16).cuboid(-1.5F, -0.875F, 1.625F, 3.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.3491F, -1.5708F, 0.0F));
+		lettuce.addOrReplaceChild("topsmall4_r1", CubeListBuilder.create().texOffs(6, 20).addBox(-1.0F, -0.875F, 0.625F, 2.0F, 0.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(6, 16).addBox(-1.5F, -0.875F, 1.625F, 3.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3491F, -1.5708F, 0.0F));
 
-		lettuce.addChild("topsmall3_r1", ModelPartBuilder.create().uv(10, 20).cuboid(-1.0F, -0.875F, 0.625F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(12, 16).cuboid(-1.5F, -0.875F, 1.625F, 3.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.3491F, 3.1416F, 0.0F));
+		lettuce.addOrReplaceChild("topsmall3_r1", CubeListBuilder.create().texOffs(10, 20).addBox(-1.0F, -0.875F, 0.625F, 2.0F, 0.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(12, 16).addBox(-1.5F, -0.875F, 1.625F, 3.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3491F, 3.1416F, 0.0F));
 
-		lettuce.addChild("topsmall2_r1", ModelPartBuilder.create().uv(14, 20).cuboid(-1.0F, -0.875F, 0.625F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(17, 0).cuboid(-1.5F, -0.875F, 1.625F, 3.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.3491F, 1.5708F, 0.0F));
+		lettuce.addOrReplaceChild("topsmall2_r1", CubeListBuilder.create().texOffs(14, 20).addBox(-1.0F, -0.875F, 0.625F, 2.0F, 0.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(17, 0).addBox(-1.5F, -0.875F, 1.625F, 3.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3491F, 1.5708F, 0.0F));
 
-		lettuce.addChild("topsmall1_r1", ModelPartBuilder.create().uv(18, 20).cuboid(-1.0F, -0.875F, 0.625F, 2.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(17, 3).cuboid(-1.5F, -0.875F, 1.625F, 3.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.3491F, 0.0F, 0.0F));
+		lettuce.addOrReplaceChild("topsmall1_r1", CubeListBuilder.create().texOffs(18, 20).addBox(-1.0F, -0.875F, 0.625F, 2.0F, 0.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(17, 3).addBox(-1.5F, -0.875F, 1.625F, 3.0F, 0.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.3491F, 0.0F, 0.0F));
 
-		lettuce.addChild("bottomsmall8_r1", ModelPartBuilder.create().uv(18, 6).cuboid(-1.5F, -0.5F, 0.25F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F))
-		.uv(0, 0).cuboid(-2.0F, -0.5F, 2.25F, 4.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2618F, 2.3562F, 0.0F));
+		lettuce.addOrReplaceChild("bottomsmall8_r1", CubeListBuilder.create().texOffs(18, 6).addBox(-1.5F, -0.5F, 0.25F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 0).addBox(-2.0F, -0.5F, 2.25F, 4.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 2.3562F, 0.0F));
 
-		lettuce.addChild("bottomsmall7_r1", ModelPartBuilder.create().uv(18, 8).cuboid(-1.5F, -0.5F, 0.25F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F))
-		.uv(0, 4).cuboid(-2.0F, -0.5F, 2.25F, 4.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2618F, -2.3562F, 0.0F));
+		lettuce.addOrReplaceChild("bottomsmall7_r1", CubeListBuilder.create().texOffs(18, 8).addBox(-1.5F, -0.5F, 0.25F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 4).addBox(-2.0F, -0.5F, 2.25F, 4.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, -2.3562F, 0.0F));
 
-		lettuce.addChild("bottomsmall6_r1", ModelPartBuilder.create().uv(18, 10).cuboid(-1.5F, -0.5F, 0.25F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F))
-		.uv(0, 8).cuboid(-2.0F, -0.5F, 2.25F, 4.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2618F, -0.7854F, 0.0F));
+		lettuce.addOrReplaceChild("bottomsmall6_r1", CubeListBuilder.create().texOffs(18, 10).addBox(-1.5F, -0.5F, 0.25F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 8).addBox(-2.0F, -0.5F, 2.25F, 4.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, -0.7854F, 0.0F));
 
-		lettuce.addChild("bottomsmall5_r1", ModelPartBuilder.create().uv(18, 12).cuboid(-1.5F, -0.5F, 0.25F, 3.0F, 0.0F, 2.0F, new Dilation(0.0F))
-		.uv(8, 0).cuboid(-2.0F, -0.5F, 2.25F, 4.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2618F, 0.7854F, 0.0F));
+		lettuce.addOrReplaceChild("bottomsmall5_r1", CubeListBuilder.create().texOffs(18, 12).addBox(-1.5F, -0.5F, 0.25F, 3.0F, 0.0F, 2.0F, new CubeDeformation(0.0F))
+		.texOffs(8, 0).addBox(-2.0F, -0.5F, 2.25F, 4.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.7854F, 0.0F));
 
-		lettuce.addChild("bottomsmall4_r1", ModelPartBuilder.create().uv(11, 19).cuboid(-1.5F, -0.25F, 1.0F, 3.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(8, 4).cuboid(-2.0F, -0.25F, 2.0F, 4.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
+		lettuce.addOrReplaceChild("bottomsmall4_r1", CubeListBuilder.create().texOffs(11, 19).addBox(-1.5F, -0.25F, 1.0F, 3.0F, 0.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(8, 4).addBox(-2.0F, -0.25F, 2.0F, 4.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.1745F, 0.0F, 0.0F));
 
-		lettuce.addChild("bottomsmall3_r1", ModelPartBuilder.create().uv(0, 20).cuboid(-1.5F, -0.25F, -2.0F, 3.0F, 0.0F, 1.0F, new Dilation(0.0F))
-		.uv(8, 8).cuboid(-2.0F, -0.25F, -6.0F, 4.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
+		lettuce.addOrReplaceChild("bottomsmall3_r1", CubeListBuilder.create().texOffs(0, 20).addBox(-1.5F, -0.25F, -2.0F, 3.0F, 0.0F, 1.0F, new CubeDeformation(0.0F))
+		.texOffs(8, 8).addBox(-2.0F, -0.25F, -6.0F, 4.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
 
-		lettuce.addChild("bottomsmall2_r1", ModelPartBuilder.create().uv(18, 14).cuboid(-2.0F, -0.25F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F))
-		.uv(0, 12).cuboid(-6.0F, -0.25F, -2.0F, 4.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1745F));
+		lettuce.addOrReplaceChild("bottomsmall2_r1", CubeListBuilder.create().texOffs(18, 14).addBox(-2.0F, -0.25F, -1.5F, 1.0F, 0.0F, 3.0F, new CubeDeformation(0.0F))
+		.texOffs(0, 12).addBox(-6.0F, -0.25F, -2.0F, 4.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1745F));
 
-		lettuce.addChild("bottomsmall1_r1", ModelPartBuilder.create().uv(18, 17).cuboid(1.0F, -0.25F, -1.5F, 1.0F, 0.0F, 3.0F, new Dilation(0.0F))
-		.uv(8, 12).cuboid(2.0F, -0.25F, -2.0F, 4.0F, 0.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.1745F));
-		return TexturedModelData.of(modelData, 32, 32);
+		lettuce.addOrReplaceChild("bottomsmall1_r1", CubeListBuilder.create().texOffs(18, 17).addBox(1.0F, -0.25F, -1.5F, 1.0F, 0.0F, 3.0F, new CubeDeformation(0.0F))
+		.texOffs(8, 12).addBox(2.0F, -0.25F, -2.0F, 4.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.1745F));
+		return LayerDefinition.create(modelData, 32, 32);
 	}
 
-    public void render(MatrixStack matrices, VertexConsumer buffer, int light, int overlay, Vec3d vec) {
-        lettuce.render(matrices, buffer, light, overlay);
-    }
-
-    public RenderLayer getLayer() {
-       return RenderLayer.getCutout();
+    public void render(WaterLettuceBlockEntityRenderState renderState, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
+        queue.submitModelPart(lettuce, matrices, RenderTypes.entityCutout(renderState.texture), renderState.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, renderState.breakProgress);
     }
 }

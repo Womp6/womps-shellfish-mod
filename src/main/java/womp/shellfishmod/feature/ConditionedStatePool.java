@@ -2,16 +2,15 @@ package womp.shellfishmod.feature;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.world.gen.blockpredicate.BlockPredicate;
-
-public record ConditionedStatePool(BlockPredicate condition, Pool<BlockState> pool) {
+public record ConditionedStatePool(BlockPredicate condition, WeightedList<BlockState> pool) {
     
     public static final Codec<ConditionedStatePool> CONDITIONED_STATE_POOL_CODEC =
     RecordCodecBuilder.create(instance -> instance.group(
-        BlockPredicate.BASE_CODEC.fieldOf("condition").forGetter(c -> c.condition()),
-        Pool.createCodec(BlockState.CODEC).fieldOf("states").forGetter(c -> c.pool())
+        BlockPredicate.CODEC.fieldOf("condition").forGetter(c -> c.condition()),
+        WeightedList.codec(BlockState.CODEC).fieldOf("states").forGetter(c -> c.pool())
     ).apply(instance, ConditionedStatePool::new));
 }

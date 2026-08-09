@@ -1,52 +1,50 @@
 package womp.shellfishmod.registry;
 
 import java.util.HashMap;
-
+import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.Identifier;
 import com.mojang.serialization.Codec;
-
-import net.minecraft.component.ComponentType;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
 
 public class ShellfishCrayfish {
 
-	public static final HashMap<ComponentType<Boolean>, String> map = new HashMap<>();
+	public static final HashMap<DataComponentType<Boolean>, String> map = new HashMap<>();
 
-	public static final ComponentType<Boolean> SUPERCRAYFISH = registerBoolComp("supercrayfish");
-	public static final ComponentType<Boolean> CLAYFISH = registerBoolComp("clayfish");
-	public static final ComponentType<Boolean> SAPPHIRE = registerBoolComp("sapphire");
-	public static final ComponentType<Boolean> LOUISIANA = registerBoolComp("louisiana");
-	public static final ComponentType<Boolean> WHITE_TUBERCLED = registerBoolComp("white_tubercled");
-	public static final ComponentType<Boolean> ZEBRA = registerBoolComp("zebra");
-	public static final ComponentType<Boolean> VIRILE = registerBoolComp("virile");
-	public static final ComponentType<Boolean> RUSTY = registerBoolComp("rusty");
-	public static final ComponentType<Boolean> SUPERNOVA = registerBoolComp("supernova");
-	public static final ComponentType<Boolean> SIGNAL = registerBoolComp("signal");
-	public static final ComponentType<Boolean> SWAMP_DWARF = registerBoolComp("swamp_dwarf");
-	public static final ComponentType<Boolean> AUSTRALIAN_REDCLAW = registerBoolComp("australian_redclaw");
-	public static final ComponentType<Boolean> BIG_SANDY = registerBoolComp("big_sandy");
-	public static final ComponentType<Boolean> SPINYCHEEK = registerBoolComp("spinycheek");
-	public static final ComponentType<Boolean> PARKHILL_PRAIRIE = registerBoolComp("parkhill_prairie");
-	public static final ComponentType<Boolean> COMMON_YABBY = registerBoolComp("common_yabby");
-	public static final ComponentType<Boolean> NASHVILLE = registerBoolComp("nashville");
-	public static final ComponentType<Boolean> MURRAY = registerBoolComp("murray");
-	public static final ComponentType<Boolean> TASMANIAN_GIANT = registerBoolComp("tasmanian_giant");
-	public static final ComponentType<Boolean> JAPANESE = registerBoolComp("japanese");
-	public static final ComponentType<Boolean> MARBLED = registerBoolComp("marbled");
-	public static final ComponentType<Boolean> ORANGE_DWARF = registerBoolComp("orange_dwarf");
-	public static final ComponentType<Boolean> SLOUGH = registerBoolComp("slough");
-	public static final ComponentType<Boolean> CAVE = registerBoolComp("cave");
-	public static final ComponentType<Boolean> NOBLE = registerBoolComp("noble");
-	public static final ComponentType<Boolean> HAIRY_MARRON = registerBoolComp("hairy_marron");
-	public static final ComponentType<Boolean> THUNDERBOLT = registerBoolComp("thunderbolt");
-	public static final ComponentType<Boolean> BLUE_KONG = registerBoolComp("blue_kong");
-	public static final ComponentType<Boolean> DIAMOND = registerBoolComp("diamond");
-	public static final ComponentType<Boolean> GOLDEN = registerBoolComp("golden");
+	public static final DataComponentType<Boolean> SUPERCRAYFISH = registerBoolComp("supercrayfish");
+	public static final DataComponentType<Boolean> CLAYFISH = registerBoolComp("clayfish");
+	public static final DataComponentType<Boolean> SAPPHIRE = registerBoolComp("sapphire");
+	public static final DataComponentType<Boolean> LOUISIANA = registerBoolComp("louisiana");
+	public static final DataComponentType<Boolean> WHITE_TUBERCLED = registerBoolComp("white_tubercled");
+	public static final DataComponentType<Boolean> ZEBRA = registerBoolComp("zebra");
+	public static final DataComponentType<Boolean> VIRILE = registerBoolComp("virile");
+	public static final DataComponentType<Boolean> RUSTY = registerBoolComp("rusty");
+	public static final DataComponentType<Boolean> SUPERNOVA = registerBoolComp("supernova");
+	public static final DataComponentType<Boolean> SIGNAL = registerBoolComp("signal");
+	public static final DataComponentType<Boolean> SWAMP_DWARF = registerBoolComp("swamp_dwarf");
+	public static final DataComponentType<Boolean> AUSTRALIAN_REDCLAW = registerBoolComp("australian_redclaw");
+	public static final DataComponentType<Boolean> BIG_SANDY = registerBoolComp("big_sandy");
+	public static final DataComponentType<Boolean> SPINYCHEEK = registerBoolComp("spinycheek");
+	public static final DataComponentType<Boolean> PARKHILL_PRAIRIE = registerBoolComp("parkhill_prairie");
+	public static final DataComponentType<Boolean> COMMON_YABBY = registerBoolComp("common_yabby");
+	public static final DataComponentType<Boolean> NASHVILLE = registerBoolComp("nashville");
+	public static final DataComponentType<Boolean> MURRAY = registerBoolComp("murray");
+	public static final DataComponentType<Boolean> TASMANIAN_GIANT = registerBoolComp("tasmanian_giant");
+	public static final DataComponentType<Boolean> JAPANESE = registerBoolComp("japanese");
+	public static final DataComponentType<Boolean> MARBLED = registerBoolComp("marbled");
+	public static final DataComponentType<Boolean> ORANGE_DWARF = registerBoolComp("orange_dwarf");
+	public static final DataComponentType<Boolean> SLOUGH = registerBoolComp("slough");
+	public static final DataComponentType<Boolean> CAVE = registerBoolComp("cave");
+	public static final DataComponentType<Boolean> NOBLE = registerBoolComp("noble");
+	public static final DataComponentType<Boolean> HAIRY_MARRON = registerBoolComp("hairy_marron");
+	public static final DataComponentType<Boolean> THUNDERBOLT = registerBoolComp("thunderbolt");
+	public static final DataComponentType<Boolean> BLUE_KONG = registerBoolComp("blue_kong");
+	public static final DataComponentType<Boolean> DIAMOND = registerBoolComp("diamond");
+	public static final DataComponentType<Boolean> GOLDEN = registerBoolComp("golden");
 
-	private static ComponentType<Boolean> registerBoolComp(String name) {
-		return Registry.register(Registries.DATA_COMPONENT_TYPE, Identifier.of("shellfish", !name.equals("supercrayfish") && !name.equals("clayfish") ? name + "_crayfish" : name), new ComponentType.Builder<Boolean>().codec(Codec.BOOL).packetCodec(PacketCodecs.BOOLEAN).build());
+	private static DataComponentType<Boolean> registerBoolComp(String name) {
+		return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Identifier.fromNamespaceAndPath("shellfish", !name.equals("supercrayfish") && !name.equals("clayfish") ? name + "_crayfish" : name), new DataComponentType.Builder<Boolean>().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
 	}
     
     public static void register() {

@@ -1,20 +1,20 @@
 package womp.shellfishmod.entity.goals;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import womp.shellfishmod.blocks.parents.EggsBlock;
 import womp.shellfishmod.entity.parents.EggLaying;
 
-public class ShellfishLayEggGoal extends MoveToTargetPosGoal {
+public class ShellfishLayEggGoal extends MoveToBlockGoal {
 
     protected final EggLaying shellfish;
     private final SoundEvent laySound;
@@ -29,45 +29,45 @@ public class ShellfishLayEggGoal extends MoveToTargetPosGoal {
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         if (this.shellfish.hasEgg()) {
-            return super.canStart();
+            return super.canUse();
         }
         return false;
     }
 
     @Override
-    public boolean shouldContinue() {
-        return super.shouldContinue() && this.shellfish.hasEgg();
+    public boolean canContinueToUse() {
+        return super.canContinueToUse() && this.shellfish.hasEgg();
     }
 
     @Override
     public void tick() {
         super.tick();
-        BlockPos blockPos = this.shellfish.getEntity().getBlockPos();
-        if (this.shellfish.getEntity().isTouchingWater() && this.hasReached() && i == 0) {
-                World world = this.shellfish.getEntity().getWorld();
-                world.playSound(null, blockPos, laySound, SoundCategory.BLOCKS, 0.3f, 0.9f + world.random.nextFloat() * 0.2f);
-                BlockPos blockPos2 = this.targetPos.up();
+        BlockPos blockPos = this.shellfish.getEntity().blockPosition();
+        if (this.shellfish.getEntity().isInWater() && this.isReachedTarget() && i == 0) {
+                Level world = this.shellfish.getEntity().level();
+                world.playSound(null, blockPos, laySound, SoundSource.BLOCKS, 0.3f, 0.9f + world.getRandom().nextFloat() * 0.2f);
+                BlockPos blockPos2 = this.blockPos.above();
                 BlockState blockState;
-                if (eggBlock instanceof EggsBlock) blockState = (BlockState)eggBlock.getDefaultState()
-                    .with(EggsBlock.VARIANT1, this.shellfish.getEntity().getVariant().getIndex() + 1)
-                    .with(EggsBlock.VARIANT2, shellfish.getPartnerVariant() + 1);
-                else blockState = (BlockState)eggBlock.getDefaultState();
+                if (eggBlock instanceof EggsBlock) blockState = (BlockState)eggBlock.defaultBlockState()
+                    .setValue(EggsBlock.VARIANT1, this.shellfish.getEntity().getVariant().getIndex() + 1)
+                    .setValue(EggsBlock.VARIANT2, shellfish.getPartnerVariant() + 1);
+                else blockState = (BlockState)eggBlock.defaultBlockState();
                 this.shellfish.setPartnerVariant(-1);  // Reset
-                world.setBlockState(blockPos2, blockState, Block.NOTIFY_ALL);
-                world.emitGameEvent(GameEvent.BLOCK_PLACE, blockPos2, GameEvent.Emitter.of(this.shellfish.getEntity(), blockState));
+                world.setBlock(blockPos2, blockState, Block.UPDATE_ALL);
+                world.gameEvent(GameEvent.BLOCK_PLACE, blockPos2, GameEvent.Context.of(this.shellfish.getEntity(), blockState));
                 this.shellfish.setHasEgg(false);
-                this.shellfish.getEntity().setLoveTicks(600);
+                this.shellfish.getEntity().setInLoveTime(600);
                 i++;
         }
     }
 
     @Override
-    protected boolean isTargetPos(WorldView world, BlockPos pos) {
+    protected boolean isValidTarget(LevelReader world, BlockPos pos) {
         FluidState blockState = world.getFluidState(pos);
-        FluidState fluidUp = world.getFluidState(pos.up());
-        BlockState blockup = world.getBlockState(pos.up());
-        return blockState.isEmpty() && fluidUp.isOf(Fluids.WATER) && !(blockup.getBlock() instanceof EggsBlock);
+        FluidState fluidUp = world.getFluidState(pos.above());
+        BlockState blockup = world.getBlockState(pos.above());
+        return blockState.isEmpty() && fluidUp.is(Fluids.WATER) && !(blockup.getBlock() instanceof EggsBlock);
     }
 }

@@ -1,46 +1,46 @@
 package womp.shellfishmod.blocks;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Fertilizable;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import womp.shellfishmod.blocks.parents.ShellfishPlantBlock;
 import womp.shellfishmod.registry.ShellfishBlocks;
 
-public class RockWeedBlock extends ShellfishPlantBlock implements Fertilizable {
+public class RockWeedBlock extends ShellfishPlantBlock implements BonemealableBlock {
     
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(1.0, 0.0, 1.0, 15.0, 15.0, 15.0);
+    protected static final VoxelShape SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 15.0, 15.0);
 
-    public RockWeedBlock(AbstractBlock.Settings settings) {
-        super(settings, SHAPE, ShellfishPlantBlock.PlaceType.SOLID_SIDE, createCodec(RockWeedBlock::new));
+    public RockWeedBlock(BlockBehaviour.Properties settings) {
+        super(settings, SHAPE, ShellfishPlantBlock.PlaceType.SOLID_SIDE, simpleCodec(RockWeedBlock::new));
     }
 
     @Override
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
+    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
         return true;
     }
 
     @Override
-    public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
+    public boolean isBonemealSuccess(Level world, RandomSource random, BlockPos pos, BlockState state) {
         return true;
     }
 
     @Override
-    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        BlockState blockState = ShellfishBlocks.TALL_ROCKWEED.getDefaultState();
-        BlockState blockState2 = (BlockState)blockState.with(TallRockWeedBlock.HALF, DoubleBlockHalf.UPPER);
-        BlockPos blockPos = pos.up();
-        if (world.getBlockState(blockPos).isOf(Blocks.WATER)) {
-            world.setBlockState(pos, blockState, Block.NOTIFY_LISTENERS);
-            world.setBlockState(blockPos, blockState2, Block.NOTIFY_LISTENERS);
+    public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state) {
+        BlockState blockState = ShellfishBlocks.TALL_ROCKWEED.defaultBlockState();
+        BlockState blockState2 = (BlockState)blockState.setValue(TallRockWeedBlock.HALF, DoubleBlockHalf.UPPER);
+        BlockPos blockPos = pos.above();
+        if (world.getBlockState(blockPos).is(Blocks.WATER)) {
+            world.setBlock(pos, blockState, Block.UPDATE_CLIENTS);
+            world.setBlock(blockPos, blockState2, Block.UPDATE_CLIENTS);
         }
     }
 }

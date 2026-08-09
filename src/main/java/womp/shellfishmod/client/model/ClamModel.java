@@ -1,50 +1,50 @@
 package womp.shellfishmod.client.model;
 
-import net.minecraft.client.model.Dilation;
-import net.minecraft.client.model.ModelData;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.model.ModelPartBuilder;
-import net.minecraft.client.model.ModelPartData;
-import net.minecraft.client.model.ModelTransform;
-import net.minecraft.client.model.TexturedModelData;
-import net.minecraft.client.render.entity.animation.Animation;
-import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.animation.KeyframeAnimation;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import womp.shellfishmod.client.states.ShellfishRenderState;
 import womp.shellfishmod.entity.ClamEntity;
 import womp.shellfishmod.entity.animations.ShellfishAnimations;
 
 public class ClamModel extends EntityModel<ShellfishRenderState<ClamEntity.Variant>> {
 
-	private final Animation moveAnimation;
-	private final Animation idleAnimation;
+	private final KeyframeAnimation moveAnimation;
+	private final KeyframeAnimation idleAnimation;
 
 	public ClamModel(ModelPart root) {
 		super(root);
-		this.moveAnimation = ShellfishAnimations.CLAM_MOVE.createAnimation(root);
-		this.idleAnimation = ShellfishAnimations.CLAM_IDLE.createAnimation(root);
+		this.moveAnimation = ShellfishAnimations.CLAM_MOVE.bake(root);
+		this.idleAnimation = ShellfishAnimations.CLAM_IDLE.bake(root);
 	}
 
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData clam = modelPartData.addChild("clam", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 24.0F, 0.0F));
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition modelPartData = modelData.getRoot();
+		PartDefinition clam = modelPartData.addOrReplaceChild("clam", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-		ModelPartData mainbody = clam.addChild("mainbody", ModelPartBuilder.create(), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		PartDefinition mainbody = clam.addOrReplaceChild("mainbody", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		mainbody.addChild("mainbody1", ModelPartBuilder.create().uv(0, 5).cuboid(-2.5F, -1.0F, -2.25F, 5.0F, 1.0F, 4.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		mainbody.addOrReplaceChild("mainbody1", CubeListBuilder.create().texOffs(0, 5).addBox(-2.5F, -1.0F, -2.25F, 5.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		mainbody.addChild("mainbody2", ModelPartBuilder.create().uv(0, 0).cuboid(-2.5F, -2.0F, -2.25F, 5.0F, 1.0F, 4.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		mainbody.addOrReplaceChild("mainbody2", CubeListBuilder.create().texOffs(0, 0).addBox(-2.5F, -2.0F, -2.25F, 5.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		clam.addChild("bodyend", ModelPartBuilder.create().uv(11, 10).cuboid(-2.0F, -1.5F, 1.75F, 4.0F, 1.0F, 1.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
+		clam.addOrReplaceChild("bodyend", CubeListBuilder.create().texOffs(11, 10).addBox(-2.0F, -1.5F, 1.75F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		clam.addChild("insides", ModelPartBuilder.create().uv(0, 10).cuboid(-2.0F, -1.5F, -1.25F, 4.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.origin(0.0F, 0.0F, 0.0F));
-		return TexturedModelData.of(modelData, 32, 32);
+		clam.addOrReplaceChild("insides", CubeListBuilder.create().texOffs(0, 10).addBox(-2.0F, -1.5F, -1.25F, 4.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		return LayerDefinition.create(modelData, 32, 32);
 	}
 
 	@Override
-	public void setAngles(ShellfishRenderState<ClamEntity.Variant> entity) {
-		super.setAngles(entity);
-		this.moveAnimation.apply(entity.moveAnimationState, entity.age, 1f);
-		this.idleAnimation.apply(entity.idleAnimationState, entity.age, 1f);
+	public void setupAnim(ShellfishRenderState<ClamEntity.Variant> entity) {
+		super.setupAnim(entity);
+		this.moveAnimation.apply(entity.moveAnimationState, entity.ageInTicks, 1f);
+		this.idleAnimation.apply(entity.idleAnimationState, entity.ageInTicks, 1f);
 	}
 }

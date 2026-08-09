@@ -1,38 +1,36 @@
 package womp.shellfishmod.entity.goals;
 
 import java.util.EnumSet;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import womp.shellfishmod.entity.SeaSnailEntity;
 
 public class WanderToWaterGoal extends Goal {
-    private final PathAwareEntity mob;
+    private final PathfinderMob mob;
     private double x;
     private double y;
     private double z;
     private final double speed;
-    private final World world;
+    private final Level world;
 
-    public WanderToWaterGoal(PathAwareEntity mob, double speed) {
+    public WanderToWaterGoal(PathfinderMob mob, double speed) {
         this.mob = mob;
         this.speed = speed;
-        this.world = mob.getWorld();
-        this.setControls(EnumSet.of(Goal.Control.MOVE));
+        this.world = mob.level();
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
 
     @Override
-    public boolean canStart() {
-        if (this.mob.isTouchingWater()) {
+    public boolean canUse() {
+        if (this.mob.isInWater()) {
             return false;
         };
-        Vec3d vec3d = this.getWanderTarget();
+        Vec3 vec3d = this.getWanderTarget();
         if (vec3d == null) {
             return false;
         }
@@ -43,8 +41,8 @@ public class WanderToWaterGoal extends Goal {
     }
 
     @Override
-    public boolean shouldContinue() {
-        return !this.mob.getNavigation().isIdle();
+    public boolean canContinueToUse() {
+        return !this.mob.getNavigation().isDone();
     }
 
     @Override
@@ -52,7 +50,7 @@ public class WanderToWaterGoal extends Goal {
         if (this.mob instanceof SeaSnailEntity snail) {
             snail.setCanHide(false);
         }
-        this.mob.getNavigation().startMovingTo(this.x, this.y, this.z, this.speed);
+        this.mob.getNavigation().moveTo(this.x, this.y, this.z, this.speed);
     }
 
     @Override
@@ -63,13 +61,13 @@ public class WanderToWaterGoal extends Goal {
     }
 
     @Nullable
-    private Vec3d getWanderTarget() {
-        net.minecraft.util.math.random.Random random = this.mob.getRandom();
-        BlockPos blockPos = this.mob.getBlockPos();
+    private Vec3 getWanderTarget() {
+        net.minecraft.util.RandomSource random = this.mob.getRandom();
+        BlockPos blockPos = this.mob.blockPosition();
         for (int i = 0; i < 10; ++i) {
-            BlockPos blockPos2 = blockPos.add(random.nextInt(6) - 3, 1 - random.nextInt(4), random.nextInt(6) - 3);
-            if (!this.world.getBlockState(blockPos2).isOf(Blocks.WATER)) continue;
-            return Vec3d.ofBottomCenter(blockPos2);
+            BlockPos blockPos2 = blockPos.offset(random.nextInt(6) - 3, 1 - random.nextInt(4), random.nextInt(6) - 3);
+            if (!this.world.getBlockState(blockPos2).is(Blocks.WATER)) continue;
+            return Vec3.atBottomCenterOf(blockPos2);
         }
         return null;
     }

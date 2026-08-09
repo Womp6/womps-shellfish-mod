@@ -11,6 +11,6 @@ public class ShellfishPackets {
     }
 
     public static void register() {
-        PayloadTypeRegistry.playS2C().register(BaitPacket.ID, BaitPacket.PACKET);
+        PayloadTypeRegistry.clientboundPlay().register(BaitPacket.ID, BaitPacket.PACKET);
     }
 }

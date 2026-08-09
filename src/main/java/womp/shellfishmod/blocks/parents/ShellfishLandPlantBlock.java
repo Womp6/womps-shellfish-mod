@@ -1,90 +1,89 @@
 package womp.shellfishmod.blocks.parents;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.TallGrassBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShortPlantBlock;
-import net.minecraft.block.TallPlantBlock;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
-
-public class ShellfishLandPlantBlock extends ShortPlantBlock {
+public class ShellfishLandPlantBlock extends TallGrassBlock {
 
     private final boolean waterOnly;
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private final Block tallPlantBlock;
 
-    public ShellfishLandPlantBlock(Settings settings, boolean waterOnly, Block tallPlantBlock) {
+    public ShellfishLandPlantBlock(Properties settings, boolean waterOnly, Block tallPlantBlock) {
         super(settings);
         this.waterOnly = waterOnly;
-        this.setDefaultState(getDefaultState().with(WATERLOGGED, waterOnly));
+        this.registerDefaultState(defaultBlockState().setValue(WATERLOGGED, waterOnly));
         this.tallPlantBlock = tallPlantBlock;
     }
 
     @Override
-    protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
-        return (floor.isIn(BlockTags.SAND) || super.canPlantOnTop(floor, world, pos) || floor.isOf(Blocks.CLAY) || floor.isOf(Blocks.MUD))
-            && (waterOnly || world.getFluidState(pos.up()).isIn(FluidTags.WATER) ? world.getBlockState(pos.up(2)).isTransparent() && world.getFluidState(pos.up(2)).isEmpty() : true);
+    protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos) {
+        return (floor.is(BlockTags.SAND) || super.mayPlaceOn(floor, world, pos) || floor.is(Blocks.CLAY) || floor.is(Blocks.MUD))
+            && (waterOnly || world.getFluidState(pos.above()).is(FluidTags.WATER) ? world.getBlockState(pos.above(2)).propagatesSkylightDown() && world.getFluidState(pos.above(2)).isEmpty() : true);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        if (state.get(WATERLOGGED).booleanValue() || waterOnly) {
-            return Fluids.WATER.getStill(false);
+        if (state.getValue(WATERLOGGED).booleanValue() || waterOnly) {
+            return Fluids.WATER.getSource(false);
         }
-        return Fluids.EMPTY.getDefaultState();
+        return Fluids.EMPTY.defaultFluidState();
     }
 
     @Override
     @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState state = super.getPlacementState(ctx);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockState state = super.getStateForPlacement(ctx);
         if (state == null) return null;
-        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        if (fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8) {
-            return state.with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
+        if (fluidState.is(FluidTags.WATER) && fluidState.getAmount() == 8) {
+            return state.setValue(WATERLOGGED, ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER);
         }
-        return waterOnly ? null : state.with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        return waterOnly ? null : state.setValue(WATERLOGGED, ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(WATERLOGGED);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView view, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-        if (!state.isAir() || state.get(WATERLOGGED)) {
-            view.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess view, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (!state.isAir() || state.getValue(WATERLOGGED)) {
+            view.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
-        return super.getStateForNeighborUpdate(state, world, view, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, world, view, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override
-    public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-        return tallPlantBlock.getDefaultState().canPlaceAt(world, pos) && world.isAir(pos.up());
+    public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+        return tallPlantBlock.defaultBlockState().canSurvive(world, pos) && world.isEmptyBlock(pos.above());
     }
 
     @Override
-    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        TallPlantBlock tallPlantBlock = (TallPlantBlock)(this.tallPlantBlock);
-        if (tallPlantBlock.getDefaultState().canPlaceAt(world, pos) && world.isAir(pos.up())) {
-            TallPlantBlock.placeAt(world, tallPlantBlock.getDefaultState(), pos, 2);
+    public void performBonemeal(ServerLevel world, RandomSource random, BlockPos pos, BlockState state) {
+        DoublePlantBlock tallPlantBlock = (DoublePlantBlock)(this.tallPlantBlock);
+        if (tallPlantBlock.defaultBlockState().canSurvive(world, pos) && world.isEmptyBlock(pos.above())) {
+            DoublePlantBlock.placeAt(world, tallPlantBlock.defaultBlockState(), pos, 2);
         }
     }
 }

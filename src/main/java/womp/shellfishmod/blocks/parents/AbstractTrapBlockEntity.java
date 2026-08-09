@@ -4,40 +4,40 @@ import java.util.Optional;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.LockableContainerBlockEntity;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentsAccess;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.ServerRecipeManager;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import womp.shellfishmod.networking.BaitPacket;
 import womp.shellfishmod.recipes.ShellfishTrapRecipe;
 import womp.shellfishmod.recipes.ShellfishTrapRecipeInput;
@@ -47,7 +47,7 @@ import womp.shellfishmod.screens.ShellfishTrapScreenHandler;
 import womp.shellfishmod.screens.TrapData;
 
 // The foundation of this file was created using help from Kaupenjoe
-public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEntity implements ExtendedScreenHandlerFactory<TrapData>, ImplementedInventory {
+public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity implements ExtendedMenuProvider<TrapData>, ImplementedInventory {
 
     //REQUIRED
     protected abstract Item selectJunk(int i);
@@ -72,7 +72,7 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
 
 
     public static final int BAIT_SLOT = 0;
-    protected final PropertyDelegate delegate;
+    protected final ContainerData delegate;
     protected int progress = 0;
     protected int maxProgress = getMaxProgress();
     protected boolean canTrap;
@@ -80,11 +80,11 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
     protected int durability = getMaxDurability();
     protected int maxDurability = getMaxDurability();
 
-    protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(19, ItemStack.EMPTY);
+    protected NonNullList<ItemStack> inventory = NonNullList.withSize(19, ItemStack.EMPTY);
 
     public AbstractTrapBlockEntity(BlockEntityType<? extends AbstractTrapBlockEntity> be, BlockPos pos, BlockState state) {
         super(be, pos, state);
-        this.delegate = new PropertyDelegate() {
+        this.delegate = new ContainerData() {
 
             @Override
             public int get(int var1) {
@@ -116,7 +116,7 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
             }
 
             @Override
-            public int size() {
+            public int getCount() {
                 return 4;
             }
             
@@ -124,67 +124,67 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
     }
 
     @Override
-    public TrapData getScreenOpeningData(ServerPlayerEntity player) {
-        return new TrapData(pos);
+    public TrapData getScreenOpeningData(ServerPlayer player) {
+        return new TrapData(worldPosition);
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return this.inventory;
     }
 
     public ItemStack renderBait() {
-        return this.getStack(BAIT_SLOT);
+        return this.getItem(BAIT_SLOT);
     }
 
     @Override
-    public void markDirty() {
-        if (world != null) {
-            if (!world.isClient) {
-                for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld)world, getPos())) {
-                    ServerPlayNetworking.send(player, new BaitPacket(inventory, this.getPos()));
+    public void setChanged() {
+        if (level != null) {
+            if (!level.isClientSide()) {
+                for (ServerPlayer player : PlayerLookup.tracking((ServerLevel)level, getBlockPos())) {
+                    ServerPlayNetworking.send(player, new BaitPacket(inventory, this.getBlockPos()));
                 }
             }
         }
-        super.markDirty();
+        super.setChanged();
     }
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
-    public void setInventory(DefaultedList<ItemStack> list) {
+    public void setInventory(NonNullList<ItemStack> list) {
         for (int i = 0; i < list.size(); i++) {
             this.inventory.set(i, list.get(i));
         }
     }
 
     @Override
-    public void writeData(WriteView nbt) {
-        super.writeData(nbt);
-        Inventories.writeData(nbt, inventory);
+    public void saveAdditional(ValueOutput nbt) {
+        super.saveAdditional(nbt);
+        ContainerHelper.saveAllItems(nbt, inventory);
         nbt.putInt("progress", progress);
         nbt.putInt("durability", durability);
         nbt.putBoolean("canTrap", canTrap);
     }
 
     @Override
-    public void readData(ReadView nbt) {
-        Inventories.readData(nbt, inventory);
-        progress = nbt.getInt("progress", 0);
-        durability = nbt.getInt("durability", maxDurability);
-        canTrap = nbt.getBoolean("canTrap", true);
-        super.readData(nbt);
+    public void loadAdditional(ValueInput nbt) {
+        ContainerHelper.loadAllItems(nbt, inventory);
+        progress = nbt.getIntOr("progress", 0);
+        durability = nbt.getIntOr("durability", maxDurability);
+        canTrap = nbt.getBooleanOr("canTrap", true);
+        super.loadAdditional(nbt);
     }
 
-    public void tick(World world, BlockPos pos, BlockState state) {
+    public void tick(Level world, BlockPos pos, BlockState state) {
         if (durability == 0) {
             setBroken(true);
         } else if (durability > maxDurability) {
@@ -197,7 +197,7 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
             if (checkProperConditions(world, pos, state)) {
                 if (canInsertIntoOutputSlots() && hasRecipe() && this.canTrap) {
                     increaseTrapProgress();
-                    markDirty(world, pos, state);
+                    setChanged(world, pos, state);
 
                     if (trappingComplete()) {
                         resetTrapping();
@@ -215,42 +215,42 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
 
     protected void checkCanTrap() {
         for (int i = 1; i <= 18; i++) {
-            if (this.getStack(i).isEmpty()) this.canTrap = true;
+            if (this.getItem(i).isEmpty()) this.canTrap = true;
         }
     }
 
     protected void outputProduct() {
         Optional<ShellfishTrapRecipe> recipe = getCurrentRecipe();
         Item output1 = recipe.get().getResult().getItem();
-        Random random = Random.create();
-        count = random.nextBetween(1, getMaxOutCount());
+        RandomSource random = RandomSource.create();
+        count = random.nextIntBetweenInclusive(1, getMaxOutCount());
         Item output = selectOutput(output1);
         int stack = checkStack(output);
         int count2 = 0;
-        if (stack != -1) count2 = -output.getMaxCount() + (this.getStack(stack).getCount() + count);
+        if (stack != -1) count2 = -output.getDefaultMaxStackSize() + (this.getItem(stack).getCount() + count);
         int stack2 = checkSecondStack(output, stack, count2);
         if (stack == -1 || stack2 == -2) {
             this.canTrap = false;
         } else if (stack2 != -1) {
-            this.canTrap = this.getStack(stack2).getCount() + count2 < output.getMaxCount();
+            this.canTrap = this.getItem(stack2).getCount() + count2 < output.getDefaultMaxStackSize();
         }
         if (this.canTrap) {
-            if (!this.getStack(stack).isEmpty()) {
-                this.removeStack(BAIT_SLOT, 1);
+            if (!this.getItem(stack).isEmpty()) {
+                this.removeItem(BAIT_SLOT, 1);
                 if (count2 < 1) {
-                    this.setStack(stack, new ItemStack(this.getStack(stack).getItem(), this.getStack(stack).getCount() + count));
+                    this.setItem(stack, new ItemStack(this.getItem(stack).getItem(), this.getItem(stack).getCount() + count));
                 } else {
-                    this.setStack(stack, new ItemStack(this.getStack(stack).getItem(), this.getStack(stack).getMaxCount()));
-                    if (!this.getStack(stack2).isEmpty()) {
-                        this.setStack(stack2, new ItemStack(this.getStack(stack2).getItem(), this.getStack(stack2).getCount() + count2));
+                    this.setItem(stack, new ItemStack(this.getItem(stack).getItem(), this.getItem(stack).getMaxStackSize()));
+                    if (!this.getItem(stack2).isEmpty()) {
+                        this.setItem(stack2, new ItemStack(this.getItem(stack2).getItem(), this.getItem(stack2).getCount() + count2));
                     } else {
-                        this.setStack(stack2, new ItemStack(output, count2));
+                        this.setItem(stack2, new ItemStack(output, count2));
                     }
                 }
                 durability--;
             } else {
-                this.removeStack(BAIT_SLOT, 1);
-                this.setStack(stack, new ItemStack(output, count));
+                this.removeItem(BAIT_SLOT, 1);
+                this.setItem(stack, new ItemStack(output, count));
                 durability--;
             }
         }
@@ -259,36 +259,36 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
     protected int checkSecondStack(Item item, int current, int count2) {
         if (count2 < 1) return -1;
         for (int i = 1; i < 19; i++) {
-            if (((this.getStack(i).getItem() == item && this.getStack(i).getCount() < this.getStack(i).getMaxCount()) || this.getStack(i).isEmpty()) && current != i) return i;
+            if (((this.getItem(i).getItem() == item && this.getItem(i).getCount() < this.getItem(i).getMaxStackSize()) || this.getItem(i).isEmpty()) && current != i) return i;
         }
         return -2;
     } 
 
     protected int checkStack(Item item) {
         for (int i = 1; i <= 18; i++) {
-            if ((this.getStack(i).getItem() == item && this.getStack(i).getCount() < this.getStack(i).getMaxCount()) || this.getStack(i).isEmpty()) return i;
+            if ((this.getItem(i).getItem() == item && this.getItem(i).getCount() < this.getItem(i).getMaxStackSize()) || this.getItem(i).isEmpty()) return i;
         }
        return -1;
     }
 
     protected Item selectOutput(Item item) {
-        Random random = Random.create();
-        Item bait = this.getStack(BAIT_SLOT).getItem();
+        RandomSource random = RandomSource.create();
+        Item bait = this.getItem(BAIT_SLOT).getItem();
         if (bait.equals(ShellfishItems.SHELLFISH_BAIT) || bait.equals(ShellfishItems.DRIED_SHELLFISH_BAIT)) {
-            int factor = random.nextBetween(1, getOutputInts()[0]);
+            int factor = random.nextIntBetweenInclusive(1, getOutputInts()[0]);
             if (factor <= getOutputInts()[2]) {
-                return selectTreasure(random.nextBetween(1, getOutputInts()[6]));
+                return selectTreasure(random.nextIntBetweenInclusive(1, getOutputInts()[6]));
             } else if (factor <= getOutputInts()[4]) {
-                return selectJunk(random.nextBetween(1, getOutputInts()[7]));
+                return selectJunk(random.nextIntBetweenInclusive(1, getOutputInts()[7]));
             } else {
                 return item;
             }
         } else {
-            int factor = random.nextBetween(1, getOutputInts()[1]);
+            int factor = random.nextIntBetweenInclusive(1, getOutputInts()[1]);
             if (factor <= getOutputInts()[3]) {
-                return selectTreasure(random.nextBetween(1, getOutputInts()[6]));
+                return selectTreasure(random.nextIntBetweenInclusive(1, getOutputInts()[6]));
             } else if (factor <= getOutputInts()[5]) {
-                return selectJunk(random.nextBetween(1, getOutputInts()[7]));
+                return selectJunk(random.nextIntBetweenInclusive(1, getOutputInts()[7]));
             } else {
                 return item;
             }
@@ -313,9 +313,9 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
     }
 
     private Optional<ShellfishTrapRecipe> getCurrentRecipe() {
-        ShellfishTrapRecipeInput recipe = new ShellfishTrapRecipeInput(inventory.get(BAIT_SLOT), this.getWorld().getBiome(pos).getIdAsString());
-        if (!world.isClient) {
-            Optional<RecipeEntry<ShellfishTrapRecipe>> value = ServerRecipeManager.createCachedMatchGetter(ShellfishTrapRecipe.Type.INSTANCE).getFirstMatch(recipe, (ServerWorld)world);
+        ShellfishTrapRecipeInput recipe = new ShellfishTrapRecipeInput(inventory.get(BAIT_SLOT), this.getLevel().getBiome(worldPosition).getRegisteredName());
+        if (!level.isClientSide()) {
+            Optional<RecipeHolder<ShellfishTrapRecipe>> value = RecipeManager.createCheck(ShellfishTrapRecipe.Type.INSTANCE).getRecipeFor(recipe, (ServerLevel)level);
             if (value.isPresent()) {
                 return Optional.of(value.get().value());
             }
@@ -323,8 +323,8 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
         return Optional.empty();
     }
 
-    public boolean biomeMatch(World world, String biome) {
-        String currentBiome = world.getBiome(this.getPos()).getKey().get().getValue().toString();
+    public boolean biomeMatch(Level world, String biome) {
+        String currentBiome = world.getBiome(this.getBlockPos()).unwrapKey().get().identifier().toString();
         if (currentBiome.equals(biome)) {
             return true;
         } else {
@@ -333,46 +333,46 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
     }
 
     @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction dir) {
         return slot == BAIT_SLOT;
     }
 
     @Override
-    public boolean canExtract(int slot, ItemStack stack, @Nullable Direction dir) {
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, @Nullable Direction dir) {
         return slot != BAIT_SLOT;
     }
 
     @Override
-    public ScreenHandler createScreenHandler(int var1, PlayerInventory var2) {
+    public AbstractContainerMenu createMenu(int var1, Inventory var2) {
         return new ShellfishTrapScreenHandler(var1, var2, this, delegate);
     }
         
     protected boolean canInsertIntoOutputSlots() {
         for (int i = 1; i <= 18; i++) {
-            if (this.getStack(i).isEmpty() || this.getStack(i).getCount() < this.getStack(i).getMaxCount()) return true;
+            if (this.getItem(i).isEmpty() || this.getItem(i).getCount() < this.getItem(i).getMaxStackSize()) return true;
         }
         return false;
     }
 
-    protected boolean checkProperConditions(World world, BlockPos pos, BlockState state) {
+    protected boolean checkProperConditions(Level world, BlockPos pos, BlockState state) {
         int i = 0;
-        if (world.getFluidState(pos.up(1)).getFluid() == Fluids.WATER) i++;
-        if (world.getFluidState(pos.north(1)).getFluid() == Fluids.WATER) i++;
-        if (world.getFluidState(pos.east(1)).getFluid() == Fluids.WATER) i++;
-        if (world.getFluidState(pos.west(1)).getFluid() == Fluids.WATER) i++;
-        if (world.getFluidState(pos.south(1)).getFluid() == Fluids.WATER) i++;
+        if (world.getFluidState(pos.above(1)).getType() == Fluids.WATER) i++;
+        if (world.getFluidState(pos.north(1)).getType() == Fluids.WATER) i++;
+        if (world.getFluidState(pos.east(1)).getType() == Fluids.WATER) i++;
+        if (world.getFluidState(pos.west(1)).getType() == Fluids.WATER) i++;
+        if (world.getFluidState(pos.south(1)).getType() == Fluids.WATER) i++;
 
         if (world.getBlockState(pos.north(1)).getBlock() instanceof AbstractTrapBlock) return false;
         if (world.getBlockState(pos.south(1)).getBlock() instanceof AbstractTrapBlock) return false;
         if (world.getBlockState(pos.east(1)).getBlock() instanceof AbstractTrapBlock) return false;
         if (world.getBlockState(pos.west(1)).getBlock() instanceof AbstractTrapBlock) return false;
 
-        if (world.getEntitiesByType(EntityType.HOPPER_MINECART, new Box(pos.down(1)), entity -> true).size() > 0) return false;
+        if (world.getEntities(EntityType.HOPPER_MINECART, new AABB(pos.below(1)), entity -> true).size() > 0) return false;
         
-        if (this.getWorld() != null && this.getWorld().getBlockState(this.getPos()).getBlock() instanceof AbstractTrapBlock) {
-            BlockState state1 = this.getWorld().getBlockState(this.getPos());
-            if (state1.contains(AbstractTrapBlock.FACING)) {
-                Direction dir = state.get(AbstractTrapBlock.FACING);
+        if (this.getLevel() != null && this.getLevel().getBlockState(this.getBlockPos()).getBlock() instanceof AbstractTrapBlock) {
+            BlockState state1 = this.getLevel().getBlockState(this.getBlockPos());
+            if (state1.hasProperty(AbstractTrapBlock.FACING)) {
+                Direction dir = state.getValue(AbstractTrapBlock.FACING);
                 switch (dir) {
                     case NORTH, SOUTH -> {
                         if (!checkNotCovered(world, pos.south(1), pos.north(1), pos)) {
@@ -388,14 +388,14 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
                 }
             }
         }
-        return (i >= 3) && !state.getFluidState().isEmpty() && world.getBlockState(pos.down(1)).isSideSolidFullSquare(world, pos, Direction.UP) && !world.getBlockState(pos.down(1)).isTransparent();
+        return (i >= 3) && !state.getFluidState().isEmpty() && world.getBlockState(pos.below(1)).isFaceSturdy(world, pos, Direction.UP) && !world.getBlockState(pos.below(1)).propagatesSkylightDown();
     }
 
-    protected boolean checkNotCovered(World world, BlockPos pos1, BlockPos pos2, BlockPos pos) {
-        if (world.getFluidState(pos1).getFluid() != Fluids.WATER && world.getFluidState(pos2).getFluid() != Fluids.WATER) return false;
-        else if (world.getBlockState(pos1).isFullCube(world, pos) && world.getFluidState(pos2).getFluid() != Fluids.WATER) return false;
-        else if (world.getBlockState(pos2).isFullCube(world, pos) && world.getFluidState(pos1).getFluid() != Fluids.WATER) return false;
-        else if (world.getBlockState(pos1).isFullCube(world, pos) && world.getBlockState(pos2).isFullCube(world, pos)) return false;
+    protected boolean checkNotCovered(Level world, BlockPos pos1, BlockPos pos2, BlockPos pos) {
+        if (world.getFluidState(pos1).getType() != Fluids.WATER && world.getFluidState(pos2).getType() != Fluids.WATER) return false;
+        else if (world.getBlockState(pos1).isCollisionShapeFullBlock(world, pos) && world.getFluidState(pos2).getType() != Fluids.WATER) return false;
+        else if (world.getBlockState(pos2).isCollisionShapeFullBlock(world, pos) && world.getFluidState(pos1).getType() != Fluids.WATER) return false;
+        else if (world.getBlockState(pos1).isCollisionShapeFullBlock(world, pos) && world.getBlockState(pos2).isCollisionShapeFullBlock(world, pos)) return false;
         else return true;
     }
 
@@ -409,7 +409,7 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
         if (durability > maxDurability) {
             durability = maxDurability;
         }
-        markDirty();
+        setChanged();
     }
 
     public void setDurability(int value) {
@@ -419,49 +419,44 @@ public abstract class AbstractTrapBlockEntity extends LockableContainerBlockEnti
         } else {
             setBroken(false);
         }
-        markDirty();
+        setChanged();
     }
 
     public void setBroken(boolean value) {
-        if (world != null) {
-            BlockState state = world.getBlockState(pos);
+        if (level != null) {
+            BlockState state = level.getBlockState(worldPosition);
             if (state.getBlock() instanceof AbstractTrapBlock) {
-                world.setBlockState(pos, state.with(AbstractTrapBlock.BROKEN, value), Block.NOTIFY_LISTENERS);
+                level.setBlock(worldPosition, state.setValue(AbstractTrapBlock.BROKEN, value), Block.UPDATE_CLIENTS);
             }
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_LISTENERS);
-            markDirty();
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+            setChanged();
         }
     }
 
     @Override
-    protected DefaultedList<ItemStack> getHeldStacks() {
-        return this.inventory;
-    }
-
-    @Override
-    protected void setHeldStacks(DefaultedList<ItemStack> inventory) {
+    protected void setItems(NonNullList<ItemStack> inventory) {
         this.inventory = inventory;
-        markDirty();
+        setChanged();
     }
 
     @Override
-    protected void readComponents(ComponentsAccess components) {
-        super.readComponents(components);
+    protected void applyImplicitComponents(DataComponentGetter components) {
+        super.applyImplicitComponents(components);
         this.durability = components.getOrDefault(ShellfishComponents.DURABILITY_COMPONENT, maxDurability);
-        markDirty();
+        setChanged();
     }
  
     @Override
-    protected void addComponents(ComponentMap.Builder componentMapBuilder) {
-        super.addComponents(componentMapBuilder);
+    protected void collectImplicitComponents(DataComponentMap.Builder componentMapBuilder) {
+        super.collectImplicitComponents(componentMapBuilder);
         if (durability < maxDurability) {
-            componentMapBuilder.add(ShellfishComponents.DURABILITY_COMPONENT, durability);
+            componentMapBuilder.set(ShellfishComponents.DURABILITY_COMPONENT, durability);
         }
     }
  
     @Override
-    public void removeFromCopiedStackData(WriteView nbt) {
-        super.removeFromCopiedStackData(nbt);
-        nbt.remove("durability");
+    public void removeComponentsFromTag(ValueOutput nbt) {
+        super.removeComponentsFromTag(nbt);
+        nbt.discard("durability");
     }
 }

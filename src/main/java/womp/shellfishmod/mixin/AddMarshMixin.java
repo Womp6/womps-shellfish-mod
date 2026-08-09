@@ -10,39 +10,39 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.datafixers.util.Pair;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.util.MultiNoiseUtil;
-import net.minecraft.world.biome.source.util.VanillaBiomeParameters;
-import net.minecraft.world.biome.source.util.MultiNoiseUtil.ParameterRange;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.biome.Climate.Parameter;
+import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import womp.shellfishmod.registry.ShellfishWorldgen;
 
-@Mixin(VanillaBiomeParameters.class)
+@Mixin(OverworldBiomeBuilder.class)
 public class AddMarshMixin {
 
-    private static MultiNoiseUtil.ParameterRange temp = ParameterRange.of(-0.15f, 0.55f),
-        humidity = ParameterRange.of(-1.0f, 1.0f),
-        continentalness = ParameterRange.combine(ParameterRange.of(-0.11f, 0.03f), ParameterRange.of(0.3f, 1.0f)),
-        continentalness2 = ParameterRange.combine(ParameterRange.of(-0.11f, 0.55f), ParameterRange.of(0.3f, 1.0f)),
-        erosion = ParameterRange.of(0.55f, 1.0f);
+    private static Climate.Parameter temp = Parameter.span(-0.15f, 0.55f),
+        humidity = Parameter.span(-1.0f, 1.0f),
+        continentalness = Parameter.span(Parameter.span(-0.11f, 0.03f), Parameter.span(0.3f, 1.0f)),
+        continentalness2 = Parameter.span(Parameter.span(-0.11f, 0.55f), Parameter.span(0.3f, 1.0f)),
+        erosion = Parameter.span(0.55f, 1.0f);
 
 
-    @Inject(method = "writeLowBiomes", at = @At("RETURN"))
-    public void writeLowBiomes(Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> parameters, MultiNoiseUtil.ParameterRange weirdness, CallbackInfo callback) {
+    @Inject(method = "addLowSlice", at = @At("RETURN"))
+    public void writeLowBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, Climate.Parameter weirdness, CallbackInfo callback) {
         if (!FabricLoader.getInstance().isModLoaded("terrablender")) {
             this.writeBiomeParameters(parameters, temp, humidity, continentalness, erosion, weirdness, 0.0f, ShellfishWorldgen.MARSH);
         }
     }
 
-    @Inject(method = "writeValleyBiomes", at = @At("RETURN"))
-    public void writeValleyBiomes(Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> parameters, MultiNoiseUtil.ParameterRange weirdness, CallbackInfo callback) {
+    @Inject(method = "addValleys", at = @At("RETURN"))
+    public void writeValleyBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, Climate.Parameter weirdness, CallbackInfo callback) {
         if (!FabricLoader.getInstance().isModLoaded("terrablender")) {
             this.writeBiomeParameters(parameters, temp, humidity, continentalness2, erosion, weirdness, 0.0f, ShellfishWorldgen.MARSH);
         }
     }
 
-    private void writeBiomeParameters(Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> parameters, MultiNoiseUtil.ParameterRange temperature, MultiNoiseUtil.ParameterRange humidity, MultiNoiseUtil.ParameterRange continentalness, MultiNoiseUtil.ParameterRange erosion, MultiNoiseUtil.ParameterRange weirdness, float offset, RegistryKey<Biome> biome) {
-        parameters.accept(Pair.of(MultiNoiseUtil.createNoiseHypercube(temperature, humidity, continentalness, erosion, MultiNoiseUtil.ParameterRange.of(0.0f), weirdness, offset), biome));
-        parameters.accept(Pair.of(MultiNoiseUtil.createNoiseHypercube(temperature, humidity, continentalness, erosion, MultiNoiseUtil.ParameterRange.of(1.0f), weirdness, offset), biome));
+    private void writeBiomeParameters(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset, ResourceKey<Biome> biome) {
+        parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(0.0f), weirdness, offset), biome));
+        parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(1.0f), weirdness, offset), biome));
     }
 }

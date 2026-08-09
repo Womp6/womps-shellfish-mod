@@ -1,0 +1,13 @@
+{
+    "values": [
+        "shellfish:shellfish_trapper/2/raw_clam_and_emerald_cooked_clam",
+        "shellfish:shellfish_trapper/2/raw_crab_and_emerald_cooked_crab",
+        "shellfish:shellfish_trapper/2/raw_crayfish_and_emerald_cooked_crayfish",
+        "shellfish:shellfish_trapper/2/raw_lobster_and_emerald_cooked_lobster",
+        "shellfish:shellfish_trapper/2/raw_mussel_and_emerald_cooked_mussel",
+        "shellfish:shellfish_trapper/2/raw_oyster_and_emerald_cooked_oyster",
+        "shellfish:shellfish_trapper/2/raw_sea_snail_and_emerald_cooked_sea_snail",
+        "shellfish:shellfish_trapper/2/raw_shrimp_and_emerald_cooked_shrimp",
+        "shellfish:shellfish_trapper/2/raw_uni_and_emerald_cooked_uni"
+    ]
+}

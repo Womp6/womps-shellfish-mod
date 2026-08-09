@@ -1,10 +1,10 @@
 package womp.shellfishmod.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 public class ShellfishTags {
     
@@ -18,7 +18,7 @@ public class ShellfishTags {
         public static final TagKey<Item> EMPTY_TAG = createTag("empty_tag");
 
         private static TagKey<Item> createTag(String name) {
-            return TagKey.of(RegistryKeys.ITEM, Identifier.of("shellfish", name));
+            return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("shellfish", name));
         }
     }
 
@@ -27,7 +27,7 @@ public class ShellfishTags {
         public static final TagKey<Block> SHELLFISH_SPAWNABLE_ON = createTag("shellfish_spawnable_on");
 
         private static TagKey<Block> createTag(String name) {
-            return TagKey.of(RegistryKeys.BLOCK, Identifier.of("shellfish", name));
+            return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("shellfish", name));
         } 
     }
 }

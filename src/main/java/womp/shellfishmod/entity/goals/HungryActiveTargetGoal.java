@@ -1,51 +1,49 @@
 package womp.shellfishmod.entity.goals;
 
 import java.util.EnumSet;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions.Selector;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.ai.TargetPredicate.EntityPredicate;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.TrackTargetGoal;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Box;
 import womp.shellfishmod.command.ShellfishStateUtil;
 import womp.shellfishmod.entity.parents.Hungry;
 
-public class HungryActiveTargetGoal<T extends LivingEntity> extends TrackTargetGoal {
+public class HungryActiveTargetGoal<T extends LivingEntity> extends TargetGoal {
     protected final Class<T> targetClass;
 
     protected final int reciprocalChance;
     protected @Nullable LivingEntity targetEntity;
-    protected TargetPredicate targetPredicate;
+    protected TargetingConditions targetPredicate;
 
-    public HungryActiveTargetGoal(MobEntity mob, Class<T> targetClass, boolean checkVisibility) {
+    public HungryActiveTargetGoal(Mob mob, Class<T> targetClass, boolean checkVisibility) {
         this(mob, targetClass, 10, checkVisibility, false, null);
     }
 
-    public HungryActiveTargetGoal(MobEntity mob, Class<T> targetClass, boolean checkVisibility, EntityPredicate targetPredicate) {
+    public HungryActiveTargetGoal(Mob mob, Class<T> targetClass, boolean checkVisibility, Selector targetPredicate) {
         this(mob, targetClass, 10, checkVisibility, false, targetPredicate);
     }
 
-    public HungryActiveTargetGoal(MobEntity mob, Class<T> targetClass, boolean checkVisibility, boolean checkCanNavigate) {
+    public HungryActiveTargetGoal(Mob mob, Class<T> targetClass, boolean checkVisibility, boolean checkCanNavigate) {
         this(mob, targetClass, 10, checkVisibility, checkCanNavigate, null);
     }
 
-    public HungryActiveTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable EntityPredicate targetPredicate) {
+    public HungryActiveTargetGoal(Mob mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Selector targetPredicate) {
         super(mob, checkVisibility, checkCanNavigate);
         this.targetClass = targetClass;
-        this.reciprocalChance = HungryActiveTargetGoal.toGoalTicks(reciprocalChance);
-        this.setControls(EnumSet.of(Goal.Control.TARGET));
-        this.targetPredicate = TargetPredicate.createAttackable().setBaseMaxDistance(this.getFollowRange()).setPredicate(targetPredicate);
+        this.reciprocalChance = HungryActiveTargetGoal.reducedTickDelay(reciprocalChance);
+        this.setFlags(EnumSet.of(Goal.Flag.TARGET));
+        this.targetPredicate = TargetingConditions.forCombat().range(this.getFollowDistance()).selector(targetPredicate);
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         if (this.reciprocalChance > 0 && this.mob.getRandom().nextInt(this.reciprocalChance) != 0) {
             return false;
         }
@@ -54,7 +52,7 @@ public class HungryActiveTargetGoal<T extends LivingEntity> extends TrackTargetG
             return false;
         }
 
-        ServerWorld world = (ServerWorld) this.mob.getWorld();
+        ServerLevel world = (ServerLevel) this.mob.level();
 
         if (ShellfishStateUtil.isShellfishPassive(world)) {
             return false;
@@ -64,13 +62,13 @@ public class HungryActiveTargetGoal<T extends LivingEntity> extends TrackTargetG
         return this.targetEntity != null;
     }
 
-    protected Box getSearchBox(double distance) {
-        return this.mob.getBoundingBox().expand(distance, 4.0, distance);
+    protected AABB getSearchBox(double distance) {
+        return this.mob.getBoundingBox().inflate(distance, 4.0, distance);
     }
 
     protected void findClosestTarget() {
-        ServerWorld server = (ServerWorld) this.mob.getWorld();
-        this.targetEntity = this.targetClass == PlayerEntity.class || this.targetClass == ServerPlayerEntity.class ? server.getClosestPlayer(this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ()) : server.getClosestEntity(this.mob.getWorld().getEntitiesByClass(this.targetClass, this.getSearchBox(this.getFollowRange()), livingEntity -> true), this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+        ServerLevel server = (ServerLevel) this.mob.level();
+        this.targetEntity = this.targetClass == Player.class || this.targetClass == ServerPlayer.class ? server.getNearestPlayer(this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ()) : server.getNearestEntity(this.mob.level().getEntitiesOfClass(this.targetClass, this.getSearchBox(this.getFollowDistance()), livingEntity -> true), this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
     }
 
     @Override
@@ -84,9 +82,9 @@ public class HungryActiveTargetGoal<T extends LivingEntity> extends TrackTargetG
     }
 
     @Override
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         if (this.mob instanceof Hungry hungry && !hungry.isHungry()) return false;
-        if (ShellfishStateUtil.isShellfishPassive((ServerWorld)this.mob.getWorld())) return false;
-        return super.shouldContinue();
+        if (ShellfishStateUtil.isShellfishPassive((ServerLevel)this.mob.level())) return false;
+        return super.canContinueToUse();
     }
 }

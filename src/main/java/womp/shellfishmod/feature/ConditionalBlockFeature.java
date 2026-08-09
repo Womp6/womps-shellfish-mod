@@ -1,32 +1,30 @@
 package womp.shellfishmod.feature;
 
 import java.util.Optional;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import com.mojang.serialization.Codec;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.TallPlantBlock;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.SimpleBlockFeatureConfig;
-import net.minecraft.world.gen.feature.util.FeatureContext;
-import net.minecraft.world.gen.stateprovider.BlockStateProvider;
+public class ConditionalBlockFeature extends Feature<SimpleBlockConfiguration> {
 
-public class ConditionalBlockFeature extends Feature<SimpleBlockFeatureConfig> {
-
-    public ConditionalBlockFeature(Codec<SimpleBlockFeatureConfig> codec) {
+    public ConditionalBlockFeature(Codec<SimpleBlockConfiguration> codec) {
         super(codec);
     }
 
     @Override
-    public boolean generate(FeatureContext<SimpleBlockFeatureConfig> context) {
-        SimpleBlockFeatureConfig config = context.getConfig();
-        StructureWorldAccess world = context.getWorld();
-        BlockPos pos = context.getOrigin();
-        Random random = context.getRandom();
+    public boolean place(FeaturePlaceContext<SimpleBlockConfiguration> context) {
+        SimpleBlockConfiguration config = context.config();
+        WorldGenLevel world = context.level();
+        BlockPos pos = context.origin();
+        RandomSource random = context.random();
 
         BlockStateProvider provider = config.toPlace();
         BlockState state;
@@ -36,16 +34,16 @@ public class ConditionalBlockFeature extends Feature<SimpleBlockFeatureConfig> {
             if (isState.isPresent()) state = isState.get();
             else return false;
         } else {
-            state = provider.get(random, pos);
+            state = provider.getState(world, random, pos);
         }
 
-        if (!state.canPlaceAt(world, pos)) return false;
+        if (!state.canSurvive(world, pos)) return false;
 
-        if (state.getBlock() instanceof TallPlantBlock) {
-            if (!world.isAir(pos.up())) return false;
-            TallPlantBlock.placeAt(world, state, pos, Block.NOTIFY_LISTENERS);
+        if (state.getBlock() instanceof DoublePlantBlock) {
+            if (!world.isEmptyBlock(pos.above())) return false;
+            DoublePlantBlock.placeAt(world, state, pos, Block.UPDATE_CLIENTS);
         } else {
-            world.setBlockState(pos, state, Block.NOTIFY_LISTENERS);
+            world.setBlock(pos, state, Block.UPDATE_CLIENTS);
         }
 
         return true;

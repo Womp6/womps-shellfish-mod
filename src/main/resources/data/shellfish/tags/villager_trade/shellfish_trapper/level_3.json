@@ -1,0 +1,18 @@
+{
+    "values": [
+        "shellfish:shellfish_trapper/3/emerald_crayfish_bucket",
+        "shellfish:shellfish_trapper/3/emerald_lobster_bucket",
+        "shellfish:shellfish_trapper/3/emerald_crab_bucket",
+        "shellfish:shellfish_trapper/3/emerald_shrimp_bucket",
+        "shellfish:shellfish_trapper/3/emerald_sea_snail_bucket",
+        "shellfish:shellfish_trapper/3/emerald_sea_urchin_bucket",
+        "shellfish:shellfish_trapper/3/emerald_clam_bucket",
+        "shellfish:shellfish_trapper/3/emerald_oyster_bucket",
+        "shellfish:shellfish_trapper/3/emerald_mussel_bucket",
+        "shellfish:shellfish_trapper/3/rockweed_emerald",
+        "shellfish:shellfish_trapper/3/water_lettuce_emerald",
+        "shellfish:shellfish_trapper/3/paddleweed_emerald",
+        "shellfish:shellfish_trapper/3/eelgrass_emerald",
+        "shellfish:shellfish_trapper/3/sea_lettuce_emerald"
+    ]
+}

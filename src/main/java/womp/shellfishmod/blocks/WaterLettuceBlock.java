@@ -1,75 +1,74 @@
 package womp.shellfishmod.blocks;
 
 import com.mojang.serialization.MapCodec;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.PlantBlock;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCollisionHandler;
-import net.minecraft.entity.vehicle.BoatEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.vehicle.boat.Boat;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import womp.shellfishmod.util.config.ShellfishConfig;
 
-public class WaterLettuceBlock extends PlantBlock implements BlockEntityProvider {
+public class WaterLettuceBlock extends VegetationBlock implements EntityBlock {
 
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(2.5, -1.0, 2.5, 13.5, 0.5, 13.5);
-    protected static final VoxelShape SHAPE_2D = Block.createCuboidShape(1.0, 0.0, 1.0, 15.0, 1.5, 15.0);
+    protected static final VoxelShape SHAPE = Block.box(2.5, -1.0, 2.5, 13.5, 0.5, 13.5);
+    protected static final VoxelShape SHAPE_2D = Block.box(1.0, 0.0, 1.0, 15.0, 1.5, 15.0);
 
-    public static final BooleanProperty SHOW_3D = BooleanProperty.of("is3d");
-    public static final BooleanProperty IS_SWAMP = BooleanProperty.of("swamp");
-    public static final BooleanProperty IS_MARSH = BooleanProperty.of("marsh");
+    public static final BooleanProperty SHOW_3D = BooleanProperty.create("is3d");
+    public static final BooleanProperty IS_SWAMP = BooleanProperty.create("swamp");
+    public static final BooleanProperty IS_MARSH = BooleanProperty.create("marsh");
 
-    public static final MapCodec<WaterLettuceBlock> CODEC = createCodec(WaterLettuceBlock::new);
+    public static final MapCodec<WaterLettuceBlock> CODEC = simpleCodec(WaterLettuceBlock::new);
 
-    public WaterLettuceBlock(Settings settings) {
+    public WaterLettuceBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(SHOW_3D, true).with(IS_SWAMP, false).with(IS_MARSH, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(SHOW_3D, true).setValue(IS_SWAMP, false).setValue(IS_MARSH, false));
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(SHOW_3D).add(IS_SWAMP).add(IS_MARSH);
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
-        if (world instanceof ServerWorld && entity instanceof BoatEntity) {
-            world.breakBlock(new BlockPos(pos), true, entity);
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl) {
+        if (world instanceof ServerLevel && entity instanceof Boat) {
+            world.destroyBlock(new BlockPos(pos), true, entity);
         }
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return ShellfishConfig.getShellfishGraphics() >= 1 ? SHAPE : SHAPE_2D;
     }
 
     @Override
-    protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
+    protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos) {
         FluidState fluidState = world.getFluidState(pos);
-        FluidState fluidState2 = world.getFluidState(pos.up());
-        return fluidState.getFluid() == Fluids.WATER && fluidState2.getFluid() == Fluids.EMPTY;
+        FluidState fluidState2 = world.getFluidState(pos.above());
+        return fluidState.getType() == Fluids.WATER && fluidState2.getType() == Fluids.EMPTY;
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos var1, BlockState var2) {
+    public BlockEntity newBlockEntity(BlockPos var1, BlockState var2) {
         return new WaterLettuceBlockEntity(var1, var2);
     }
 
     @Override
-    protected MapCodec<? extends PlantBlock> getCodec() {
+    protected MapCodec<? extends VegetationBlock> codec() {
         return CODEC;
     }
 }

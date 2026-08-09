@@ -1,26 +1,26 @@
 package womp.shellfishmod.entity.goals;
 
-import net.minecraft.entity.ai.goal.RevengeGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.player.Player;
 import womp.shellfishmod.command.ShellfishStateUtil;
 
-public class HungryRevengeGoal extends RevengeGoal {
+public class HungryRevengeGoal extends HurtByTargetGoal {
 
-    public HungryRevengeGoal(PathAwareEntity mob, Class<?>[] noRevengeTypes) {
+    public HungryRevengeGoal(PathfinderMob mob, Class<?>[] noRevengeTypes) {
         super(mob, noRevengeTypes);
     }
 
     @Override
-    public boolean canStart() {
-        if (ShellfishStateUtil.isShellfishPassive((ServerWorld)this.mob.getWorld()) && !(target instanceof PlayerEntity)) return false;
-        return super.canStart();
+    public boolean canUse() {
+        if (ShellfishStateUtil.isShellfishPassive((ServerLevel)this.mob.level()) && !(targetMob instanceof Player)) return false;
+        return super.canUse();
     }
     
     @Override
-    public boolean shouldContinue() {
-        if (ShellfishStateUtil.isShellfishPassive((ServerWorld)this.mob.getWorld()) && !(target instanceof PlayerEntity)) return false;
-        return super.shouldContinue();
+    public boolean canContinueToUse() {
+        if (ShellfishStateUtil.isShellfishPassive((ServerLevel)this.mob.level()) && !(targetMob instanceof Player)) return false;
+        return super.canContinueToUse();
     }
 }

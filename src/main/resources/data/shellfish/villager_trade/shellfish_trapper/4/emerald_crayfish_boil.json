@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "shellfish:crayfish_boil"
+  },
+  "max_uses": 8.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": 4,
+    "id": "minecraft:emerald"
+  },
+  "xp": 35.0
+}

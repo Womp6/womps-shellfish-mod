@@ -1,48 +1,47 @@
 package womp.shellfishmod.entity.parents;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Bucketable;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.Bucketable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.pathing.PathNodeType;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.biome.BiomeKeys;
 import womp.shellfishmod.entity.parents.ShellfishEntity.ShellfishVariant;
 import womp.shellfishmod.registry.ShellfishWorldgen;
 import womp.shellfishmod.util.ShellfishTags;
 
-public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> extends AnimalEntity implements Bucketable {
+public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> extends Animal implements Bucketable {
     
     protected @Nullable SoundEvent hostileSound;
     protected static int depth;
@@ -60,14 +59,14 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     public final AnimationState moveAnimationState = new AnimationState();
     private int tickCounter = 0;    // For hungry feature
     private int slowCounter = 0;    // For mobs with broken animations
-    private static final TrackedData<Integer> VARIANT = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final TrackedData<Boolean> FROM_BUCKET = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    private static final TrackedData<Boolean> NEWBORN = DataTracker.registerData(ShellfishEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(ShellfishEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(ShellfishEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> NEWBORN = SynchedEntityData.defineId(ShellfishEntity.class, EntityDataSerializers.BOOLEAN);
     public int partnerVariantStorage = -1;
     
-    public ShellfishEntity(EntityType<? extends ShellfishEntity<?>> entityType, World world) {
+    public ShellfishEntity(EntityType<? extends ShellfishEntity<?>> entityType, Level world) {
         super(entityType, world);
-        this.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
+        this.setPathfindingMalus(PathType.WATER, 0.0f);
         hostileSound = null;    // Gets the hostile sound, if any
         depth = 26;             // Indicates the spawn depth of the mob; 26 blocks is default
         isIdleEntity = false;   // For mobs that do mostly nothing, such as the clam
@@ -81,9 +80,9 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
 
     public boolean isIdle() {
         if (waterIdle) {
-            return this.lastX == this.getX() && this.lastZ == this.getZ() && this.isTouchingWater();
+            return this.xo == this.getX() && this.zo == this.getZ() && this.isInWater();
         }
-        return this.lastX == this.getX() && this.lastZ == this.getZ();
+        return this.xo == this.getX() && this.zo == this.getZ();
     }
 
     /**
@@ -100,11 +99,11 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
      * <p> Mussel: moving and in water
      */
     public boolean isWalking() {
-        if (this.lastX != this.getX()) {
-            return waterWalking ? this.isTouchingWater() : true;
+        if (this.xo != this.getX()) {
+            return waterWalking ? this.isInWater() : true;
         }
-        if (this.lastZ != this.getZ()) {
-            return waterWalking ? this.isTouchingWater() : true;
+        if (this.zo != this.getZ()) {
+            return waterWalking ? this.isInWater() : true;
         }
         return false;
     }
@@ -113,7 +112,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     protected void setupAnimationStates() {
         
         if (brokenAnim ? isIdle() && slowCounter >= 3 : isIdle()) {
-            this.idleAnimationState.startIfNotRunning(this.age);
+            this.idleAnimationState.startIfStopped(this.tickCount);
             this.moveAnimationState.stop();
         } else {
             this.idleAnimationState.stop();
@@ -122,10 +121,10 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
 
         if (this.isWalking()) {
             slowCounter = 0;
-            this.moveAnimationState.startIfNotRunning(this.age);
+            this.moveAnimationState.startIfStopped(this.tickCount);
         }
 
-        if (isIdleEntity && !isTouchingWater()) {
+        if (isIdleEntity && !isInWater()) {
             this.moveAnimationState.stop();
             slowCounter = 0;
         }
@@ -134,10 +133,10 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     @Override
     public void tick() {
         super.tick();
-        if (!this.getWorld().isClient && this.isBaby()) this.setNewborn(this.getBreedingAge() <= -12000);
+        if (!this.level().isClientSide() && this.isBaby()) this.setNewborn(this.getAge() <= -12000);
 
         // ANIMATION
-        if (this.getWorld().isClient()) {
+        if (this.level().isClientSide()) {
             this.setupAnimationStates();
         }
 
@@ -148,34 +147,34 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     }
 
     @Override
-    public boolean canSpawn(WorldView world) {
-        return world.doesNotIntersectEntities(this);
+    public boolean checkSpawnObstruction(LevelReader world) {
+        return world.isUnobstructed(this);
     }
 
-    public static boolean canSpawn(EntityType<? extends ShellfishEntity<?>> type, WorldAccess world, SpawnReason reason, BlockPos pos, Random random) {
+    public static boolean canSpawn(EntityType<? extends ShellfishEntity<?>> type, LevelAccessor world, EntitySpawnReason reason, BlockPos pos, RandomSource random) {
         int i = world.getSeaLevel();
         int j = i - depth;
-        return pos.getY() >= j && pos.getY() < i && (world.getFluidState(pos.up()).isIn(FluidTags.WATER) || world.getFluidState(pos.down()).isIn(FluidTags.WATER)) && world.getFluidState(pos).isIn(FluidTags.WATER) && ((world.getBiome(pos).matchesKey(ShellfishWorldgen.MARSH) || world.getBiome(pos).matchesKey(BiomeKeys.SWAMP) || world.getBiome(pos).matchesKey(BiomeKeys.MANGROVE_SWAMP)) ? isLightLevelValidForNaturalSpawn(world, pos) : true);
+        return pos.getY() >= j && pos.getY() < i && (world.getFluidState(pos.above()).is(FluidTags.WATER) || world.getFluidState(pos.below()).is(FluidTags.WATER)) && world.getFluidState(pos).is(FluidTags.WATER) && ((world.getBiome(pos).is(ShellfishWorldgen.MARSH) || world.getBiome(pos).is(Biomes.SWAMP) || world.getBiome(pos).is(Biomes.MANGROVE_SWAMP)) ? isBrightEnoughToSpawn(world, pos) : true);
     }
 
     @Override
-    public boolean isFromBucket() {
-        return this.dataTracker.get(FROM_BUCKET);
+    public boolean fromBucket() {
+        return this.entityData.get(FROM_BUCKET);
     }
 
     @Override
-    public boolean isPushedByFluids() {
+    public boolean isPushedByFluid() {
         return false;
     }
 
     // Default travel method for in water movement (to make it look natural)
     @Override
-    public void travel(Vec3d movementInput) {
-        if (this.isTouchingWater() && slow && this.canMoveVoluntarily()) {
-            this.updateVelocity(tSpeed, movementInput);
-            this.move(MovementType.SELF, this.getVelocity());
-            if (this.isAttacking()) this.setVelocity(this.getVelocity().multiply(.8, .85, .8).add(0, -0.01, 0));
-            else this.setVelocity(this.getVelocity().multiply(.8, .825, .8).add(0, -0.01d, 0));
+    public void travel(Vec3 movementInput) {
+        if (this.isInWater() && slow && this.canSimulateMovement()) {
+            this.moveRelative(tSpeed, movementInput);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            if (this.isAggressive()) this.setDeltaMovement(this.getDeltaMovement().multiply(.8, .85, .8).add(0, -0.01, 0));
+            else this.setDeltaMovement(this.getDeltaMovement().multiply(.8, .825, .8).add(0, -0.01d, 0));
         } else {
             super.travel(movementInput);
         }
@@ -183,38 +182,38 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
 
     @Override
     public void setFromBucket(boolean fromBucket) {
-        this.dataTracker.set(FROM_BUCKET, fromBucket);
+        this.entityData.set(FROM_BUCKET, fromBucket);
     }
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(VARIANT, 0);
-        builder.add(FROM_BUCKET, false);
-        builder.add(NEWBORN, true);
-        builder.add(EggLaying.HAS_EGG, false);
-        builder.add(Hungry.IS_HUNGRY, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(VARIANT, 0);
+        builder.define(FROM_BUCKET, false);
+        builder.define(NEWBORN, true);
+        builder.define(EggLaying.HAS_EGG, false);
+        builder.define(Hungry.IS_HUNGRY, false);
     }
 
     @Override
-    public boolean damage(ServerWorld world, DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel world, DamageSource source, float amount) {
         if (this.isInvulnerableTo(world, source)) {
             return false;
         } else {
-            Entity entity = source.getAttacker();
-            if (entity != null && !(entity instanceof PlayerEntity) && !(entity instanceof ArrowEntity)) {
+            Entity entity = source.getEntity();
+            if (entity != null && !(entity instanceof Player) && !(entity instanceof Arrow)) {
                 amount = (amount + 1.0f) / 2.0f;
             }
-            return super.damage(world, source, amount);
+            return super.hurtServer(world, source, amount);
         }
     }
 
     @Override
-    public boolean tryAttack(ServerWorld world, Entity target) {
+    public boolean doHurtTarget(ServerLevel world, Entity target) {
         if (hostileSound == null) {return false;}
-        boolean bl = target.damage(world, this.getDamageSources().mobAttack(this), (float)(this.getAttributeValue(EntityAttributes.ATTACK_DAMAGE)));
+        boolean bl = target.hurtServer(world, this.damageSources().mobAttack(this), (float)(this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
         if (bl) {
-           this.onAttacking(target);
+           this.setLastHurtMob(target);
            this.playSound(hostileSound, 1.0f, 1.0f);
         }
   
@@ -222,18 +221,18 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     }
 
     public T getVariant() {
-        return byId(this.dataTracker.get(VARIANT));
+        return byId(this.entityData.get(VARIANT));
     }
 
     public void setVariant(T variant) {
-        this.dataTracker.set(VARIANT, variant.getIndex());
+        this.entityData.set(VARIANT, variant.getIndex());
     }
 
     @Override
-    public void writeCustomData(WriteView nbt) {
-        super.writeCustomData(nbt);
+    public void addAdditionalSaveData(ValueOutput nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putInt("Variant", this.getVariant().getIndex());
-        nbt.putBoolean("FromBucket", this.isFromBucket());
+        nbt.putBoolean("FromBucket", this.fromBucket());
         nbt.putBoolean("newborn", this.isNewborn());
         if (this instanceof EggLaying egg) {
             nbt.putBoolean("HasEgg", egg.hasEgg());
@@ -245,74 +244,74 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     }
 
     @Override
-    public void readCustomData(ReadView nbt) {
-        super.readCustomData(nbt);
-        this.setVariant(byId(nbt.getInt("Variant", 0)));
-        this.setFromBucket(nbt.getBoolean("FromBucket", false));
-        this.setNewborn(nbt.getBoolean("newborn", true));
+    public void readAdditionalSaveData(ValueInput nbt) {
+        super.readAdditionalSaveData(nbt);
+        this.setVariant(byId(nbt.getIntOr("Variant", 0)));
+        this.setFromBucket(nbt.getBooleanOr("FromBucket", false));
+        this.setNewborn(nbt.getBooleanOr("newborn", true));
         if (this instanceof EggLaying egg) {
-            egg.setHasEgg(nbt.getBoolean("HasEgg", false));
-            partnerVariantStorage = nbt.getInt("partnerVariantStorage", -1);
+            egg.setHasEgg(nbt.getBooleanOr("HasEgg", false));
+            partnerVariantStorage = nbt.getIntOr("partnerVariantStorage", -1);
         }
         if (this instanceof Hungry hungry) {
-            hungry.setHungry(nbt.getBoolean("IsHungry", false));
+            hungry.setHungry(nbt.getBooleanOr("IsHungry", false));
         }
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void copyDataToStack(ItemStack bucket) {
-        Bucketable.copyDataToStack(this, bucket);
-        NbtComponent.set(DataComponentTypes.BUCKET_ENTITY_DATA, bucket, nbtCompound -> {
+    public void saveToBucketTag(ItemStack bucket) {
+        Bucketable.saveDefaultDataToBucketTag(this, bucket);
+        CustomData.update(DataComponents.BUCKET_ENTITY_DATA, bucket, nbtCompound -> {
             nbtCompound.putInt("Variant", this.getVariant().getIndex());
             nbtCompound.putFloat("Health", this.getHealth());
-            nbtCompound.putInt("Age", this.getBreedingAge());
+            nbtCompound.putInt("Age", this.getAge());
             nbtCompound.putBoolean("newborn", this.isNewborn());
         });
     }
     
     @Override
-    public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        return Bucketable.tryBucket(player, hand, this).orElse(super.interactMob(player, hand));
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        return Bucketable.bucketMobPickup(player, hand, this).orElse(super.mobInteract(player, hand));
     }
 
     @Override
-    public boolean cannotDespawn() {
-        return super.cannotDespawn() || this.isFromBucket();
+    public boolean requiresCustomPersistence() {
+        return super.requiresCustomPersistence() || this.fromBucket();
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void copyDataFromNbt(NbtCompound nbt) {
-        Bucketable.copyDataFromNbt(this, nbt);
-        this.setVariant(byId(nbt.getInt("Variant", 0)));
+    public void loadFromBucketTag(CompoundTag nbt) {
+        Bucketable.loadDefaultDataFromBucketTag(this, nbt);
+        this.setVariant(byId(nbt.getIntOr("Variant", random.nextInt(0, getMaxVariants()))));
         if (nbt.contains("Age")) {
-            this.setBreedingAge(nbt.getInt("Age", 2000));
+            this.setAge(nbt.getIntOr("Age", 2000));
         }
     }
 
     @Override
-    public SoundEvent getBucketFillSound() {
-        return SoundEvents.ITEM_BUCKET_FILL_FISH;
+    public SoundEvent getPickupSound() {
+        return SoundEvents.BUCKET_FILL_FISH;
     }
 
     // Default max air (for clams, oysters, mussles)
     @Override
-    public int getMaxAir() {
+    public int getMaxAirSupply() {
         return 64000;
     }
 
     @SuppressWarnings("deprecation")
     protected void tickAir(int air) {
         if (airBreathing) return;
-        if (this.isAlive() && !this.isTouchingWaterOrRain()) {
-            this.setAir(air - 1);
-            if (this.getAir() == -20) {
-                this.setAir(0);
-                this.serverDamage(getDamageSources().dryOut(), 2.0f);
+        if (this.isAlive() && !this.isInWaterOrRain()) {
+            this.setAirSupply(air - 1);
+            if (this.getAirSupply() == -20) {
+                this.setAirSupply(0);
+                this.hurt(damageSources().dryOut(), 2.0f);
             }
         } else {
-            this.setAir(this.getMaxAir());
+            this.setAirSupply(this.getMaxAirSupply());
         }
         
     }
@@ -320,29 +319,29 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     // Used for suffocation on land when needed
     @Override
     public void baseTick() {
-        int i = this.getAir();
+        int i = this.getAirSupply();
         super.baseTick();
         if (airBreathing) return;
-        if (!this.isAiDisabled()) {
+        if (!this.isNoAi()) {
             this.tickAir(i);
         }
     }
 
     // Default chunk limit
     @Override
-    public int getLimitPerChunk() {
+    public int getMaxSpawnClusterSize() {
         return 6;
     }
 
     @Override
-    public float getPathfindingFavor(BlockPos pos, WorldView world) {
+    public float getWalkTargetValue(BlockPos pos, LevelReader world) {
         return 0.0f;
     }
 
     // Default
     @Override
-    public boolean isBreedingItem(ItemStack item) {
-        return item.isIn(ShellfishTags.Items.EMPTY_TAG);
+    public boolean isFood(ItemStack item) {
+        return item.is(ShellfishTags.Items.EMPTY_TAG);
     }
 
     // Default
@@ -354,25 +353,25 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
         setVariant(byId(variant));
     }
 
-    public interface ShellfishVariant extends StringIdentifiable {
+    public interface ShellfishVariant extends StringRepresentable {
         public int getIndex();
     }
 
     public void setNewborn(boolean value) {
-        this.dataTracker.set(NEWBORN, value);
+        this.entityData.set(NEWBORN, value);
     }
 
     public boolean isNewborn() {
-        return this.dataTracker.get(NEWBORN);
+        return this.entityData.get(NEWBORN);
     }
 
 
     // Used in renderers
-    public void scale(MatrixStack poseStack, float scale, float babyScale) {
+    public void scale(PoseStack poseStack, float scale, float babyScale) {
         scale(poseStack, scale, babyScale, babyScale);
     }
 
-    public void scale(MatrixStack poseStack, float scale, float babyScale, float smallBabyScale) {
+    public void scale(PoseStack poseStack, float scale, float babyScale, float smallBabyScale) {
         if (this.isBaby() && this.isNewborn()) poseStack.scale(smallBabyScale, smallBabyScale, smallBabyScale);
         else if (this.isBaby() && !this.isNewborn()) poseStack.scale(babyScale, babyScale, babyScale);
         else poseStack.scale(scale, scale, scale);

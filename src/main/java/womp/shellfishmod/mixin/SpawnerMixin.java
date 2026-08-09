@@ -2,48 +2,47 @@ package womp.shellfishmod.mixin;
 
 import java.util.Iterator;
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.NaturalSpawner;
+import net.minecraft.world.level.NaturalSpawner.SpawnState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.profiler.Profiler;
-import net.minecraft.util.profiler.Profilers;
-import net.minecraft.world.SpawnHelper;
-import net.minecraft.world.SpawnHelper.Info;
-import net.minecraft.world.chunk.WorldChunk;
 import womp.shellfishmod.registry.ShellfishWorldgen;
 
-@Mixin(SpawnHelper.class)
+@Mixin(NaturalSpawner.class)
 public class SpawnerMixin {
 
     private static final int MARSH_WA_CAP = 30;
 
-    @Inject(method = "spawn", at = @At("HEAD"), cancellable = true)
-    private static void spawnWaterAmbient(ServerWorld world, WorldChunk chunk, Info info, List<SpawnGroup> spawnableGroups, CallbackInfo cb) {
-        if (world.getBiome(chunk.getPos().getCenterAtY(63)).matchesKey(ShellfishWorldgen.MARSH)) {
-            if (waterAmbientBelowCap(info) && !spawnableGroups.contains(SpawnGroup.WATER_AMBIENT)) spawnableGroups.add(SpawnGroup.WATER_AMBIENT);
-            Profiler profiler = Profilers.get();
+    @Inject(method = "spawnForChunk", at = @At("HEAD"), cancellable = true)
+    private static void spawnWaterAmbient(ServerLevel world, LevelChunk chunk, SpawnState info, List<MobCategory> spawnableGroups, CallbackInfo cb) {
+        if (world.getBiome(chunk.getPos().getMiddleBlockPosition(63)).is(ShellfishWorldgen.MARSH)) {
+            if (waterAmbientBelowCap(info) && !spawnableGroups.contains(MobCategory.WATER_AMBIENT)) spawnableGroups.add(MobCategory.WATER_AMBIENT);
+            ProfilerFiller profiler = Profiler.get();
             profiler.push("spawner");
-            Iterator<SpawnGroup> groups = spawnableGroups.iterator();
+            Iterator<MobCategory> groups = spawnableGroups.iterator();
             
             while (groups.hasNext()) {
-                SpawnGroup group = groups.next();
-                if (group == SpawnGroup.WATER_AMBIENT ? canWaterAmbientSpawn(info, chunk.getPos()) : ((InfoInvoker)info).callCanSpawn(group, chunk.getPos())) {
-                    BlockPos chunkCenter = chunk.getPos().getCenterAtY(57);
-                    int nearbyCount = world.getEntitiesByClass(LivingEntity.class, new Box(chunkCenter).expand(20), e -> e.getType().getSpawnGroup() == SpawnGroup.WATER_AMBIENT).size();
-                    if (group == SpawnGroup.WATER_AMBIENT && nearbyCount > 1) {
+                MobCategory group = groups.next();
+                if (group == MobCategory.WATER_AMBIENT ? canWaterAmbientSpawn(info, chunk.getPos()) : ((InfoInvoker)info).callCanSpawn(group, chunk.getPos())) {
+                    BlockPos chunkCenter = chunk.getPos().getMiddleBlockPosition(57);
+                    int nearbyCount = world.getEntitiesOfClass(LivingEntity.class, new AABB(chunkCenter).inflate(20), e -> e.getType().getCategory() == MobCategory.WATER_AMBIENT).size();
+                    if (group == MobCategory.WATER_AMBIENT && nearbyCount > 1) {
                         continue;
                     }
-                    SpawnHelper.spawnEntitiesInChunk(group, world, chunk, ((InfoInvoker)info)::callTest, ((InfoInvoker)info)::callRun);
+                    NaturalSpawner.spawnCategoryForChunk(group, world, chunk, ((InfoInvoker)info)::callTest, ((InfoInvoker)info)::callRun);
                 }
             }
             profiler.pop();
@@ -51,14 +50,14 @@ public class SpawnerMixin {
         }
     }
 
-    @Accessor("CHUNK_AREA")
+    @Accessor("MAGIC_NUMBER")
     private static int getChunkArea() {
         throw new AssertionError();
     }
 
-    private static boolean canWaterAmbientSpawn(Info info, ChunkPos chunkPos) {
+    private static boolean canWaterAmbientSpawn(SpawnState info, ChunkPos chunkPos) {
         DensityGetter capper = (DensityGetter)((InfoInvoker)info).getDensityCapper();
-        Iterator<ServerPlayerEntity> var3 = ((DensityGetter)capper).callGetMobSpawnablePlayers(chunkPos).iterator();
+        Iterator<ServerPlayer> var3 = ((DensityGetter)capper).callGetMobSpawnablePlayers(chunkPos).iterator();
 
         DensityCapGetter densityCap;
         do {
@@ -66,7 +65,7 @@ public class SpawnerMixin {
                 return false;
             }
 
-            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)var3.next();
+            ServerPlayer serverPlayerEntity = (ServerPlayer)var3.next();
             densityCap = (DensityCapGetter)capper.getPlayersToDensityCap().get(serverPlayerEntity);
         } while(densityCap != null && !capCanSpawn(densityCap));
 
@@ -74,11 +73,11 @@ public class SpawnerMixin {
     }
 
     private static boolean capCanSpawn(DensityCapGetter cap) {
-        return cap.getSpawnGroupsToDensity().getOrDefault(SpawnGroup.WATER_AMBIENT, 0) < MARSH_WA_CAP;
+        return cap.getSpawnGroupsToDensity().getOrDefault(MobCategory.WATER_AMBIENT, 0) < MARSH_WA_CAP;
     }
 
-    private static boolean waterAmbientBelowCap(Info info) {
+    private static boolean waterAmbientBelowCap(SpawnState info) {
         int i = MARSH_WA_CAP * ((InfoInvoker)info).getSpawningChunkCount() / getChunkArea();
-		return info.getGroupToCount().getInt(SpawnGroup.WATER_AMBIENT) < i;
+		return info.getMobCategoryCounts().getInt(MobCategory.WATER_AMBIENT) < i;
     }
 }

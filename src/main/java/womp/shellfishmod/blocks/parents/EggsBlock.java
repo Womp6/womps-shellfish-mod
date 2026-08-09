@@ -1,115 +1,114 @@
 package womp.shellfishmod.blocks.parents;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.VisibleForTesting;
-
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.Waterloggable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCollisionHandler;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsage;
-import net.minecraft.item.Items;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
 import womp.shellfishmod.entity.parents.ShellfishEntity;
 import womp.shellfishmod.registry.ShellfishItems;
 
-public class EggsBlock extends Block implements Waterloggable {
+public class EggsBlock extends Block implements SimpleWaterloggedBlock {
 
     private final SoundEvent hatchSound;
     private final EntityType<? extends ShellfishEntity<?>> shellfish;
 
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    public static final IntProperty VARIANT1 = IntProperty.of("variant1", 0, 50);
-    public static final IntProperty VARIANT2 = IntProperty.of("variant2", 0, 50);
-    protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 1.5, 16.0);
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final IntegerProperty VARIANT1 = IntegerProperty.create("variant1", 0, 50);
+    public static final IntegerProperty VARIANT2 = IntegerProperty.create("variant2", 0, 50);
+    protected static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 1.5, 16.0);
     private static int minHatchTime = 3600;
     private static int maxHatchTime = 12000;
 
-    public EggsBlock(AbstractBlock.Settings settings, EntityType<? extends ShellfishEntity<?>> shellfish, SoundEvent hatchSound) {
+    public EggsBlock(BlockBehaviour.Properties settings, EntityType<? extends ShellfishEntity<?>> shellfish, SoundEvent hatchSound) {
         super(settings);
         this.hatchSound = hatchSound;
         this.shellfish = shellfish;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.WATERLOGGED).add(VARIANT1).add(VARIANT2);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BlockStateProperties.WATERLOGGED).add(VARIANT1).add(VARIANT2);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return (BlockState)this.getDefaultState()
-            .with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER)
-            .with(VARIANT1, 0).with(VARIANT2, 0);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return (BlockState)this.defaultBlockState()
+            .setValue(WATERLOGGED, ctx.getLevel().getFluidState(ctx.getClickedPos()).getType() == Fluids.WATER)
+            .setValue(VARIANT1, 0).setValue(VARIANT2, 0);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return EggsBlock.canLayAt(world, pos.down());
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        return EggsBlock.canLayAt(world, pos.below());
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        world.scheduleBlockTick(pos, this, EggsBlock.getHatchTime(world.getRandom()));
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+        world.scheduleTick(pos, this, EggsBlock.getHatchTime(world.getRandom()));
     }
 
-    private static int getHatchTime(Random random) {
-        return random.nextBetweenExclusive(minHatchTime, maxHatchTime);
+    private static int getHatchTime(RandomSource random) {
+        return random.nextInt(minHatchTime, maxHatchTime);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView view, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-        if (!this.canPlaceAt(state, world, pos)) {
-            return Blocks.WATER.getDefaultState();
+    public BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess view, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (!this.canSurvive(state, world, pos)) {
+            return Blocks.WATER.defaultBlockState();
         }
-        if (state.get(WATERLOGGED)) {
-            view.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        if (state.getValue(WATERLOGGED)) {
+            view.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
-        return super.getStateForNeighborUpdate(state, world, view, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, world, view, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (!this.canPlaceAt(state, world, pos)) {
+    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+        if (!this.canSurvive(state, world, pos)) {
             this.breakWithoutDrop(world, pos);
             return;
         }
@@ -117,55 +116,55 @@ public class EggsBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl) {
         if (entity.getType().equals(EntityType.FALLING_BLOCK)) {
             this.breakWithoutDrop(world, pos);
         }
     }
 
-    private static boolean canLayAt(BlockView world, BlockPos pos) {
+    private static boolean canLayAt(BlockGetter world, BlockPos pos) {
         FluidState blockState = world.getFluidState(pos);
-        FluidState fluidState2 = world.getFluidState(pos.up());
-        return blockState.getFluid() == Fluids.EMPTY && fluidState2.getFluid() == Fluids.WATER;
+        FluidState fluidState2 = world.getFluidState(pos.above());
+        return blockState.getType() == Fluids.EMPTY && fluidState2.getType() == Fluids.WATER;
     }
 
-    private void hatch(ServerWorld world, BlockPos pos, Random random) {
+    private void hatch(ServerLevel world, BlockPos pos, RandomSource random) {
         int v1 = -1, v2 = -1;
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof EggsBlock) {
-            v1 = state.get(VARIANT1) - 1;
-            v2 = state.get(VARIANT2) - 1;
+            v1 = state.getValue(VARIANT1) - 1;
+            v2 = state.getValue(VARIANT2) - 1;
         }
         this.breakWithoutDrop(world, pos);
-        world.playSound(null, pos, hatchSound, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        world.playSound(null, pos, hatchSound, SoundSource.BLOCKS, 1.0f, 1.0f);
         this.spawnShellfish(world, pos, random, v1, v2);
     }
 
-    private void breakWithoutDrop(World world, BlockPos pos) {
-        world.breakBlock(pos, false);
+    private void breakWithoutDrop(Level world, BlockPos pos) {
+        world.destroyBlock(pos, false);
     }
 
-    private void spawnShellfish(ServerWorld world, BlockPos pos, Random random, int v1, int v2) {
-        int i = random.nextBetweenExclusive(2, 5);
+    private void spawnShellfish(ServerLevel world, BlockPos pos, RandomSource random, int v1, int v2) {
+        int i = random.nextInt(2, 5);
         for (int j = 1; j <= i; ++j) {
-            ShellfishEntity<?> child = shellfish.create(world, SpawnReason.BREEDING);
+            ShellfishEntity<?> child = shellfish.create(world, EntitySpawnReason.BREEDING);
             if (child == null) continue;
-            child.setBreedingAge(-24000);
+            child.setAge(-24000);
             double d = (double)pos.getX() + this.getSpawnOffset(random);
             double e = (double)pos.getZ() + this.getSpawnOffset(random);
-            int k = random.nextBetweenExclusive(1, 361);
-            child.refreshPositionAndAngles(d, (double)pos.getY() - 0, e, k, 0.0f);
-            child.setPersistent();
+            int k = random.nextInt(1, 361);
+            child.snapTo(d, (double)pos.getY() - 0, e, k, 0.0f);
+            child.setPersistenceRequired();
             if (v1 >= 0 && v2 >= 0 && v1 < child.getMaxVariants() && v2 < child.getMaxVariants()) {
-                child.setVariantNumerical(random.nextBetween(0, 1) == 1 ? v1 : v2);
+                child.setVariantNumerical(random.nextIntBetweenInclusive(0, 1) == 1 ? v1 : v2);
             } else child.setVariantNumerical(random.nextInt(child.getMaxVariants()));
-            world.spawnEntity(child);
+            world.addFreshEntity(child);
         }
     }
 
-    private double getSpawnOffset(Random random) {
+    private double getSpawnOffset(RandomSource random) {
         double d = 0.1875;
-        return MathHelper.clamp(random.nextDouble(), d, 1.0 - d);
+        return Mth.clamp(random.nextDouble(), d, 1.0 - d);
     }
 
     @VisibleForTesting
@@ -181,15 +180,15 @@ public class EggsBlock extends Block implements Waterloggable {
     }
     
     @Override
-    public ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if(stack.isOf(Items.BUCKET)) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if(stack.is(Items.BUCKET)) {
             ItemStack itemStack = new ItemStack(ShellfishItems.CAVIAR_BUCKET);
-            ItemStack itemStack2 = ItemUsage.exchangeStack(stack, player, itemStack, false);
-            player.setStackInHand(hand, itemStack2);
-            world.playSound(null, pos.getX() + 0.5d, pos.getY(), pos.getZ() + 0.5d, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1, 1);
-            world.setBlockState(pos, (state.get(WATERLOGGED) ? Blocks.WATER : Blocks.AIR).getDefaultState(), Block.NOTIFY_ALL);
-            return ActionResult.SUCCESS;
+            ItemStack itemStack2 = ItemUtils.createFilledResult(stack, player, itemStack, false);
+            player.setItemInHand(hand, itemStack2);
+            world.playSound(null, pos.getX() + 0.5d, pos.getY(), pos.getZ() + 0.5d, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1, 1);
+            world.setBlock(pos, (state.getValue(WATERLOGGED) ? Blocks.WATER : Blocks.AIR).defaultBlockState(), Block.UPDATE_ALL);
+            return InteractionResult.SUCCESS;
         }
-        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+        return super.useItemOn(stack, state, world, pos, player, hand, hit);
     }
 }

@@ -1,7 +1,7 @@
 package womp.shellfishmod.blocks;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import womp.shellfishmod.blocks.parents.ShellfishPlantBlockEntity3d;
 import womp.shellfishmod.registry.ShellfishBlocks;
 
@@ -24,10 +24,10 @@ public class WaterLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
     public void setSwamp(boolean swamp) {
         this.swamp = swamp;
 
-        if (world != null) {
-            BlockState state = world.getBlockState(pos);
+        if (level != null) {
+            BlockState state = level.getBlockState(worldPosition);
             if (state.getBlock() instanceof WaterLettuceBlock) {
-                world.setBlockState(pos, state.with(WaterLettuceBlock.IS_SWAMP, this.swamp));
+                level.setBlockAndUpdate(worldPosition, state.setValue(WaterLettuceBlock.IS_SWAMP, this.swamp));
             }
         }
     }
@@ -35,10 +35,10 @@ public class WaterLettuceBlockEntity extends ShellfishPlantBlockEntity3d {
     public void setMarsh(boolean marsh) {
         this.marsh = marsh;
 
-        if (world != null) {
-            BlockState state = world.getBlockState(pos);
+        if (level != null) {
+            BlockState state = level.getBlockState(worldPosition);
             if (state.getBlock() instanceof WaterLettuceBlock) {
-                world.setBlockState(pos, state.with(WaterLettuceBlock.IS_MARSH, this.marsh));
+                level.setBlockAndUpdate(worldPosition, state.setValue(WaterLettuceBlock.IS_MARSH, this.marsh));
             }
         }
     }

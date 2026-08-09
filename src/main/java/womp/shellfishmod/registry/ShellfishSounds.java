@@ -1,9 +1,9 @@
 package womp.shellfishmod.registry;
 
-import net.minecraft.registry.Registries;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
 
 public class ShellfishSounds {
 
@@ -43,8 +43,8 @@ public class ShellfishSounds {
     
 
     public static SoundEvent registerSound(String subtitle) {
-        Identifier id = Identifier.of("shellfish", subtitle);
-        return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
+        Identifier id = Identifier.fromNamespaceAndPath("shellfish", subtitle);
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 
     public static void register() {}

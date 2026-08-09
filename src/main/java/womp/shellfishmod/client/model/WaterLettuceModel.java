@@ -7,10 +7,12 @@ import net.minecraft.client.model.ModelPartBuilder;
 import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3d;
+import womp.shellfishmod.client.states.WaterLettuceBlockEntityRenderState;
 
 public class WaterLettuceModel {
 	
@@ -62,8 +64,8 @@ public class WaterLettuceModel {
 		return TexturedModelData.of(modelData, 32, 32);
 	}
 
-    public void render(MatrixStack matrices, VertexConsumer buffer, int light, int overlay, Vec3d vec) {
-        lettuce.render(matrices, buffer, light, overlay);
+    public void render(WaterLettuceBlockEntityRenderState renderState, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+        queue.submitModelPart(lettuce, matrices, RenderLayer.getEntityCutoutNoCull(renderState.texture), renderState.lightmapCoordinates, OverlayTexture.DEFAULT_UV, null, -1, renderState.crumblingOverlay);
     }
 
     public RenderLayer getLayer() {

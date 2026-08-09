@@ -40,7 +40,7 @@ public class WanderInWaterGoal extends Goal {
         this.speed = speed;
         this.chance = chance;
         this.canDespawn = canDespawn;
-        this.world = mob.getWorld();
+        this.world = mob.getEntityWorld();
         this.setControls(EnumSet.of(Goal.Control.MOVE));
     }
 

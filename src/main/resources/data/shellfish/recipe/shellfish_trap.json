@@ -6,7 +6,7 @@
         "###"
     ],
     "key": {
-        "#": "minecraft:chain"
+        "#": "minecraft:iron_chain"
     },
     "result": {
         "id": "shellfish:shellfish_trap",

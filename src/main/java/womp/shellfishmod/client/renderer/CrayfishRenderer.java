@@ -1,8 +1,9 @@
 package womp.shellfishmod.client.renderer;
 
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import womp.shellfishmod.client.model.CrayfishModel;
@@ -20,7 +21,7 @@ public class CrayfishRenderer extends MobEntityRenderer<CrayfishEntity, Shellfis
     @Override
     public Identifier getTexture(ShellfishRenderState<Variant> animatable) {
         int variant = animatable.variant.getIndex();
-        if (animatable.customName != null && "Supercrayfish".equals(animatable.customName.getString())) {
+        if (animatable.displayName != null && "Supercrayfish".equals(animatable.displayName.getString())) {
             return Identifier.of("shellfish", "textures/entity/crayfish/supercrayfish.png");
         } else {
             return Identifier.of("shellfish", "textures/entity/crayfish/crayfish_" + variant + ".png");
@@ -28,7 +29,7 @@ public class CrayfishRenderer extends MobEntityRenderer<CrayfishEntity, Shellfis
     }
 
     @Override
-    public void render(ShellfishRenderState<Variant> entity, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
+    public void render(ShellfishRenderState<Variant> entity, MatrixStack poseStack, OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
         
         int variant = entity.variant.getIndex();                  
         if (variant == 11 || variant == 17 || variant == 25) entity.shellfish.scale(poseStack, 0.9f, 0.65f, 0.4f);
@@ -38,7 +39,7 @@ public class CrayfishRenderer extends MobEntityRenderer<CrayfishEntity, Shellfis
         else if (variant == 23) entity.shellfish.scale(poseStack, 0.5f, 0.25f);
         else entity.shellfish.scale(poseStack, 0.75f, 0.4f);
 
-        super.render(entity, poseStack, bufferSource, packedLight);
+        super.render(entity, poseStack, orderedRenderCommandQueue, cameraRenderState);
     }
 
     @Override

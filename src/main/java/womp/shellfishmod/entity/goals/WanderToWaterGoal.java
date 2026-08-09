@@ -23,7 +23,7 @@ public class WanderToWaterGoal extends Goal {
     public WanderToWaterGoal(PathAwareEntity mob, double speed) {
         this.mob = mob;
         this.speed = speed;
-        this.world = mob.getWorld();
+        this.world = mob.getEntityWorld();
         this.setControls(EnumSet.of(Goal.Control.MOVE));
     }
 

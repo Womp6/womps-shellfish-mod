@@ -134,10 +134,10 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishVariant> exte
     @Override
     public void tick() {
         super.tick();
-        if (!this.getWorld().isClient && this.isBaby()) this.setNewborn(this.getBreedingAge() <= -12000);
+        if (!this.getEntityWorld().isClient() && this.isBaby()) this.setNewborn(this.getBreedingAge() <= -12000);
 
         // ANIMATION
-        if (this.getWorld().isClient()) {
+        if (this.getEntityWorld().isClient()) {
             this.setupAnimationStates();
         }
 

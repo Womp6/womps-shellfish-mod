@@ -237,7 +237,7 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
 
         ShrimpWaterMateGoal(EggLaying shrimp, double speed) {
             super(shrimp, speed);
-            this.world = shellfish.getEntity().getWorld();
+            this.world = shellfish.getEntity().getEntityWorld();
             this.random = new java.util.Random();
         }
         
@@ -279,7 +279,7 @@ public class ShrimpEntity extends ShellfishEntity<Variant> implements EggLaying 
 
         ShrimpWaterLayEggGoal(EggLaying shrimp, double speed) {
             super(shrimp, speed, ShellfishSounds.SHRIMP_LAYS_EGGS, ShellfishBlocks.SHRIMP_EGGS_BLOCK);
-            this.world = this.shellfish.getEntity().getWorld();
+            this.world = this.shellfish.getEntity().getEntityWorld();
             this.random = new java.util.Random();
         }
         

@@ -14,13 +14,13 @@ public class HungryRevengeGoal extends RevengeGoal {
 
     @Override
     public boolean canStart() {
-        if (ShellfishStateUtil.isShellfishPassive((ServerWorld)this.mob.getWorld()) && !(target instanceof PlayerEntity)) return false;
+        if (ShellfishStateUtil.isShellfishPassive((ServerWorld)this.mob.getEntityWorld()) && !(target instanceof PlayerEntity)) return false;
         return super.canStart();
     }
     
     @Override
     public boolean shouldContinue() {
-        if (ShellfishStateUtil.isShellfishPassive((ServerWorld)this.mob.getWorld()) && !(target instanceof PlayerEntity)) return false;
+        if (ShellfishStateUtil.isShellfishPassive((ServerWorld)this.mob.getEntityWorld()) && !(target instanceof PlayerEntity)) return false;
         return super.shouldContinue();
     }
 }

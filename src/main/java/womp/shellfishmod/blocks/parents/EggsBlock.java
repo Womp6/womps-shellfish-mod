@@ -116,7 +116,7 @@ public class EggsBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier applier) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier applier, boolean bl) {
         if (entity.getType().equals(EntityType.FALLING_BLOCK)) {
             this.breakWithoutDrop(world, pos);
         }

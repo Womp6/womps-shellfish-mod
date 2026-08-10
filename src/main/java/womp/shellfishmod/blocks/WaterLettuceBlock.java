@@ -52,8 +52,8 @@ public class WaterLettuceBlock extends VegetationBlock implements EntityBlock {
     }
 
     @Override
-    public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity, InsideBlockEffectApplier applier) {
-        super.entityInside(pState, pLevel, pPos, pEntity, applier);
+    public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity, InsideBlockEffectApplier applier, boolean bl) {
+        super.entityInside(pState, pLevel, pPos, pEntity, applier, bl);
         if (pLevel instanceof ServerLevel && pEntity instanceof Boat) {
             pLevel.destroyBlock(new BlockPos(pPos), true, pEntity);
         }

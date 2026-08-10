@@ -127,7 +127,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishEntity.Shellf
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide && this.isBaby()) this.setNewborn(this.getAge() <= -12000);
+        if (!this.level().isClientSide() && this.isBaby()) this.setNewborn(this.getAge() <= -12000);
 
         // ANIMATION
         if (this.level().isClientSide()) {
@@ -277,7 +277,7 @@ public abstract class ShellfishEntity<T extends Enum<T> & ShellfishEntity.Shellf
     @Override
     public void loadFromBucketTag(CompoundTag nbt) {
         Bucketable.loadDefaultDataFromBucketTag(this, nbt);
-        this.setVariant(byId(nbt.getIntOr("Variant", 0)));
+        this.setVariant(byId(nbt.getIntOr("Variant", random.nextInt(0, getMaxVariants()))));
         if (nbt.contains("Age")) {
             this.setAge(nbt.getIntOr("Age", 2000));
         }

@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -48,6 +49,7 @@ import womp.shellfishmod.registry.ShellfishComponents;
 import womp.shellfishmod.registry.ShellfishItems;
 import womp.shellfishmod.screens.ShellfishTrapScreenHandler;
 
+import java.util.List;
 import java.util.Optional;
 
 // The foundation of this file was created using help from Kaupenjoe
@@ -56,8 +58,8 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     //REQUIRED
     protected abstract Item selectJunk(int i);
     protected abstract Item selectTreasure(int i);
-    protected abstract int getMaxDurability();
-    protected abstract int getMaxProgress();
+    public abstract int getMaxDurability();
+    public abstract int getMaxProgress();
     protected abstract int getMaxOutCount();
     public abstract String getRepairKey();
     /**
@@ -85,6 +87,8 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     protected int maxDurability = getMaxDurability();
     private static final int[] SLOTS_FOR_DOWN = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
     private static final int[] SLOTS_FOR_REST = new int[]{0};
+
+    private int updateTicks = 0;
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(19) {
         @Override
@@ -117,30 +121,22 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
             @Override
             public int get(int var1) {
-                switch (var1) {
-                    case 0: {
-                        return AbstractTrapBlockEntity.this.progress;
-                    }
-                    case 1: {
-                        return AbstractTrapBlockEntity.this.maxProgress;
-                    }
-                    case 2: {
-                        return AbstractTrapBlockEntity.this.durability;
-                    }
-                    case 3: {
-                        return AbstractTrapBlockEntity.this.maxDurability;
-                    }
-                }
-                return 0;
+                return switch (var1) {
+                    case 0 -> AbstractTrapBlockEntity.this.progress;
+                    case 1 -> AbstractTrapBlockEntity.this.maxProgress;
+                    case 2 -> AbstractTrapBlockEntity.this.durability;
+                    case 3 -> AbstractTrapBlockEntity.this.maxDurability;
+                    default -> 0;
+                };
             }
 
             @Override
             public void set(int var1, int var2) {
                 switch (var1) {
-                    case 0: AbstractTrapBlockEntity.this.progress = var2;
-                    case 1: AbstractTrapBlockEntity.this.maxProgress = var2;
-                    case 2: AbstractTrapBlockEntity.this.durability = var2;
-                    case 3: AbstractTrapBlockEntity.this.maxDurability = var2;
+                    case 0 -> AbstractTrapBlockEntity.this.progress = var2;
+                    case 1 -> AbstractTrapBlockEntity.this.maxProgress = var2;
+                    case 2 -> AbstractTrapBlockEntity.this.durability = var2;
+                    case 3 -> AbstractTrapBlockEntity.this.maxDurability = var2;
                 }
             }
 
@@ -149,6 +145,10 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
                 return 4;
             }
         };
+    }
+
+    public int getProgress() {
+        return progress;
     }
 
     public ItemStack renderBait() {
@@ -190,6 +190,14 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     }
 
     public void tick(Level world, BlockPos pos, BlockState state) {
+        if (updateTicks > 0 && level != null) {
+            updateTicks--;
+            List<ServerPlayer> nearbyPlayers = level.getEntitiesOfClass(ServerPlayer.class, new AABB(pos).inflate(5.0));
+            for (ServerPlayer p : nearbyPlayers) if (p.hasContainerOpen() && p.containerMenu instanceof ShellfishTrapScreenHandler trap) {
+                trap.broadcastFullState();
+                trap.sendAllDataToRemote();
+            }
+        }
         if (durability == 0) {
             setBroken(true);
         } else if (durability > maxDurability) {
@@ -319,7 +327,7 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
     private Optional<ShellfishTrapRecipe> getCurrentRecipe() {
         ShellfishTrapRecipeInput recipe = new ShellfishTrapRecipeInput(itemHandler.getStackInSlot(BAIT_SLOT), this.getLevel().getBiome(worldPosition).getRegisteredName());
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             Optional<RecipeHolder<ShellfishTrapRecipe>> value = RecipeManager.createCheck(ShellfishTrapRecipe.Type.INSTANCE).getRecipeFor(recipe, (ServerLevel)level);
             if (value.isPresent()) {
                 return Optional.of(value.get().value());
@@ -432,6 +440,7 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
     @Override
     protected AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory) {
+        updateTicks = 5;
         return new ShellfishTrapScreenHandler(pContainerId, pInventory, this, delegate);
     }
 

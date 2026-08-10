@@ -1,6 +1,5 @@
 package womp.shellfishmod.item;
 
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PlaceOnWaterBlockItem;

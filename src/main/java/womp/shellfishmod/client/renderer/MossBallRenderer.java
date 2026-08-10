@@ -2,8 +2,10 @@ package womp.shellfishmod.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import womp.shellfishmod.client.ShellfishClient;
 import womp.shellfishmod.client.model.MossBallModel;
@@ -22,8 +24,8 @@ public class MossBallRenderer extends MobRenderer<MossBallEntity, ShellfishRende
     }
 
     @Override
-    public void render(ShellfishRenderState<MossBallEntity.Variant> entity, PoseStack poseStack,
-                       MultiBufferSource bufferSource, int packedLight)  {
+    public void submit(ShellfishRenderState<MossBallEntity.Variant> entity, PoseStack poseStack,
+                       SubmitNodeCollector queue, CameraRenderState camera)  {
 
         if(entity.variant.getIndex() == 1) {
             poseStack.scale(0.5f, 0.5f, 0.5f);
@@ -32,7 +34,7 @@ public class MossBallRenderer extends MobRenderer<MossBallEntity, ShellfishRende
         }
 
 
-        super.render(entity, poseStack, bufferSource, packedLight);
+        super.submit(entity, poseStack, queue, camera);
     }
 
     @Override

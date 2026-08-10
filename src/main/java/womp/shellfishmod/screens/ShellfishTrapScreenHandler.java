@@ -48,6 +48,13 @@ public class ShellfishTrapScreenHandler extends AbstractContainerMenu {
         addPlayerInventory(inventory2);
         addPlayerHotbar(inventory2);
 
+        if (delegate.get(3) == 0) {
+            delegate.set(0, this.blockEntity.getProgress());
+            delegate.set(1, this.blockEntity.getMaxProgress());
+            delegate.set(2, this.blockEntity.getDurability());
+            delegate.set(3, this.blockEntity.getMaxDurability());
+        }
+
         addDataSlots(arrayPropertyDelegate);
     }
 

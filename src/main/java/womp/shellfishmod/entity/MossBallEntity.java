@@ -197,7 +197,7 @@ public class MossBallEntity extends WaterAnimal implements Bucketable {
     @Override
     public void loadFromBucketTag(CompoundTag var1) {
         Bucketable.loadDefaultDataFromBucketTag(this, var1);
-        this.setVariant(Variant.byId(var1.getIntOr("Variant", 0)));
+        this.setVariant(Variant.byId(var1.getIntOr("Variant", random.nextInt(0, 2))));
     }
 
     @Override

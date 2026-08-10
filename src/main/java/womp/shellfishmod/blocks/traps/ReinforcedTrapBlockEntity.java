@@ -67,12 +67,12 @@ public class ReinforcedTrapBlockEntity extends AbstractTrapBlockEntity {
     }
 
     @Override
-    protected int getMaxDurability() {
+    public int getMaxDurability() {
         return 300;
     }
 
     @Override
-    protected int getMaxProgress() {
+    public int getMaxProgress() {
         return 700;
     }
 

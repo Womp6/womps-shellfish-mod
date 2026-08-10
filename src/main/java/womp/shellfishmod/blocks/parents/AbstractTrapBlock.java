@@ -104,7 +104,7 @@ public abstract class AbstractTrapBlock extends BaseEntityBlock implements Simpl
 
     @Override
     public @NotNull InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof AbstractTrapBlockEntity trap) {
                 if (hand == InteractionHand.MAIN_HAND && getRepairItems().containsKey(stack.getItem()) && trap.getDurability() < trap.getMaxDurability()) {

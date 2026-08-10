@@ -55,12 +55,12 @@ public class ShellfishTrapBlockEntity extends AbstractTrapBlockEntity {
     }
 
     @Override
-    protected int getMaxDurability() {
+    public int getMaxDurability() {
         return 150;
     }
 
     @Override
-    protected int getMaxProgress() {
+    public int getMaxProgress() {
         return 900;
     }
 

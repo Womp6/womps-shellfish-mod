@@ -4,7 +4,6 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -19,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import womp.shellfishmod.ShellfishMod;
 import womp.shellfishmod.client.model.*;
+import womp.shellfishmod.client.model.snail.*;
 import womp.shellfishmod.client.renderer.*;
 import womp.shellfishmod.util.config.ShellfishConfig;
 import womp.shellfishmod.registry.ShellfishBlocks;
@@ -26,13 +26,17 @@ import womp.shellfishmod.registry.ShellfishEntities;
 import womp.shellfishmod.registry.ShellfishScreens;
 import womp.shellfishmod.screens.ShellfishTrapScreen;
 
-@Mod.EventBusSubscriber(modid = ShellfishMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ShellfishMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.BOTH, value = Dist.CLIENT)
 public class ShellfishClient {
 
     public static final ModelLayerLocation OYSTER_MODEL = registerML("oyster", "oyster_model");
     public static final ModelLayerLocation CLAM_MODEL = registerML("clam", "clam_model");
     public static final ModelLayerLocation SEA_URCHIN_MODEL = registerML("sea_urchin", "sea_urchin_model");
-    public static final ModelLayerLocation SEA_SNAIL_MODEL = registerML("sea_snail", "sea_snail_model");
+    public static final ModelLayerLocation SEA_SNAIL_MODEL1 = registerML("sea_snail1", "sea_snail_model1");
+    public static final ModelLayerLocation SEA_SNAIL_MODEL2 = registerML("sea_snail2", "sea_snail_model2");
+    public static final ModelLayerLocation SEA_SNAIL_MODEL3 = registerML("sea_snail3", "sea_snail_model3");
+    public static final ModelLayerLocation SEA_SNAIL_MODEL4 = registerML("sea_snail4", "sea_snail_model4");
+    public static final ModelLayerLocation SEA_SNAIL_MODEL5 = registerML("sea_snail5", "sea_snail_model5");
     public static final ModelLayerLocation SHRIMP_MODEL = registerML("shrimp", "shrimp_model");
     public static final ModelLayerLocation LOBSTER_MODEL = registerML("lobster", "lobster_model");
     public static final ModelLayerLocation CRAYFISH_MODEL = registerML("crayfish", "crayfish_model");
@@ -63,7 +67,11 @@ public class ShellfishClient {
         event.registerLayerDefinition(LOBSTER_MODEL, LobsterModel::getTexturedModelData);
         event.registerLayerDefinition(CRAB_MODEL, CrabModel::getTexturedModelData);
         event.registerLayerDefinition(SHRIMP_MODEL, ShrimpModel::getTexturedModelData);
-        event.registerLayerDefinition(SEA_SNAIL_MODEL, SeaSnailModel::getTexturedModelData);
+        event.registerLayerDefinition(SEA_SNAIL_MODEL1, SeaSnailModelV1::getTexturedModelData);
+        event.registerLayerDefinition(SEA_SNAIL_MODEL2, SeaSnailModelV2::getTexturedModelData);
+        event.registerLayerDefinition(SEA_SNAIL_MODEL3, SeaSnailModelV3::getTexturedModelData);
+        event.registerLayerDefinition(SEA_SNAIL_MODEL4, SeaSnailModelV4::getTexturedModelData);
+        event.registerLayerDefinition(SEA_SNAIL_MODEL5, SeaSnailModelV5::getTexturedModelData);
         event.registerLayerDefinition(SEA_URCHIN_MODEL, SeaUrchinModel::getTexturedModelData);
         event.registerLayerDefinition(CLAM_MODEL, ClamModel::getTexturedModelData);
         event.registerLayerDefinition(OYSTER_MODEL, OysterModel::getTexturedModelData);

@@ -230,7 +230,7 @@ public class ShellfishItems {
     }
 
     private static RegistryObject<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> type) {
-        return ITEMS.register(name, () -> new SpawnEggItem(type.get(), new Item.Properties().setId(ShellfishTags.createKey(name, Registries.ITEM))));
+        return ITEMS.register(name, () -> new SpawnEggItem(new Item.Properties().setId(ShellfishTags.createKey(name, Registries.ITEM)).spawnEgg(type.get())));
     }
 
     private static RegistryObject<Item> registerDurability(String name, Supplier<? extends Block> block, int max) {

@@ -4,20 +4,24 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import womp.shellfishmod.blocks.SeaLettuceBlockEntity;
 import womp.shellfishmod.client.model.SeaLettuceModel;
+import womp.shellfishmod.client.states.SeaLettuceBlockEntityRenderState;
 import womp.shellfishmod.util.config.ShellfishConfig;
 
 import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
-public class SeaLettuceRenderer implements BlockEntityRenderer<SeaLettuceBlockEntity> {
+public class SeaLettuceRenderer implements BlockEntityRenderer<SeaLettuceBlockEntity, SeaLettuceBlockEntityRenderState> {
 
     private final SeaLettuceModel seaLettuceModel;
     private final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("shellfish", "textures/block/sea_lettuce.png");
@@ -27,9 +31,7 @@ public class SeaLettuceRenderer implements BlockEntityRenderer<SeaLettuceBlockEn
     }
 
     @Override
-    public void render(SeaLettuceBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, Vec3 vec) {
-
-        blockEntity.set3d(ShellfishConfig.getShellfishGraphics() == 2);
+    public void submit(SeaLettuceBlockEntityRenderState blockEntity, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState camera) {
 
         if(ShellfishConfig.getShellfishGraphics() == 2) {
             matrices.pushPose();
@@ -38,24 +40,39 @@ public class SeaLettuceRenderer implements BlockEntityRenderer<SeaLettuceBlockEn
             matrices.scale(1f, 1f, 1f);
             matrices.mulPose(Axis.XP.rotationDegrees(180.0F));
 
-            Random random = new Random(blockEntity.getBlockPos().hashCode());
+            Random random = new Random(blockEntity.randomOffsetHash);
             float offsetX = (random.nextFloat() - 0.5f) * 0.5f;
             float offsetZ = (random.nextFloat() - 0.5f) * 0.5f;
 
             matrices.translate(offsetX, 0f, offsetZ);
 
-            if (blockEntity.isLarge()) {
+            if (blockEntity.isLarge) {
                 matrices.scale(2f, 2f, 2f);
                 matrices.translate(0f, -0.7475f, 0f);
             }
 
-            seaLettuceModel.render(blockEntity, matrices, vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(getTexture(blockEntity))), light, overlay, vec);
+            seaLettuceModel.render(blockEntity, matrices, queue, camera, getTexture());
 
             matrices.popPose();
         }
     }
 
-    private ResourceLocation getTexture(SeaLettuceBlockEntity lettuce) {
+    private ResourceLocation getTexture() {
         return texture;
+    }
+
+    @Override
+    public SeaLettuceBlockEntityRenderState createRenderState() {
+        return new SeaLettuceBlockEntityRenderState();
+    }
+
+    @Override
+    public void extractRenderState(SeaLettuceBlockEntity blockEntity, SeaLettuceBlockEntityRenderState state,
+                                   float tickProgress, Vec3 cameraPos, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+        blockEntity.set3d(ShellfishConfig.getShellfishGraphics() == 2);
+        state.isLarge = blockEntity.isLarge();
+        state.randomOffsetHash = blockEntity.getBlockPos().hashCode();
+        state.animationStartTime = blockEntity.getAnimationStartTime();
     }
 }

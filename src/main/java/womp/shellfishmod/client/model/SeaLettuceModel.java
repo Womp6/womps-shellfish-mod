@@ -7,14 +7,21 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.Keyframe;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import org.joml.Vector3fc;
 import womp.shellfishmod.blocks.SeaLettuceBlockEntity;
 import womp.shellfishmod.blocks.animations.BlockAnimations;
+import womp.shellfishmod.client.states.SeaLettuceBlockEntityRenderState;
 import womp.shellfishmod.util.config.ShellfishConfig;
 
 public class SeaLettuceModel {
@@ -115,7 +122,7 @@ public class SeaLettuceModel {
         return LayerDefinition.create(modelData, 32, 32);
     }
 
-    public void applyBoneTransformation(String boneName, Vector3f rotation, PoseStack matrices) {
+    public void applyBoneTransformation(String boneName, Vector3fc rotation, PoseStack matrices) {
         ModelPart bonePart = this.sea_lettuce.getChild(boneName);
         if (bonePart != null && rotation != null) {
             bonePart.xRot = rotation.x();
@@ -151,8 +158,8 @@ public class SeaLettuceModel {
     }
 
     private AnimationChannel interpolateTransformation(Keyframe start, Keyframe end, float t) {
-        Vector3f startRotation = start.target();
-        Vector3f endRotation = end.target();
+        Vector3fc startRotation = start.postTarget();
+        Vector3fc endRotation = end.postTarget();
         Vector3f interpolatedRotation = new Vector3f(
                 startRotation.x() + t * (endRotation.x() - startRotation.x()),
                 startRotation.y() + t * (endRotation.y() - startRotation.y()),
@@ -164,21 +171,21 @@ public class SeaLettuceModel {
     public void applyTransformationToModel(String boneName, AnimationChannel transformation, PoseStack matrices) {
         ModelPart bonePart = sea_lettuce.getChild(boneName);
         if (bonePart != null) {
-            Vector3f rotation = transformation.keyframes()[0].target();
+            Vector3fc rotation = transformation.keyframes()[0].postTarget();
             applyBoneTransformation(boneName, rotation, matrices);
         }
     }
 
-    public void render(SeaLettuceBlockEntity blockEntity, PoseStack matrices, VertexConsumer var2, int var3, int var4, Vec3 vec) {
+    public void render(SeaLettuceBlockEntityRenderState blockEntity, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState, ResourceLocation texture) {
         resetTransformations();
 
         if(ShellfishConfig.getShellfishGraphics() == 2) {
             long currentTime = System.currentTimeMillis();
-            float animationTime = ((currentTime - blockEntity.getAnimationStartTime()) / 1000.0f) % this.animation.lengthInSeconds();
+            float animationTime = ((currentTime - blockEntity.animationStartTime) / 1000.0f) % this.animation.lengthInSeconds();
             applyAnimationToModel(animationTime, matrices);
         }
 
-        sea_lettuce.render(matrices, var2, var3, var4);
+        queue.submitModelPart(sea_lettuce, matrices, RenderType.entitySmoothCutout(texture), blockEntity.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, blockEntity.breakProgress);
     }
 
     private final List<String> boneNames = List.of(

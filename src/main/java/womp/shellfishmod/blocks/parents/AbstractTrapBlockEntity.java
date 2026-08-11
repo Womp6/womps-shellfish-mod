@@ -12,7 +12,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -42,14 +41,12 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import womp.shellfishmod.ShellfishMod;
 import womp.shellfishmod.recipes.ShellfishTrapRecipe;
 import womp.shellfishmod.recipes.ShellfishTrapRecipeInput;
 import womp.shellfishmod.registry.ShellfishComponents;
 import womp.shellfishmod.registry.ShellfishItems;
 import womp.shellfishmod.screens.ShellfishTrapScreenHandler;
 
-import java.util.List;
 import java.util.Optional;
 
 // The foundation of this file was created using help from Kaupenjoe
@@ -58,8 +55,8 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     //REQUIRED
     protected abstract Item selectJunk(int i);
     protected abstract Item selectTreasure(int i);
-    public abstract int getMaxDurability();
-    public abstract int getMaxProgress();
+    protected abstract int getMaxDurability();
+    protected abstract int getMaxProgress();
     protected abstract int getMaxOutCount();
     public abstract String getRepairKey();
     /**
@@ -87,8 +84,6 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     protected int maxDurability = getMaxDurability();
     private static final int[] SLOTS_FOR_DOWN = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
     private static final int[] SLOTS_FOR_REST = new int[]{0};
-
-    private int updateTicks = 0;
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(19) {
         @Override
@@ -147,10 +142,6 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
         };
     }
 
-    public int getProgress() {
-        return progress;
-    }
-
     public ItemStack renderBait() {
         return this.getItem(BAIT_SLOT);
     }
@@ -190,14 +181,6 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     }
 
     public void tick(Level world, BlockPos pos, BlockState state) {
-        if (updateTicks > 0 && level != null) {
-            updateTicks--;
-            List<ServerPlayer> nearbyPlayers = level.getEntitiesOfClass(ServerPlayer.class, new AABB(pos).inflate(5.0));
-            for (ServerPlayer p : nearbyPlayers) if (p.hasContainerOpen() && p.containerMenu instanceof ShellfishTrapScreenHandler trap) {
-                trap.broadcastFullState();
-                trap.sendAllDataToRemote();
-            }
-        }
         if (durability == 0) {
             setBroken(true);
         } else if (durability > maxDurability) {
@@ -431,8 +414,7 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
     @Override
     protected AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory) {
-        updateTicks = 5;
-        return new ShellfishTrapScreenHandler(pContainerId, pInventory, this, delegate);
+        return new ShellfishTrapScreenHandler(pContainerId, pInventory, this, delegate, this);
     }
 
     protected boolean canInsertIntoOutputSlots() {

@@ -114,8 +114,7 @@ public abstract class AbstractTrapBlock extends BaseEntityBlock implements Simpl
                     trap.repair(getRepairItems().get(stack.getItem()));
                     world.playSound(null, pos, ShellfishSounds.TRAP_REPAIR.get(), SoundSource.BLOCKS, 0.6f, 1.5f);
                 } else {
-                    MenuProvider screen = ((AbstractTrapBlockEntity) world.getBlockEntity(pos));
-                    ((ServerPlayer)player).openMenu(screen, pos);
+                    ((ServerPlayer)player).openMenu((MenuProvider) blockEntity);
                 }
             }
         }

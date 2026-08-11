@@ -3,6 +3,7 @@ package womp.shellfishmod.screens;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -10,7 +11,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import womp.shellfishmod.blocks.parents.AbstractTrapBlockEntity;
 import womp.shellfishmod.registry.ShellfishScreens;
 
@@ -22,18 +22,18 @@ public class ShellfishTrapScreenHandler extends AbstractContainerMenu {
     public final AbstractTrapBlockEntity blockEntity;
     
     public ShellfishTrapScreenHandler(int syncId, Inventory inventory, FriendlyByteBuf buf) {
-        this(syncId, inventory, inventory.player.level().getBlockEntity(buf.readBlockPos()),
-                new SimpleContainerData(4));
+        this(syncId, inventory, new SimpleContainer(19),
+                new SimpleContainerData(4), null);
     }
 
-    public ShellfishTrapScreenHandler(int syncId, Inventory inventory2, BlockEntity blockEntity,
-            ContainerData arrayPropertyDelegate) {
+    public ShellfishTrapScreenHandler(int syncId, Inventory inventory2, Container container,
+            ContainerData arrayPropertyDelegate, AbstractTrapBlockEntity blockEntity) {
         super(ShellfishScreens.SHELLFISH_TRAP_SCREEN_HANDLER.get(), syncId);
         
-        checkContainerSize(((Container)blockEntity), 19);
-        this.inventory = (Container)blockEntity;
+        checkContainerSize((container), 19);
+        this.inventory = container;
         this.delegate = arrayPropertyDelegate;
-        this.blockEntity = ((AbstractTrapBlockEntity)blockEntity);
+        this.blockEntity = blockEntity;
 
         this.addSlot(new Slot(inventory, 0, 12, 35));
         for (int i = 0; i < 6; i++) {
@@ -47,13 +47,6 @@ public class ShellfishTrapScreenHandler extends AbstractContainerMenu {
         }
         addPlayerInventory(inventory2);
         addPlayerHotbar(inventory2);
-
-        if (delegate.get(3) == 0) {
-            delegate.set(0, this.blockEntity.getProgress());
-            delegate.set(1, this.blockEntity.getMaxProgress());
-            delegate.set(2, this.blockEntity.getDurability());
-            delegate.set(3, this.blockEntity.getMaxDurability());
-        }
 
         addDataSlots(arrayPropertyDelegate);
     }
@@ -137,7 +130,7 @@ public class ShellfishTrapScreenHandler extends AbstractContainerMenu {
     @Override
     public void removed(Player player) {
         super.removed(player);
-        if (this.blockEntity.getDurability() == 0) {
+        if (blockEntity != null && blockEntity.getDurability() == 0) {
             player.displayClientMessage(Component.translatable(blockEntity.getRepairKey()), true);
         }
     }

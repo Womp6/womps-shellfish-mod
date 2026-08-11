@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import womp.shellfishmod.client.ShellfishClient;
 import womp.shellfishmod.client.model.ShrimpModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
@@ -19,9 +19,9 @@ public class ShrimpRenderer extends MobRenderer<ShrimpEntity, ShellfishRenderSta
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ShellfishRenderState<ShrimpEntity.Variant> animatable) {
+    public Identifier getTextureLocation(ShellfishRenderState<ShrimpEntity.Variant> animatable) {
         int variant = animatable.variant.getIndex();
-        return ResourceLocation.fromNamespaceAndPath("shellfish", "textures/entity/shrimp/shrimp_" + variant + ".png");
+        return Identifier.fromNamespaceAndPath("shellfish", "textures/entity/shrimp/shrimp_" + variant + ".png");
     }
 
     @Override

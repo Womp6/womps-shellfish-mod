@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import womp.shellfishmod.client.ShellfishClient;
 import womp.shellfishmod.client.model.MusselModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
@@ -19,9 +19,9 @@ public class MusselRenderer extends MobRenderer<MusselEntity, ShellfishRenderSta
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ShellfishRenderState<MusselEntity.Variant> var1) {
+    public Identifier getTextureLocation(ShellfishRenderState<MusselEntity.Variant> var1) {
         int variant = var1.variant.getIndex();
-        return ResourceLocation.fromNamespaceAndPath("shellfish", "textures/entity/mussel/mussel_" + variant + ".png");
+        return Identifier.fromNamespaceAndPath("shellfish", "textures/entity/mussel/mussel_" + variant + ".png");
     }
 
     @Override

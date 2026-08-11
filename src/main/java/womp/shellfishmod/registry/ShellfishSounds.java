@@ -1,6 +1,6 @@
 package womp.shellfishmod.registry;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
@@ -48,7 +48,7 @@ public class ShellfishSounds {
 
 
     private static RegistryObject<SoundEvent> registerSound(String name) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(ShellfishMod.MOD_ID, name);
+        Identifier id = Identifier.fromNamespaceAndPath(ShellfishMod.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));
     }
 

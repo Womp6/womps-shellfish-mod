@@ -336,15 +336,6 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
         return Optional.empty();
     }
 
-    public boolean biomeMatch(Level world, String biome) {
-        String currentBiome = world.getBiome(this.getBlockPos()).unwrapKey().get().location().toString();
-        if (currentBiome.equals(biome)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
         if (capability == ForgeCapabilities.ITEM_HANDLER && facing != null && !this.remove) {

@@ -6,7 +6,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import womp.shellfishmod.entity.parents.EggLaying;
 import womp.shellfishmod.entity.parents.ShellfishEntity;
 
@@ -41,7 +41,7 @@ public class ShellfishMateGoal extends BreedGoal {
         this.partner.resetLove();
         if (partner instanceof ShellfishEntity<?> shellfishPartner) this.shellfish.setPartnerVariant(shellfishPartner.getVariant().getIndex());
         RandomSource random = this.animal.getRandom();
-        if (this.level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+        if (this.level.getGameRules().get(GameRules.MOB_DROPS)) {
             this.level.addFreshEntity(new ExperienceOrb(this.level, this.animal.getX(), this.animal.getY(), this.animal.getZ(), random.nextInt(7) + 1));
         }
     }

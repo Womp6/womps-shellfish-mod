@@ -1,18 +1,16 @@
 package womp.shellfishmod.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 // This file was creating using help from Kaupenjoe
 public class ShellfishTrapScreen extends AbstractContainerScreen<ShellfishTrapScreenHandler> {
 
-    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("shellfish", "textures/gui/shellfish_trap.png");
+    public static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("shellfish", "textures/gui/shellfish_trap.png");
 
     public Component durability;
 

@@ -1,7 +1,7 @@
 package womp.shellfishmod.entity;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.ByIdMap;
@@ -14,9 +14,9 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.animal.AbstractFish;
-import net.minecraft.world.entity.animal.Turtle;
+import net.minecraft.world.entity.animal.fish.AbstractFish;
 import net.minecraft.world.entity.animal.frog.Tadpole;
+import net.minecraft.world.entity.animal.turtle.Turtle;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

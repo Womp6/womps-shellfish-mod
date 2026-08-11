@@ -1,7 +1,7 @@
 package womp.shellfishmod.entity;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;

@@ -2,35 +2,30 @@ package womp.shellfishmod.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import womp.shellfishmod.blocks.WaterLettuceBlockEntity;
 import womp.shellfishmod.client.model.WaterLettuceModel;
 import womp.shellfishmod.client.states.WaterLettuceBlockEntityRenderState;
 import womp.shellfishmod.registry.ShellfishWorldgen;
 import womp.shellfishmod.util.config.ShellfishConfig;
 
-@OnlyIn(Dist.CLIENT)
 public class WaterLettuceRenderer implements BlockEntityRenderer<WaterLettuceBlockEntity, WaterLettuceBlockEntityRenderState> {
 
     private final WaterLettuceModel lettuceModel;
-    private final ResourceLocation darkTexture = ResourceLocation.fromNamespaceAndPath("shellfish", "textures/block/water_lettuce_dark.png");
-    private final ResourceLocation marshTexture = ResourceLocation.fromNamespaceAndPath("shellfish", "textures/block/water_lettuce_marsh.png");
-    private final ResourceLocation defaultTexture = ResourceLocation.fromNamespaceAndPath("shellfish", "textures/block/water_lettuce.png");
+    private final Identifier darkTexture = Identifier.fromNamespaceAndPath("shellfish", "textures/block/water_lettuce_dark.png");
+    private final Identifier marshTexture = Identifier.fromNamespaceAndPath("shellfish", "textures/block/water_lettuce_marsh.png");
+    private final Identifier defaultTexture = Identifier.fromNamespaceAndPath("shellfish", "textures/block/water_lettuce.png");
 
     protected static final VoxelShape SHAPE = ShellfishConfig.getShellfishGraphics() == 2 ? Block.box(2.5, -1.0, 2.5, 13.5, 0.5, 13.5) : Block.box(1.0, 0.0, 1.0, 15.0, 1.5, 15.0);
 
@@ -52,7 +47,7 @@ public class WaterLettuceRenderer implements BlockEntityRenderer<WaterLettuceBlo
         }
     }
 
-    private ResourceLocation getTexture(WaterLettuceBlockEntity lettuce) {
+    private Identifier getTexture(WaterLettuceBlockEntity lettuce) {
         if (isBiome(Biomes.SWAMP, lettuce)) {
             return darkTexture;
         } else if (isBiome(ShellfishWorldgen.MARSH, lettuce)) {

@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import womp.shellfishmod.client.ShellfishClient;
 import womp.shellfishmod.client.model.CrayfishModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
@@ -19,12 +19,12 @@ public class CrayfishRenderer extends MobRenderer<CrayfishEntity, ShellfishRende
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ShellfishRenderState<CrayfishEntity.Variant> animatable) {
+    public Identifier getTextureLocation(ShellfishRenderState<CrayfishEntity.Variant> animatable) {
         int variant = animatable.variant.getIndex();
         if (animatable.nameTag != null && "Supercrayfish".equals(animatable.nameTag.getString())) {
-            return ResourceLocation.fromNamespaceAndPath("shellfish", "textures/entity/crayfish/supercrayfish.png");
+            return Identifier.fromNamespaceAndPath("shellfish", "textures/entity/crayfish/supercrayfish.png");
         } else {
-            return ResourceLocation.fromNamespaceAndPath("shellfish", "textures/entity/crayfish/crayfish_" + variant + ".png");
+            return Identifier.fromNamespaceAndPath("shellfish", "textures/entity/crayfish/crayfish_" + variant + ".png");
         }
     }
 

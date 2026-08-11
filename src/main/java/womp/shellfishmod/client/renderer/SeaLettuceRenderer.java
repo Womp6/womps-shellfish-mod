@@ -2,17 +2,13 @@ package womp.shellfishmod.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import womp.shellfishmod.blocks.SeaLettuceBlockEntity;
 import womp.shellfishmod.client.model.SeaLettuceModel;
 import womp.shellfishmod.client.states.SeaLettuceBlockEntityRenderState;
@@ -20,11 +16,10 @@ import womp.shellfishmod.util.config.ShellfishConfig;
 
 import java.util.Random;
 
-@OnlyIn(Dist.CLIENT)
 public class SeaLettuceRenderer implements BlockEntityRenderer<SeaLettuceBlockEntity, SeaLettuceBlockEntityRenderState> {
 
     private final SeaLettuceModel seaLettuceModel;
-    private final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("shellfish", "textures/block/sea_lettuce.png");
+    private final Identifier texture = Identifier.fromNamespaceAndPath("shellfish", "textures/block/sea_lettuce.png");
 
     public SeaLettuceRenderer(BlockEntityRendererProvider.Context context) {
         this.seaLettuceModel = new SeaLettuceModel(SeaLettuceModel.createBodyLayer().bakeRoot());
@@ -57,7 +52,7 @@ public class SeaLettuceRenderer implements BlockEntityRenderer<SeaLettuceBlockEn
         }
     }
 
-    private ResourceLocation getTexture() {
+    private Identifier getTexture() {
         return texture;
     }
 

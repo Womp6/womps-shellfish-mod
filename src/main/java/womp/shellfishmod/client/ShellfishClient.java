@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
@@ -45,7 +45,7 @@ public class ShellfishClient {
     public static final ModelLayerLocation MOSS_BALL_MODEL = registerML("moss_ball", "moss_ball_model");
 
     private static ModelLayerLocation registerML(String path, String name) {
-        return new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath("shellfish", path), name);
+        return new ModelLayerLocation(Identifier.fromNamespaceAndPath("shellfish", path), name);
     }
 
     public static void registerClientEntityRenders() {

@@ -26,7 +26,7 @@ public class ShellfishGameOptions extends Options {
         case DEFAULT -> Tooltip.create(DEFAULT_GRAPHICS_TOOLTIP);
         case FANCY -> Tooltip.create(FANCY_GRAPHICS_TOOLTIP);
     }, (optionText, value) -> {
-        MutableComponent mutableText = Component.translatable(value.getKey());
+        MutableComponent mutableText = Component.translatable(value.getTranslationKey());
         return mutableText;
     }, new OptionInstance.Enum<>(Arrays.asList(ShellfishGraphicsMode.values()), Codec.INT.xmap(ShellfishGraphicsMode::byId, ShellfishGraphicsMode::getId)), ShellfishGraphicsMode.DEFAULT, value -> {
         ShellfishConfig.setShellfishGraphics(value.getId());

@@ -26,14 +26,14 @@ public class AddMarshMixin {
 
     @Inject(method = "addLowSlice", at = @At("RETURN"))
     public void writeLowBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, Climate.Parameter weirdness, CallbackInfo callback) {
-        if (!ModList.get().isLoaded("terrablender")) {
+        if (!ModList.isLoaded("terrablender")) {
             this.writeBiomeParameters(parameters, temp, humidity, continentalness, erosion, weirdness, 0.0f, ShellfishWorldgen.MARSH);
         }
     }
 
     @Inject(method = "addValleys", at = @At("RETURN"))
     public void writeValleyBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, Climate.Parameter weirdness, CallbackInfo callback) {
-        if (!ModList.get().isLoaded("terrablender")) {
+        if (!ModList.isLoaded("terrablender")) {
             this.writeBiomeParameters(parameters, temp, humidity, continentalness2, erosion, weirdness, 0.0f, ShellfishWorldgen.MARSH);
         }
     }

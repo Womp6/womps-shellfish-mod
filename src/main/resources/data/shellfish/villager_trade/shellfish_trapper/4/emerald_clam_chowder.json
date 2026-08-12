@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "shellfish:clam_chowder"
+  },
+  "max_uses": 8.0,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": 2,
+    "id": "minecraft:emerald"
+  },
+  "xp": 25.0
+}

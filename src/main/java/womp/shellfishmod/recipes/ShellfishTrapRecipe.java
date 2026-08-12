@@ -10,6 +10,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import womp.shellfishmod.registry.ShellfishRecipes;
@@ -20,12 +21,24 @@ import java.util.List;
 // This file was creating using help from Kaupenjoe
 public class ShellfishTrapRecipe implements Recipe<ShellfishTrapRecipeInput> {
 
+    public static final MapCodec<ShellfishTrapRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(in -> in.group(
+            Ingredient.CODEC.fieldOf("bait").forGetter(r -> r.bait),
+            ItemStackTemplate.CODEC.listOf().fieldOf("outputs").forGetter(r -> r.outputs),
+            Codec.STRING.listOf().fieldOf("biomes").forGetter(r -> r.biome)
+    ).apply(in, ShellfishTrapRecipe::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ShellfishTrapRecipe> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC, r -> r.bait,
+            list(ItemStackTemplate.STREAM_CODEC), r -> r.outputs,
+            sList(ByteBufCodecs.STRING_UTF8), r -> r.biome,  ShellfishTrapRecipe::new
+    );
+    public static final RecipeSerializer<ShellfishTrapRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     private final Ingredient bait;
-    private final List<ItemStack> outputs;
+    private final List<ItemStackTemplate> outputs;
     private final List<String> biome;
     private ItemStack value;
 
-    public ShellfishTrapRecipe(Ingredient bait, List<ItemStack> outputs, List<String> biome) {
+    public ShellfishTrapRecipe(Ingredient bait, List<ItemStackTemplate> outputs, List<String> biome) {
         this.bait = bait;
         this.outputs = outputs;
         this.biome = biome;
@@ -46,7 +59,7 @@ public class ShellfishTrapRecipe implements Recipe<ShellfishTrapRecipeInput> {
     }
 
     @Override
-    public ItemStack assemble(ShellfishTrapRecipeInput inventory, HolderLookup.Provider provider) {
+    public ItemStack assemble(ShellfishTrapRecipeInput inventory) {
         return value.copy();
     }
 
@@ -54,7 +67,7 @@ public class ShellfishTrapRecipe implements Recipe<ShellfishTrapRecipeInput> {
         RandomSource random = RandomSource.create();
         int length = outputs.size();
         int select = random.nextIntBetweenInclusive(0, length - 1);
-        value = outputs.get(select);
+        value = outputs.get(select).create();
         return value.copy();
     }
 
@@ -75,7 +88,7 @@ public class ShellfishTrapRecipe implements Recipe<ShellfishTrapRecipeInput> {
 
     @Override
     public RecipeSerializer<ShellfishTrapRecipe> getSerializer() {
-        return Serializer.INSTANCE;
+        return SERIALIZER;
     }
 
     @Override
@@ -89,74 +102,57 @@ public class ShellfishTrapRecipe implements Recipe<ShellfishTrapRecipeInput> {
         public static final String ID = "shellfish_trap";
     }
 
-    public static class Serializer implements RecipeSerializer<ShellfishTrapRecipe> {
-        public static final Serializer INSTANCE = new Serializer();
-        public static final String ID = "shellfish_trap";
-
-        public static final MapCodec<ShellfishTrapRecipe> CODEC = RecordCodecBuilder.mapCodec(in -> in.group(
-                Ingredient.CODEC.fieldOf("bait").forGetter(r -> r.bait),
-                ItemStack.CODEC.listOf().fieldOf("outputs").forGetter(r -> r.outputs),
-                Codec.STRING.listOf().fieldOf("biomes").forGetter(r -> r.biome)
-        ).apply(in, ShellfishTrapRecipe::new));
-
-        @Override
-        public MapCodec<ShellfishTrapRecipe> codec() {
-            return CODEC;
-        }
-
-        public static <T> StreamCodec<RegistryFriendlyByteBuf, List<T>> list(StreamCodec<RegistryFriendlyByteBuf, T> elementCodec) {
-            return new StreamCodec<>() {
-                @Override
-                public void encode(RegistryFriendlyByteBuf buf, List<T> list) {
-                    buf.writeVarInt(list.size());
-                    for (T element : list) {
-                        elementCodec.encode(buf, element);
-                    }
+    public static <T> StreamCodec<RegistryFriendlyByteBuf, List<T>> list(StreamCodec<RegistryFriendlyByteBuf, T> elementCodec) {
+        return new StreamCodec<>() {
+            @Override
+            public void encode(RegistryFriendlyByteBuf buf, List<T> list) {
+                buf.writeVarInt(list.size());
+                for (T element : list) {
+                    elementCodec.encode(buf, element);
                 }
+            }
 
-                @Override
-                public List<T> decode(RegistryFriendlyByteBuf buf) {
-                    int size = buf.readVarInt();
-                    List<T> list = new ArrayList<>(size);
-                    for (int i = 0; i < size; i++) {
-                        list.add(elementCodec.decode(buf));
-                    }
-                    return list;
+            @Override
+            public List<T> decode(RegistryFriendlyByteBuf buf) {
+                int size = buf.readVarInt();
+                List<T> list = new ArrayList<>(size);
+                for (int i = 0; i < size; i++) {
+                    list.add(elementCodec.decode(buf));
                 }
-            };
-        }
+                return list;
+            }
+        };
+    }
 
-        public static <T> StreamCodec<RegistryFriendlyByteBuf, List<T>> sList(StreamCodec<ByteBuf, T> elementCodec) {
-            return new StreamCodec<>() {
-                @Override
-                public void encode(RegistryFriendlyByteBuf buf, List<T> list) {
-                    buf.writeVarInt(list.size());
-                    for (T element : list) {
-                        elementCodec.encode(buf, element);
-                    }
+    public static <T> StreamCodec<RegistryFriendlyByteBuf, List<T>> sList(StreamCodec<ByteBuf, T> elementCodec) {
+        return new StreamCodec<>() {
+            @Override
+            public void encode(RegistryFriendlyByteBuf buf, List<T> list) {
+                buf.writeVarInt(list.size());
+                for (T element : list) {
+                    elementCodec.encode(buf, element);
                 }
+            }
 
-                @Override
-                public List<T> decode(RegistryFriendlyByteBuf buf) {
-                    int size = buf.readVarInt();
-                    List<T> list = new ArrayList<>(size);
-                    for (int i = 0; i < size; i++) {
-                        list.add(elementCodec.decode(buf));
-                    }
-                    return list;
+            @Override
+            public List<T> decode(RegistryFriendlyByteBuf buf) {
+                int size = buf.readVarInt();
+                List<T> list = new ArrayList<>(size);
+                for (int i = 0; i < size; i++) {
+                    list.add(elementCodec.decode(buf));
                 }
-            };
-        }
+                return list;
+            }
+        };
+    }
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ShellfishTrapRecipe> STREAM_CODEC = StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC, r -> r.bait,
-                list(ItemStack.STREAM_CODEC), r -> r.outputs,
-                sList(ByteBufCodecs.STRING_UTF8), r -> r.biome,  ShellfishTrapRecipe::new
-        );
+    @Override
+    public boolean showNotification() {
+        return false;
+    }
 
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ShellfishTrapRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
+    @Override
+    public String group() {
+        return "";
     }
 }

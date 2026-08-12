@@ -34,7 +34,7 @@ public class ConditionalBlockFeature extends Feature<SimpleBlockConfiguration> {
             if (isState.isPresent()) state = isState.get();
             else return false;
         } else {
-            state = provider.getState(random, pos);
+            state = provider.getState(world, random, pos);
         }
 
         if (!state.canSurvive(world, pos)) return false;

@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "shellfish:moss_ball_bucket"
+  },
+  "max_uses": 5.0,
+  "reputation_discount": 0.08,
+  "wants": {
+    "count": 5,
+    "id": "minecraft:emerald"
+  },
+  "xp": 30.0
+}

@@ -1,6 +1,6 @@
 package womp.shellfishmod.screens;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -26,7 +26,8 @@ public class ShellfishTrapScreen extends AbstractContainerScreen<ShellfishTrapSc
     }
 
     @Override
-    protected void renderBg(GuiGraphics context, float var2, int var3, int var4) {
+    public void extractBackground(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
+        super.extractBackground(context, mouseX, mouseY, delta);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
@@ -35,15 +36,15 @@ public class ShellfishTrapScreen extends AbstractContainerScreen<ShellfishTrapSc
         renderDurabilityBar(context, x, y);
     }
 
-    public void renderProgressArrow(GuiGraphics context, int x, int y) {
+    public void renderProgressArrow(GuiGraphicsExtractor context, int x, int y) {
         if (menu.isTrapping()) {
             context.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 32, y + 38, 176, 0, menu.getScaledProgress(), 10, 256, 256);
         }
     }
 
     @Override
-    public void renderTooltip(GuiGraphics context, int mouseX, int mouseY) {
-        super.renderTooltip(context, mouseX, mouseY);
+    public void extractTooltip(GuiGraphicsExtractor context, int mouseX, int mouseY) {
+        super.extractTooltip(context, mouseX, mouseY);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         durability = Component.literal(Component.translatable("shellfish_trap.durability").getString() + menu.getDurability() + " / " + menu.getMaxDurability());
@@ -52,7 +53,7 @@ public class ShellfishTrapScreen extends AbstractContainerScreen<ShellfishTrapSc
         }
     }
 
-    public void renderDurabilityBar(GuiGraphics context, int x, int y) {
+    public void renderDurabilityBar(GuiGraphicsExtractor context, int x, int y) {
         if (menu.getDurability() > menu.getMaxDurability() / 2) {
             context.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 12, y + 16, 177, 10, menu.getScaledDurability(), 8, 256, 256);
         } else if (menu.getDurability() > menu.getMaxDurability() / 5) {
@@ -70,9 +71,9 @@ public class ShellfishTrapScreen extends AbstractContainerScreen<ShellfishTrapSc
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        renderBackground(context, mouseX, mouseY, delta);
-        super.render(context, mouseX, mouseY, delta);
-        renderTooltip(context, mouseX, mouseY);
-    }   
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
+        extractBackground(context, mouseX, mouseY, delta);
+        super.extractRenderState(context, mouseX, mouseY, delta);
+        extractTooltip(context, mouseX, mouseY);
+    }
 }

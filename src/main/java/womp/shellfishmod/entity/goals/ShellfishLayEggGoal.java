@@ -47,7 +47,7 @@ public class ShellfishLayEggGoal extends MoveToBlockGoal {
         BlockPos blockPos = this.shellfish.getEntity().blockPosition();
         if (this.shellfish.getEntity().isInWater() && this.isReachedTarget() && i == 0) {
             Level world = this.shellfish.getEntity().level();
-            world.playSound(null, blockPos, laySound, SoundSource.BLOCKS, 0.3f, 0.9f + world.random.nextFloat() * 0.2f);
+            world.playSound(null, blockPos, laySound, SoundSource.BLOCKS, 0.3f, 0.9f + world.getRandom().nextFloat() * 0.2f);
             BlockPos blockPos2 = this.blockPos.above();
             BlockState blockState;
             if (eggBlock instanceof EggsBlock) blockState = (BlockState)eggBlock.defaultBlockState()

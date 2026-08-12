@@ -40,7 +40,7 @@ public class ShellfishMod {
         ShellfishComponents.register(modEventBus);
 
         // TerraBlender compatibility (optional)
-        if (ModList.get().isLoaded("terrablender")) TerraBlender.register();
+        if (ModList.isLoaded("terrablender")) TerraBlender.register();
 
         FMLCommonSetupEvent.getBus(modEventBus).addListener(this::commonSetup);
     }

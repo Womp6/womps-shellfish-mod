@@ -16,7 +16,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -437,7 +437,7 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
         if (world.getBlockState(pos.east(1)).getBlock() instanceof AbstractTrapBlock) return false;
         if (world.getBlockState(pos.west(1)).getBlock() instanceof AbstractTrapBlock) return false;
 
-        if (!world.getEntities(EntityType.HOPPER_MINECART, new AABB(pos.below(1)), entity -> true).isEmpty()) return false;
+        if (!world.getEntities(EntityTypes.HOPPER_MINECART, new AABB(pos.below(1)), entity -> true).isEmpty()) return false;
 
         if (this.getLevel() != null && this.getLevel().getBlockState(this.getBlockPos()).getBlock() instanceof AbstractTrapBlock) {
             BlockState state1 = this.getLevel().getBlockState(this.getBlockPos());

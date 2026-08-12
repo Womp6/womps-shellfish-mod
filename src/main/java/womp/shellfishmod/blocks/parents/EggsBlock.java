@@ -10,10 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
@@ -117,7 +114,7 @@ public class EggsBlock extends Block implements SimpleWaterloggedBlock {
 
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier applier, boolean bl) {
-        if (entity.getType().equals(EntityType.FALLING_BLOCK)) {
+        if (entity.getType().equals(EntityTypes.FALLING_BLOCK)) {
             this.breakWithoutDrop(world, pos);
         }
     }

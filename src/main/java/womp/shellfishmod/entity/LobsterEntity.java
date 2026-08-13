@@ -2,6 +2,9 @@ package womp.shellfishmod.entity;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.ByIdMap;
@@ -35,6 +38,9 @@ import womp.shellfishmod.registry.ShellfishSounds;
 import java.util.function.IntFunction;
 
 public class LobsterEntity extends ShellfishEntity<LobsterEntity.Variant> implements Hungry, EggLaying {
+
+    public static final EntityDataAccessor<Boolean> IS_HUNGRY = SynchedEntityData.defineId(LobsterEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(LobsterEntity.class, EntityDataSerializers.BOOLEAN);
 
     public LobsterEntity(EntityType<? extends LobsterEntity> entityType, Level world) {
         super(entityType, world);
@@ -140,6 +146,23 @@ public class LobsterEntity extends ShellfishEntity<LobsterEntity.Variant> implem
     @Override
     public ShellfishEntity<Variant> getEntity() {
         return this;
+    }
+
+    @Override
+    public EntityDataAccessor<Boolean> getHasEgg() {
+        return HAS_EGG;
+    }
+
+    @Override
+    public EntityDataAccessor<Boolean> getHungry() {
+        return IS_HUNGRY;
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(IS_HUNGRY, false);
+        pBuilder.define(HAS_EGG, false);
     }
 
     @Override

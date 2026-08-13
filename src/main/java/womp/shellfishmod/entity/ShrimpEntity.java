@@ -3,6 +3,9 @@ package womp.shellfishmod.entity;
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
@@ -40,6 +43,8 @@ import womp.shellfishmod.registry.ShellfishSounds;
 import java.util.function.IntFunction;
 
 public class ShrimpEntity extends ShellfishEntity<ShrimpEntity.Variant> implements EggLaying {
+
+    public static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(ShrimpEntity.class, EntityDataSerializers.BOOLEAN);
 
     public final AnimationState swimAnimationState = new AnimationState();
 
@@ -161,6 +166,17 @@ public class ShrimpEntity extends ShellfishEntity<ShrimpEntity.Variant> implemen
     @Override
     public ShellfishEntity<Variant> getEntity() {
         return this;
+    }
+
+    @Override
+    public EntityDataAccessor<Boolean> getHasEgg() {
+        return HAS_EGG;
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(HAS_EGG, false);
     }
 
     @Override

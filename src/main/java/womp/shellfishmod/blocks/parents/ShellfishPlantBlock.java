@@ -59,7 +59,7 @@ public class ShellfishPlantBlock extends VegetationBlock implements LiquidBlockC
     protected boolean mayPlaceOn(@NotNull BlockState floor, BlockGetter world, BlockPos pos) {
         BlockState block = world.getBlockState(pos.below());
         FluidState fluid = world.getFluidState(pos);
-        if (placeType.equals(PlaceType.MUD_SAND)) return (block.getBlock().equals(Blocks.SAND) | block.getBlock().equals(Blocks.MUD)) && fluid.getType().equals(Fluids.WATER);
+        if (placeType.equals(PlaceType.MUD_SAND)) return (block.getBlock().equals(Blocks.SAND) || block.getBlock().equals(Blocks.MUD)) && fluid.getType().equals(Fluids.WATER);
         else if (placeType.equals(PlaceType.SOLID_SIDE)) return block.isFaceSturdy(world, pos, Direction.UP) && !block.is(Blocks.MAGMA_BLOCK);
         return super.mayPlaceOn(floor, world, pos);
     }
@@ -68,7 +68,7 @@ public class ShellfishPlantBlock extends VegetationBlock implements LiquidBlockC
     public boolean canSurvive(@NotNull BlockState floor, LevelReader world, BlockPos pos) {
         BlockState block = world.getBlockState(pos.below());
         FluidState fluid = world.getFluidState(pos);
-        if (placeType.equals(PlaceType.MUD_SAND)) return (block.getBlock().equals(Blocks.SAND) | block.getBlock().equals(Blocks.MUD)) && fluid.getType() == Fluids.WATER;
+        if (placeType.equals(PlaceType.MUD_SAND)) return (block.getBlock().equals(Blocks.SAND) || block.getBlock().equals(Blocks.MUD)) && fluid.getType() == Fluids.WATER;
         else if (placeType.equals(PlaceType.SOLID_SIDE)) return block.isFaceSturdy(world, pos, Direction.UP) && !block.is(Blocks.MAGMA_BLOCK);
         return super.canSurvive(floor, world, pos);
     }

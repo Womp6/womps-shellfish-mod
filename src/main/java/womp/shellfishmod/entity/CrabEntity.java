@@ -3,6 +3,9 @@ package womp.shellfishmod.entity;
 import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
@@ -35,6 +38,9 @@ import womp.shellfishmod.util.ShellfishTags;
 import java.util.function.IntFunction;
 
 public class CrabEntity extends ShellfishEntity<CrabEntity.Variant> implements Hungry, EggLaying {
+
+    public static final EntityDataAccessor<Boolean> IS_HUNGRY = SynchedEntityData.defineId(CrabEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(CrabEntity.class, EntityDataSerializers.BOOLEAN);
 
     public CrabEntity(EntityType<? extends CrabEntity> entityType, Level world) {
         super(entityType, world);
@@ -148,6 +154,23 @@ public class CrabEntity extends ShellfishEntity<CrabEntity.Variant> implements H
     @Override
     public ShellfishEntity<Variant> getEntity() {
         return this;
+    }
+
+    @Override
+    public EntityDataAccessor<Boolean> getHasEgg() {
+        return HAS_EGG;
+    }
+
+    @Override
+    public EntityDataAccessor<Boolean> getHungry() {
+        return IS_HUNGRY;
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(IS_HUNGRY, false);
+        pBuilder.define(HAS_EGG, false);
     }
 
     @Override

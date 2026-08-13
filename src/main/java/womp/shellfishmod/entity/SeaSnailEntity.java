@@ -4,6 +4,9 @@ import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
@@ -39,6 +42,8 @@ import womp.shellfishmod.util.ShellfishTags;
 import java.util.function.IntFunction;
 
 public class SeaSnailEntity extends ShellfishEntity<SeaSnailEntity.Variant> implements EggLaying {
+
+    public static final EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(SeaSnailEntity.class, EntityDataSerializers.BOOLEAN);
 
     private boolean canHide = true;
     private int counter = 5;
@@ -130,6 +135,17 @@ public class SeaSnailEntity extends ShellfishEntity<SeaSnailEntity.Variant> impl
     @Override
     public ShellfishEntity<Variant> getEntity() {
         return this;
+    }
+
+    @Override
+    public EntityDataAccessor<Boolean> getHasEgg() {
+        return HAS_EGG;
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(HAS_EGG, false);
     }
 
     public boolean canHide() {

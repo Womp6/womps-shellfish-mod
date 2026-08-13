@@ -2,8 +2,10 @@ package womp.shellfishmod.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import womp.shellfishmod.client.ShellfishClient;
 import womp.shellfishmod.client.model.CrayfishModel;
@@ -19,7 +21,7 @@ public class CrayfishRenderer extends MobRenderer<CrayfishEntity, ShellfishRende
     @Override
     public ResourceLocation getTextureLocation(ShellfishRenderState<CrayfishEntity.Variant> animatable) {
         int variant = animatable.variant.getIndex();
-        if (animatable.customName != null && "Supercrayfish".equals(animatable.customName.getString())) {
+        if (animatable.nameTag != null && "Supercrayfish".equals(animatable.nameTag.getString())) {
             return ResourceLocation.fromNamespaceAndPath("shellfish", "textures/entity/crayfish/supercrayfish.png");
         } else {
             return ResourceLocation.fromNamespaceAndPath("shellfish", "textures/entity/crayfish/crayfish_" + variant + ".png");
@@ -27,7 +29,7 @@ public class CrayfishRenderer extends MobRenderer<CrayfishEntity, ShellfishRende
     }
 
     @Override
-    public void render(ShellfishRenderState<CrayfishEntity.Variant> entity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void submit(ShellfishRenderState<CrayfishEntity.Variant> entity, PoseStack poseStack, SubmitNodeCollector queue, CameraRenderState camera) {
         
         int variant = entity.variant.getIndex();
         if (variant == 11 || variant == 17 || variant == 25) entity.shellfish.scale(poseStack, 0.9f, 0.65f, 0.4f);
@@ -37,7 +39,7 @@ public class CrayfishRenderer extends MobRenderer<CrayfishEntity, ShellfishRende
         else if (variant == 23) entity.shellfish.scale(poseStack, 0.5f, 0.25f);
         else entity.shellfish.scale(poseStack, 0.75f, 0.4f);
 
-        super.render(entity, poseStack, bufferSource, packedLight);
+        super.submit(entity, poseStack, queue, camera);
     }
 
     @Override

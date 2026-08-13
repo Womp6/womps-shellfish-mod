@@ -6,20 +6,15 @@ import net.minecraft.network.syncher.SynchedEntityData;
 
 public interface EggLaying {
 
-    EntityDataAccessor<Boolean> HAS_EGG = SynchedEntityData.defineId(ShellfishEntity.class, EntityDataSerializers.BOOLEAN);
-
     ShellfishEntity<?> getEntity();
+    EntityDataAccessor<Boolean> getHasEgg();
 
     default boolean hasEgg() {
-        return getEntity().getEntityData().get(HAS_EGG);
+        return getEntity().getEntityData().get(getHasEgg());
     }
 
     default void setHasEgg(boolean value) {
-        getEntity().getEntityData().set(HAS_EGG, value);
-    }
-
-    default EntityDataAccessor<Boolean> getEggTracker() {
-        return HAS_EGG;
+        getEntity().getEntityData().set(getHasEgg(), value);
     }
 
     default int getPartnerVariant() {

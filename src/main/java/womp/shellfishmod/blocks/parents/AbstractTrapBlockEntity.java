@@ -33,7 +33,9 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import womp.shellfishmod.recipes.ShellfishTrapRecipe;
@@ -80,9 +82,9 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     private static final int[] SLOTS_FOR_DOWN = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
     private static final int[] SLOTS_FOR_REST = new int[]{0};
 
-    private final ItemStackHandler itemHandler = new ItemStackHandler(19) {
+    private final ItemStacksResourceHandler itemHandler = new ItemStacksResourceHandler(19) {
         @Override
-        protected void onContentsChanged(int slot) {
+        protected void onContentsChanged(int slot, ItemStack prevContents) {
             setChanged();
             if (level != null) {
                 if (!level.isClientSide()) {
@@ -92,11 +94,11 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
         }
 
         @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        public boolean isValid(int slot, @NotNull ItemResource stack) {
             return switch (slot) {
                 case 0 -> true;
                 case 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 -> false;
-                default -> super.isItemValid(slot, stack);
+                default -> super.isValid(slot, stack);
             };
         }
     };
@@ -108,30 +110,22 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
             @Override
             public int get(int var1) {
-                switch (var1) {
-                    case 0: {
-                        return AbstractTrapBlockEntity.this.progress;
-                    }
-                    case 1: {
-                        return AbstractTrapBlockEntity.this.maxProgress;
-                    }
-                    case 2: {
-                        return AbstractTrapBlockEntity.this.durability;
-                    }
-                    case 3: {
-                        return AbstractTrapBlockEntity.this.maxDurability;
-                    }
-                }
-                return 0;
+                return switch (var1) {
+                    case 0 -> AbstractTrapBlockEntity.this.progress;
+                    case 1 -> AbstractTrapBlockEntity.this.maxProgress;
+                    case 2 -> AbstractTrapBlockEntity.this.durability;
+                    case 3 -> AbstractTrapBlockEntity.this.maxDurability;
+                    default -> 0;
+                };
             }
 
             @Override
             public void set(int var1, int var2) {
                 switch (var1) {
-                    case 0: AbstractTrapBlockEntity.this.progress = var2;
-                    case 1: AbstractTrapBlockEntity.this.maxProgress = var2;
-                    case 2: AbstractTrapBlockEntity.this.durability = var2;
-                    case 3: AbstractTrapBlockEntity.this.maxDurability = var2;
+                    case 0 -> AbstractTrapBlockEntity.this.progress = var2;
+                    case 1 -> AbstractTrapBlockEntity.this.maxProgress = var2;
+                    case 2 -> AbstractTrapBlockEntity.this.durability = var2;
+                    case 3 -> AbstractTrapBlockEntity.this.maxDurability = var2;
                 }
             }
 
@@ -149,8 +143,8 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     @Override
     public void saveAdditional(ValueOutput nbt) {
         super.saveAdditional(nbt);
-        NonNullList<ItemStack> items = NonNullList.withSize(itemHandler.getSlots(), ItemStack.EMPTY);
-        for (int i = 0; i < items.size(); i++) items.set(i, itemHandler.getStackInSlot(i));
+        NonNullList<ItemStack> items = NonNullList.withSize(itemHandler.size(), ItemStack.EMPTY);
+        for (int i = 0; i < items.size(); i++) items.set(i, new ItemStack(itemHandler.getResource(i).getItem(), itemHandler.getAmountAsInt(i)));
         nbt.putInt("progress", progress);
         nbt.putInt("durability", durability);
         nbt.putBoolean("canTrap", canTrap);
@@ -159,12 +153,12 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
     @Override
     public void loadAdditional(ValueInput nbt) {
-        NonNullList<ItemStack> items = NonNullList.withSize(itemHandler.getSlots(), ItemStack.EMPTY);
+        NonNullList<ItemStack> items = NonNullList.withSize(itemHandler.size(), ItemStack.EMPTY);
         progress = nbt.getIntOr("progress", 0);
         durability = nbt.getIntOr("durability", maxDurability);
         canTrap = nbt.getBooleanOr("canTrap", true);
         ContainerHelper.loadAllItems(nbt, items);
-        for (int i = 0; i < items.size(); i++) itemHandler.setStackInSlot(i, items.get(i));
+        for (int i = 0; i < items.size(); i++) itemHandler.set(i, itemHandler.getResourceFrom(items.get(i)), items.get(i).getCount());
         super.loadAdditional(nbt);
     }
 
@@ -297,8 +291,8 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     }
 
     private Optional<ShellfishTrapRecipe> getCurrentRecipe() {
-        ShellfishTrapRecipeInput recipe = new ShellfishTrapRecipeInput(itemHandler.getStackInSlot(BAIT_SLOT), this.getLevel().getBiome(worldPosition).getRegisteredName());
-        if (!level.isClientSide) {
+        ShellfishTrapRecipeInput recipe = new ShellfishTrapRecipeInput(new ItemStack(itemHandler.getResource(BAIT_SLOT).getItem(), itemHandler.getAmountAsInt(BAIT_SLOT)), this.getLevel().getBiome(worldPosition).getRegisteredName());
+        if (!level.isClientSide()) {
             Optional<RecipeHolder<ShellfishTrapRecipe>> value = RecipeManager.createCheck(ShellfishTrapRecipe.Type.INSTANCE).getRecipeFor(recipe, (ServerLevel)level);
             if (value.isPresent()) {
                 return Optional.of(value.get().value());
@@ -309,13 +303,13 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
     @Override
     public int getContainerSize() {
-        return itemHandler.getSlots();
+        return itemHandler.size();
     }
 
     @Override
     public boolean isEmpty() {
         for (int i = 0; i < getContainerSize(); i++) {
-            if (!itemHandler.getStackInSlot(i).isEmpty()) {
+            if (!getItem(i).isEmpty()) {
                 return false;
             }
         }
@@ -324,25 +318,30 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
     @Override
     public ItemStack getItem(int slot) {
-        return itemHandler.getStackInSlot(slot);
+        return new ItemStack(itemHandler.getResource(slot).getItem(), itemHandler.getAmountAsInt(slot));
     }
 
     @Override
     public ItemStack removeItem(int pSlot, int pAmount) {
-        return itemHandler.extractItem(pSlot, pAmount, false);
+        ItemStack itemStack =  new ItemStack(itemHandler.getResource(pSlot).getItem(), itemHandler.getAmountAsInt(pSlot));
+        try (Transaction tx = Transaction.open(null)) {
+            itemStack.setCount(itemHandler.extract(pSlot, itemHandler.getResource(pSlot), pAmount, tx));
+            tx.commit();
+        }
+        return itemStack;
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int pSlot) {
-        int count = itemHandler.getStackInSlot(pSlot).getCount();
-        return itemHandler.extractItem(pSlot, count, false);
+        int count = itemHandler.getAmountAsInt(pSlot);
+        return removeItem(pSlot, count);
     }
 
     @Override
     public void setItem(int pSlot, ItemStack pStack) {
-        ItemStack itemstack = itemHandler.getStackInSlot(pSlot);
+        ItemStack itemstack = getItem(pSlot);
         boolean flag = !pStack.isEmpty() && ItemStack.isSameItemSameComponents(itemstack, pStack);
-        this.itemHandler.setStackInSlot(pSlot, pStack);
+        this.itemHandler.set(pSlot, itemHandler.getResourceFrom(pStack), pStack.getCount());
         if (pStack.getCount() > this.getMaxStackSize()) {
             pStack.setCount(this.getMaxStackSize());
         }
@@ -477,9 +476,9 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
     @Override
     protected NonNullList<ItemStack> getItems() {
-        NonNullList<ItemStack> list = NonNullList.withSize(itemHandler.getSlots(), ItemStack.EMPTY);
+        NonNullList<ItemStack> list = NonNullList.withSize(itemHandler.size(), ItemStack.EMPTY);
         for (int i = 0; i < list.size(); i++) {
-            list.set(i, itemHandler.getStackInSlot(i));
+            list.set(i, getItem(i));
         }
         return list;
     }
@@ -487,8 +486,8 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
     @Override
     protected void setItems(NonNullList<ItemStack> pItems) {
         for (int i = 0; i < pItems.size(); i++) {
-            itemHandler.extractItem(i, itemHandler.getStackInSlot(i).getCount(), false);
-            itemHandler.setStackInSlot(i, pItems.get(i));
+            removeItem(i, itemHandler.getAmountAsInt(i));
+            setItem(i, pItems.get(i));
         }
         setChanged();
     }
@@ -533,8 +532,8 @@ public abstract class AbstractTrapBlockEntity extends BaseContainerBlockEntity i
 
     @Override
     public void clearContent() {
-        for (int i = 0; i < this.itemHandler.getSlots(); i ++) {
-            this.itemHandler.extractItem(i, itemHandler.getStackInSlot(i).getCount(), true);
+        for (int i = 0; i < this.itemHandler.size(); i ++) {
+            removeItem(i, itemHandler.getAmountAsInt(i));
         }
         setChanged();
     }

@@ -2,8 +2,10 @@ package womp.shellfishmod.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import womp.shellfishmod.client.ShellfishClient;
 import womp.shellfishmod.client.model.CrabModel;
@@ -23,8 +25,8 @@ public class CrabRenderer extends MobRenderer<CrabEntity, ShellfishRenderState<C
     }
 
     @Override
-    public void render(ShellfishRenderState<CrabEntity.Variant> entity, PoseStack poseStack,
-                       MultiBufferSource bufferSource, int packedLight) {
+    public void submit(ShellfishRenderState<CrabEntity.Variant> entity, PoseStack poseStack,
+                       SubmitNodeCollector queue, CameraRenderState camera) {
         int variant = entity.variant.getIndex();
         if (variant == 0) entity.shellfish.scale(poseStack, 1.1f, 0.85f, 0.4f);
         else if (variant == 1) entity.shellfish.scale(poseStack, 0.6f, 0.35f);
@@ -33,7 +35,7 @@ public class CrabRenderer extends MobRenderer<CrabEntity, ShellfishRenderState<C
         else if (variant == 4) entity.shellfish.scale(poseStack, 0.5f, 0.3f);
         else entity.shellfish.scale(poseStack, 0.75f, 0.4f);
 
-        super.render(entity, poseStack, bufferSource, packedLight);
+        super.submit(entity, poseStack, queue, camera);
     }
 
     @Override

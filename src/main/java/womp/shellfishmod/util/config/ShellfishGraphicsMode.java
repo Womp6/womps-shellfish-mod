@@ -2,12 +2,9 @@ package womp.shellfishmod.util.config;
 
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.OptionEnum;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.function.IntFunction;
 
-@OnlyIn(Dist.CLIENT)
 public enum ShellfishGraphicsMode implements OptionEnum {
 
     FAST(0, "shellfish_options.graphics.fast"),

@@ -231,7 +231,7 @@ public class ShellfishItems {
     }
 
     private static DeferredItem<Item> registerEgg(String name, Supplier<? extends EntityType<? extends Mob>> type, int primaryColor, int secondaryColor) {
-        return ITEMS.register(name, () -> new SpawnEggItem(type.get(), new Item.Properties().setId(ShellfishTags.createKey(name, Registries.ITEM))));
+        return ITEMS.register(name, () -> new SpawnEggItem(new Item.Properties().setId(ShellfishTags.createKey(name, Registries.ITEM)).spawnEgg(type.get())));
     }
 
     private static DeferredItem<Item> registerDurability(String name, Supplier<? extends Block> block, int max) {

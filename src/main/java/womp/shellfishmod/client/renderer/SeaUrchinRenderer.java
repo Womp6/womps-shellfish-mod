@@ -2,8 +2,10 @@ package womp.shellfishmod.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import womp.shellfishmod.client.ShellfishClient;
 import womp.shellfishmod.client.model.SeaUrchinModel;
@@ -23,15 +25,15 @@ public class SeaUrchinRenderer extends MobRenderer<SeaUrchinEntity, ShellfishRen
     }
 
     @Override
-    public void render(ShellfishRenderState<SeaUrchinEntity.Variant> entity, PoseStack poseStack,
-                       MultiBufferSource bufferSource, int packedLight) {
+    public void submit(ShellfishRenderState<SeaUrchinEntity.Variant> entity, PoseStack poseStack,
+                       SubmitNodeCollector queue, CameraRenderState camera) {
         int variant = entity.variant.getIndex();
         if (variant == 1) entity.shellfish.scale(poseStack, 2f, 1.2f, 0.5f);
         else if (variant == 3) entity.shellfish.scale(poseStack, 0.6f, 0.3f);
         else if (variant == 4) entity.shellfish.scale(poseStack, 1.5f, 1.0f, 0.5f);
         else entity.shellfish.scale(poseStack, 1.0f, 0.5f);
 
-        super.render(entity, poseStack, bufferSource, packedLight);
+        super.submit(entity, poseStack, queue, camera);
     }
 
     @Override

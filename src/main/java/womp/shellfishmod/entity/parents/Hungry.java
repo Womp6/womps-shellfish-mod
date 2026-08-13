@@ -6,18 +6,17 @@ import net.minecraft.network.syncher.SynchedEntityData;
 
 public interface Hungry {
 
-    EntityDataAccessor<Boolean> IS_HUNGRY = SynchedEntityData.defineId(ShellfishEntity.class, EntityDataSerializers.BOOLEAN);
-
     ShellfishEntity<?> getEntity();
+    EntityDataAccessor<Boolean> getHungry();
 
     default int getHungryTime() {
         return 6000;
     }
     default void setHungry(boolean value) {
-        getEntity().getEntityData().set(IS_HUNGRY, value);
+        getEntity().getEntityData().set(getHungry(), value);
     }
     default boolean isHungry() {
-        return getEntity().getEntityData().get(IS_HUNGRY);
+        return getEntity().getEntityData().get(getHungry());
     }
 
     default int tick(int counter) {
@@ -36,9 +35,5 @@ public interface Hungry {
             return 0;
         }
         return counter;
-    }
-
-    default EntityDataAccessor<Boolean> getHungryTracker() {
-        return IS_HUNGRY;
     }
 }

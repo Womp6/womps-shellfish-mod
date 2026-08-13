@@ -110,13 +110,13 @@ public class ShellfishBlocks {
     }
 
     private static BlockBehaviour.Properties settingsPlant(Block block, boolean offset, String name) {
-        BlockBehaviour.Properties settings = BlockBehaviour.Properties.ofFullCopy(block).instabreak().noCollission().replaceable().sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY).setId(ShellfishTags.createKey(name, Registries.BLOCK));
+        BlockBehaviour.Properties settings = BlockBehaviour.Properties.ofFullCopy(block).instabreak().noCollision().replaceable().sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY).setId(ShellfishTags.createKey(name, Registries.BLOCK));
         return offset ? settings.offsetType(BlockBehaviour.OffsetType.XZ) : settings;
     }
 
     private static DeferredBlock<Block> registerDeadBlock(String name, VoxelShape shape, boolean solid) {
         BlockBehaviour.Properties sets = BlockBehaviour.Properties.ofFullCopy(Blocks.TURTLE_EGG).instabreak().sound(SoundType.CALCITE).pushReaction(PushReaction.DESTROY).setId(ShellfishTags.createKey(name, Registries.BLOCK));
-        if (!solid) return BLOCKS.register(name, () -> new DeadBlock(sets.noCollission(), shape, solid));
+        if (!solid) return BLOCKS.register(name, () -> new DeadBlock(sets.noCollision(), shape, solid));
         return BLOCKS.register(name, () -> new DeadBlock(sets, shape, solid));
     }
 
@@ -131,7 +131,7 @@ public class ShellfishBlocks {
     }
 
     private static DeferredBlock<Block> registerEggsBlock(String name, Supplier<? extends EntityType<? extends ShellfishEntity<?>>> entity, Supplier<SoundEvent> hatchSound) {
-        return BLOCKS.register(name + "_eggs_block", () -> new EggsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).instabreak().noCollission().sound(SoundType.FROGSPAWN).pushReaction(PushReaction.DESTROY).noOcclusion().setId(ShellfishTags.createKey(name + "_eggs_block", Registries.BLOCK)), entity, hatchSound));
+        return BLOCKS.register(name + "_eggs_block", () -> new EggsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WATER).instabreak().noCollision().sound(SoundType.FROGSPAWN).pushReaction(PushReaction.DESTROY).noOcclusion().setId(ShellfishTags.createKey(name + "_eggs_block", Registries.BLOCK)), entity, hatchSound));
     }
 
     private static <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBE(String name, BlockEntityType.BlockEntitySupplier<T> factory, Supplier<Block> block) {

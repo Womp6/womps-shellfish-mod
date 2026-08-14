@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import womp.shellfishmod.client.ShellfishClient;
 import womp.shellfishmod.client.model.MossBallModel;
 import womp.shellfishmod.client.states.ShellfishRenderState;
@@ -19,8 +19,8 @@ public class MossBallRenderer extends MobRenderer<MossBallEntity, ShellfishRende
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ShellfishRenderState<MossBallEntity.Variant> entity) {
-        return ResourceLocation.fromNamespaceAndPath("shellfish", "textures/entity/moss_ball.png");
+    public Identifier getTextureLocation(ShellfishRenderState<MossBallEntity.Variant> entity) {
+        return Identifier.fromNamespaceAndPath("shellfish", "textures/entity/moss_ball.png");
     }
 
     @Override

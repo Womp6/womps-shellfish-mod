@@ -1,8 +1,8 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "shellfish:item/water_lettuce",
-        "texture": "shellfish:item/water_lettuce"
+        "particle": "shellfish:block/water_lettuce2d",
+        "texture": "shellfish:block/water_lettuce2d"
     },
     "elements": [
         {   "from": [  0, 0.25,  0 ],

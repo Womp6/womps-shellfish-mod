@@ -1,11 +1,11 @@
 package womp.shellfishmod.util.config;
 
 import net.minecraft.util.ByIdMap;
-import net.minecraft.util.OptionEnum;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.function.IntFunction;
 
-public enum ShellfishGraphicsMode implements OptionEnum {
+public enum ShellfishGraphicsMode implements StringRepresentable {
 
     FAST(0, "shellfish_options.graphics.fast"),
     DEFAULT(1, "shellfish_options.graphics.default"),
@@ -20,17 +20,16 @@ public enum ShellfishGraphicsMode implements OptionEnum {
         this.translationKey = translationKey;
     }
 
-    @Override
     public int getId() {
         return this.id;
     }
 
-    @Override
-    public String getKey() {
+    public String getTranslationKey() {
         return this.translationKey;
     }
 
-    public String toString() {
+    @Override
+    public String getSerializedName() {
         return switch (this) {
             default -> throw new IncompatibleClassChangeError();
             case FAST -> "fast";

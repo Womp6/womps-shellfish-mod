@@ -1,16 +1,13 @@
 package womp.shellfishmod.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
 import womp.shellfishmod.client.states.WaterLettuceBlockEntityRenderState;
 
 public class WaterLettuceModel {
@@ -65,10 +62,6 @@ public class WaterLettuceModel {
     }
 
     public void render(WaterLettuceBlockEntityRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
-        queue.submitModelPart(lettuce, matrices, RenderType.entityCutoutNoCull(state.texture), state.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, state.breakProgress);
-    }
-
-    public RenderType getLayer() {
-        return RenderType.cutout();
+        queue.submitModelPart(lettuce, matrices, RenderTypes.entityCutoutNoCull(state.texture), state.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, state.breakProgress);
     }
 }

@@ -4,22 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.Keyframe;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.resources.Identifier;
 import org.joml.Vector3f;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import org.joml.Vector3fc;
-import womp.shellfishmod.blocks.SeaLettuceBlockEntity;
 import womp.shellfishmod.blocks.animations.BlockAnimations;
 import womp.shellfishmod.client.states.SeaLettuceBlockEntityRenderState;
 import womp.shellfishmod.util.config.ShellfishConfig;
@@ -176,7 +173,7 @@ public class SeaLettuceModel {
         }
     }
 
-    public void render(SeaLettuceBlockEntityRenderState blockEntity, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState, ResourceLocation texture) {
+    public void render(SeaLettuceBlockEntityRenderState blockEntity, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState, Identifier texture) {
         resetTransformations();
 
         if(ShellfishConfig.getShellfishGraphics() == 2) {
@@ -185,7 +182,7 @@ public class SeaLettuceModel {
             applyAnimationToModel(animationTime, matrices);
         }
 
-        queue.submitModelPart(sea_lettuce, matrices, RenderType.entitySmoothCutout(texture), blockEntity.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, blockEntity.breakProgress);
+        queue.submitModelPart(sea_lettuce, matrices, RenderTypes.entitySmoothCutout(texture), blockEntity.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, blockEntity.breakProgress);
     }
 
     private final List<String> boneNames = List.of(

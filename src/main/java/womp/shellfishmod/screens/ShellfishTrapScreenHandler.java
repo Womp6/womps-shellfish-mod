@@ -131,7 +131,7 @@ public class ShellfishTrapScreenHandler extends AbstractContainerMenu {
     public void removed(Player player) {
         super.removed(player);
         if (this.blockEntity.getDurability() == 0) {
-            player.displayClientMessage(Component.translatable(blockEntity.getRepairKey()), true);
+            player.sendOverlayMessage(Component.translatable(blockEntity.getRepairKey()));
         }
     }
 

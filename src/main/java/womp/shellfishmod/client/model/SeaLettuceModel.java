@@ -8,7 +8,7 @@ import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import org.joml.Vector3f;
@@ -182,7 +182,7 @@ public class SeaLettuceModel {
             applyAnimationToModel(animationTime, matrices);
         }
 
-        queue.submitModelPart(sea_lettuce, matrices, RenderTypes.entitySmoothCutout(texture), blockEntity.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, blockEntity.breakProgress);
+        queue.submitModelPart(sea_lettuce, matrices, RenderTypes.endCrystalBeam(texture), blockEntity.lightCoords, OverlayTexture.NO_OVERLAY, null, -1, blockEntity.breakProgress);
     }
 
     private final List<String> boneNames = List.of(

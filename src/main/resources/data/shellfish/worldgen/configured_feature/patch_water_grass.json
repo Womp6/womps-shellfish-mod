@@ -1,74 +1,44 @@
 {
-  "type": "minecraft:random_patch",
+  "type": "minecraft:simple_block",
   "config": {
-    "feature": {
-      "feature": {
-        "type": "minecraft:simple_block",
-        "config": {
-          "to_place": {
-            "type": "minecraft:weighted_state_provider",
-            "entries": [
-              {
-                "data": {
-                  "Name": "shellfish:water_grass"
-                },
-                "weight": 9
-              },
-              {
-                "data": {
-                  "Name": "shellfish:tall_water_grass",
-                  "Properties": {
-                    "half": "lower"
-                  }
-                },
-                "weight": 9
-              },
-              {
-                "data": {
-                  "Name": "shellfish:wheatgrass",
-                  "Properties": {
-                    "waterlogged": "true"
-                  }
-                },
-                "weight": 1
-              },
-              {
-                "data": {
-                  "Name": "shellfish:tall_wheatgrass",
-                  "Properties": {
-                    "half": "lower",
-                    "waterlogged": "true"
-                  }
-                },
-                "weight": 1
-              }
-            ]
-          }
-        }
-      },
-      "placement": [
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
         {
-          "type": "minecraft:block_predicate_filter",
-          "predicate": {
-            "type": "minecraft:all_of",
-            "predicates": [
-              {
-                "type": "minecraft:matching_blocks",
-                "blocks": "minecraft:water"
-              },
-              {
-                "type": "minecraft:would_survive",
-                "state": {
-                  "Name": "shellfish:water_grass"
-                }
-              }
-            ]
-          }
+          "data": {
+            "Name": "shellfish:water_grass"
+          },
+          "weight": 9
+        },
+        {
+          "data": {
+            "Name": "shellfish:tall_water_grass",
+            "Properties": {
+              "half": "lower"
+            }
+          },
+          "weight": 9
+        },
+        {
+          "data": {
+            "Name": "shellfish:wheatgrass",
+            "Properties": {
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "shellfish:tall_wheatgrass",
+            "Properties": {
+              "half": "lower",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
         }
       ]
-    },
-    "tries": 79,
-    "xz_spread": 7,
-    "y_spread": 0
+    }
   }
 }

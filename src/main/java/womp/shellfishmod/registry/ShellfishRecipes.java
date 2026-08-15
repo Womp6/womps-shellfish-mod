@@ -20,7 +20,7 @@ public class ShellfishRecipes {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, ShellfishMod.MOD_ID);
     public static final DeferredRegister<RecipeBookCategory> RECIPE_CATEGORIES = DeferredRegister.create(Registries.RECIPE_BOOK_CATEGORY, ShellfishMod.MOD_ID);
 
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShellfishTrapRecipe>> TRAP_SERIALIZER = RECIPE_SERIALIZERS.register(ShellfishTrapRecipe.Serializer.ID, () -> ShellfishTrapRecipe.Serializer.INSTANCE);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShellfishTrapRecipe>> TRAP_SERIALIZER = RECIPE_SERIALIZERS.register("shellfish_trap", () -> ShellfishTrapRecipe.SERIALIZER);
     public static final DeferredHolder<RecipeType<?>, RecipeType<ShellfishTrapRecipe>> TRAP_TYPE = RECIPE_TYPES.register(ShellfishTrapRecipe.Type.ID, () -> ShellfishTrapRecipe.Type.INSTANCE);
     public static final Supplier<RecipeBookCategory> TRAP_CATEGORY = RECIPE_CATEGORIES.register("trap_category", RecipeBookCategory::new);
 

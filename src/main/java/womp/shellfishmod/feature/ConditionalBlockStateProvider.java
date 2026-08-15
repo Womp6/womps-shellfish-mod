@@ -1,6 +1,5 @@
 package womp.shellfishmod.feature;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -43,7 +42,7 @@ public class ConditionalBlockStateProvider extends BlockStateProvider {
     }
 
     @Override
-    public BlockState getState(RandomSource random, BlockPos pos) {
+    public BlockState getState(WorldGenLevel level, RandomSource random, BlockPos pos) {
         throw new UnsupportedOperationException("Use get(world, pos, random) instead");
     }
 }

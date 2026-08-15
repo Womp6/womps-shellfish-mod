@@ -2,7 +2,6 @@
   "required": true,
   "minVersion": "0.8",
   "package": "womp.shellfishmod.mixins",
-  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AddMarshMixin",
     "SpawnerMixin",

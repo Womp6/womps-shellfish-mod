@@ -1,14 +1,17 @@
 package womp.shellfishmod.client;
 
+import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -25,6 +28,8 @@ import womp.shellfishmod.registry.ShellfishBlocks;
 import womp.shellfishmod.registry.ShellfishEntities;
 import womp.shellfishmod.registry.ShellfishScreens;
 import womp.shellfishmod.screens.ShellfishTrapScreen;
+
+import java.util.List;
 
 @EventBusSubscriber(modid = ShellfishMod.MOD_ID, value = Dist.CLIENT)
 public class ShellfishClient {
@@ -85,23 +90,25 @@ public class ShellfishClient {
     }
 
     @SubscribeEvent
-    public static void addBlockColors(RegisterColorHandlersEvent.Block event) {
-        event.register((state, world, pos, tintIndex) -> {
-            if (world != null && pos != null) {
-                return BiomeColors.getAverageGrassColor(world, pos);
+    public static void addBlockColors(RegisterColorHandlersEvent.BlockTintSources event) {
+        event.register(List.of(new BlockTintSource() {
+            @Override
+            public int colorInWorld(BlockState state, BlockAndTintGetter level, BlockPos pos) {
+                if (level != null && pos != null) {
+                    return BiomeColors.getAverageGrassColor(level, pos);
+                }
+                return GrassColor.getDefaultColor();
             }
-            return GrassColor.getDefaultColor();
-        }, ShellfishBlocks.WATER_GRASS.get(), ShellfishBlocks.TALL_WATER_GRASS.get());
+            @Override
+            public int color(BlockState state) {
+                return GrassColor.getDefaultColor();
+            }
+        }), ShellfishBlocks.WATER_GRASS.get(), ShellfishBlocks.TALL_WATER_GRASS.get());
     }
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         registerClientEntityRenders();
-
-        ItemBlockRenderTypes.setRenderLayer(ShellfishBlocks.SEA_SNAIL_EGGS_BLOCK.get(), ChunkSectionLayer.TRANSLUCENT);
-        for (Block block : ShellfishBlocks.getCutouts()) {
-            ItemBlockRenderTypes.setRenderLayer(block, ChunkSectionLayer.CUTOUT);
-        }
 
         BlockEntityRenderers.register(ShellfishBlocks.WATER_LETTUCE_BLOCK_ENTITY.get(), WaterLettuceRenderer::new);
         BlockEntityRenderers.register(ShellfishBlocks.SEA_LETTUCE_BLOCK_ENTITY.get(), SeaLettuceRenderer::new);

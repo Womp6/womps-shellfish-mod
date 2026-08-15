@@ -14,7 +14,8 @@ loaderVersion="${loader_version_range}" #mandatory
 license="${mod_license}"
 
 displayURL="https://www.curseforge.com/minecraft/mc-mods/womps-shellfish-mod"
-logoFile="icon.png"
+iconFile="icon.png"
+bannerFile="shellfish_title_text.png"
 
 [[mixins]]
 config="shellfish.mixins.json"
